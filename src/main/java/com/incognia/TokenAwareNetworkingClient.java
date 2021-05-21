@@ -42,7 +42,7 @@ public class TokenAwareNetworkingClient {
         "Authorization",
         "Basic " + Base64.getUrlEncoder().encodeToString(clientIdSecret.getBytes()));
     TokenResponse tokenResponse =
-        networkingClient.doPost("/api/v1/token", null, TokenResponse.class, headers);
+        networkingClient.doPost("api/v1/token", null, TokenResponse.class, headers);
     return JWT.decode(tokenResponse.getAccessToken());
   }
 }
