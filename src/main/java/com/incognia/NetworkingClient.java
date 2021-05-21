@@ -50,9 +50,8 @@ public class NetworkingClient {
     Request request = requestBuilder.post(requestBody).headers(Headers.of(headers)).build();
     try (Response response = httpClient.newCall(request).execute()) {
       return parseResponse(response, responseType);
-    } catch (IncogniaException e) {
-      throw e;
     } catch (IOException e) {
+      // TODO(rato): handle timeout
       throw new IncogniaException("network call failed", e);
     }
   }
@@ -71,8 +70,6 @@ public class NetworkingClient {
                 .constructMapType(HashMap.class, String.class, Object.class);
         Map<String, Object> values = objectMapper.readValue(payload, mapType);
         throw new IncogniaAPIException(response.code(), values);
-      } catch (IncogniaAPIException e) {
-        throw e;
       } catch (IOException e) {
         throw new IncogniaException("failed reading response body", e);
       }

@@ -1,8 +1,6 @@
 package com.incognia;
 
-import java.io.IOException;
-
-public class IncogniaException extends IOException {
+public class IncogniaException extends Exception {
   public IncogniaException(String message) {
     super(message);
   }
