@@ -37,7 +37,7 @@ class NetworkingClientTest {
 
   @Test
   @DisplayName("should post to given url with correct request body")
-  void testDoPost_whenSuccessfulResponse() throws IOException {
+  void testDoPost_whenSuccessfulResponse() throws IncogniaException {
     mockServer.setDispatcher(
         new Dispatcher() {
           @SneakyThrows

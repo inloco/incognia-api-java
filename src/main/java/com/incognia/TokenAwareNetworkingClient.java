@@ -10,6 +10,9 @@ import java.util.Map;
 import okhttp3.OkHttpClient;
 
 public class TokenAwareNetworkingClient {
+  private static final String TOKEN_PATH = "api/v1/token";
+  private static final String AUTHORIZATION_HEADER = "Authorization";
+
   private final NetworkingClient networkingClient;
   private final String clientId;
   private final String clientSecret;
@@ -25,24 +28,24 @@ public class TokenAwareNetworkingClient {
 
   public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
     if (token == null || token.getExpiresAt().toInstant().isAfter(Instant.now().plusSeconds(10))) {
-      token = getToken();
+      // TODO(rato): handle concurrent requests
+      token = getNewToken();
     }
     return networkingClient.doPost(
         path,
         body,
         responseType,
-        Collections.singletonMap("Authorization", "Bearer " + token.getToken()));
+        Collections.singletonMap(AUTHORIZATION_HEADER, "Bearer " + token.getToken()));
   }
 
-  private DecodedJWT getToken() throws IncogniaException {
+  private DecodedJWT getNewToken() throws IncogniaException {
     Map<String, String> headers = new HashMap<>();
     headers.put("Content-Type", "application/x-www-form-urlencoded");
     String clientIdSecret = clientId + ":" + clientSecret;
     headers.put(
-        "Authorization",
+        AUTHORIZATION_HEADER,
         "Basic " + Base64.getUrlEncoder().encodeToString(clientIdSecret.getBytes()));
-    TokenResponse tokenResponse =
-        networkingClient.doPost("api/v1/token", null, TokenResponse.class, headers);
+    TokenResponse tokenResponse = networkingClient.doPost(TOKEN_PATH, TokenResponse.class, headers);
     return JWT.decode(tokenResponse.getAccessToken());
   }
 }

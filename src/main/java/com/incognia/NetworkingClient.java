@@ -35,6 +35,11 @@ public class NetworkingClient {
     return doPost(path, body, responseType, Collections.emptyMap());
   }
 
+  public <U> U doPost(String path, Class<U> responseType, Map<String, String> headers)
+      throws IncogniaException {
+    return doPost(path, null, responseType, headers);
+  }
+
   public <T, U> U doPost(String path, T body, Class<U> responseType, Map<String, String> headers)
       throws IncogniaException {
     Builder requestBuilder = new Builder().url(baseUrl.newBuilder().addPathSegments(path).build());
