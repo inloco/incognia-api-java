@@ -27,7 +27,7 @@ public class TokenAwareNetworkingClient {
   }
 
   public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
-    if (token == null || token.getExpiresAt().toInstant().isAfter(Instant.now().plusSeconds(10))) {
+    if (token == null || token.getExpiresAt().toInstant().isBefore(Instant.now().plusSeconds(10))) {
       // TODO(rato): handle concurrent requests
       token = getNewToken();
     }

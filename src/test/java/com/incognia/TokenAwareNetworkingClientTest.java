@@ -48,11 +48,12 @@ class TokenAwareNetworkingClientTest {
     String token = createToken();
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     mockServer.setDispatcher(dispatcher);
-    TestResponseBody testResponseBody =
-        client.doPost(
-            "api/v2/onboarding", new TestRequestBody("my-id", 1234), TestResponseBody.class);
-    assertThat(testResponseBody.getName()).isEqualTo("my awesome name");
-    assertThat(testResponseBody.getName()).isEqualTo("my awesome name");
+    for (int i = 0; i < 2; i++) {
+      TestResponseBody testResponseBody =
+          client.doPost(
+              "api/v2/onboarding", new TestRequestBody("my-id", 1234), TestResponseBody.class);
+      assertThat(testResponseBody.getName()).isEqualTo("my awesome name");
+    }
     assertThat(dispatcher.getTokenRequestCount()).isEqualTo(1);
   }
 
