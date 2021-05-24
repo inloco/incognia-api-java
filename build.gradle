@@ -1,6 +1,7 @@
 plugins {
     id 'java-library'
     id "com.diffplug.spotless" version "5.12.4"
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 repositories {
@@ -45,6 +46,12 @@ spotless {
     java {
         googleJavaFormat()
     }
+}
+
+shadowJar {
+    relocate 'okhttp3', 'shadow.okhttp3'
+    relocate 'com.fasterxml', 'shadow.com.fasterxml'
+    relocate 'com.auth0', 'shadow.com.auth0'
 }
 
 tasks.named('test') {
