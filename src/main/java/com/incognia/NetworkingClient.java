@@ -23,12 +23,15 @@ public class NetworkingClient {
   private final OkHttpClient httpClient;
   private final ObjectMapper objectMapper;
   private final HttpUrl baseUrl;
+  private final MapType mapType;
 
   public NetworkingClient(OkHttpClient httpClient, String baseUrl) {
     this.httpClient = httpClient;
     this.objectMapper =
         new ObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
     this.baseUrl = HttpUrl.parse(baseUrl);
+    this.mapType =
+        objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class);
   }
 
   public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
@@ -69,10 +72,6 @@ public class NetworkingClient {
         if (payload.length() == 0) {
           throw new IncogniaAPIException(response.code(), Collections.emptyMap());
         }
-        MapType mapType =
-            objectMapper
-                .getTypeFactory()
-                .constructMapType(HashMap.class, String.class, Object.class);
         Map<String, Object> values = objectMapper.readValue(payload, mapType);
         throw new IncogniaAPIException(response.code(), values);
       } catch (IOException e) {
