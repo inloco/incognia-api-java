@@ -20,4 +20,8 @@ public class IncogniaAPIException extends IncogniaException {
   public int getStatusCode() {
     return statusCode;
   }
+
+  public Map<String, Object> getResponsePayload() {
+    return responsePayload;
+  }
 }
