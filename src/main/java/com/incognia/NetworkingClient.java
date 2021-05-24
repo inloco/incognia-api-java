@@ -69,10 +69,10 @@ public class NetworkingClient {
       String payload;
       try (ResponseBody body = response.body()) {
         payload = body.string();
-        if (payload.length() == 0) {
-          throw new IncogniaAPIException(response.code(), Collections.emptyMap());
-        }
-        Map<String, Object> values = objectMapper.readValue(payload, mapType);
+        Map<String, Object> values =
+            payload.length() == 0
+                ? Collections.emptyMap()
+                : objectMapper.readValue(payload, mapType);
         throw new IncogniaAPIException(response.code(), values);
       } catch (IOException e) {
         throw new IncogniaException("failed reading response body", e);
