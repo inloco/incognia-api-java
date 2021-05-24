@@ -9,6 +9,7 @@ public class IncogniaAPI {
   private static final String BR_API_URL = "https://incognia.inloco.com.br";
   private static final String US_API_URL = "https://api.us.incognia.com";
   private static final Map<Region, String> API_URLS = buildApiUrls();
+  private static final Region DEFAULT_REGION = Region.US;
 
   private final String clientId;
   private final String clientSecret;
@@ -16,14 +17,17 @@ public class IncogniaAPI {
   private final OkHttpClient httpClient;
 
   public IncogniaAPI(String clientId, String clientSecret) {
-    this(clientId, clientSecret, Region.US);
+    this(clientId, clientSecret, DEFAULT_REGION);
   }
 
   public IncogniaAPI(String clientId, String clientSecret, Region region) {
-    this(clientId, clientSecret, API_URLS.get(region));
+    this(clientId, clientSecret, API_URLS.get(region != null ? region : DEFAULT_REGION));
   }
 
   IncogniaAPI(String clientId, String clientSecret, String apiUrl) {
+    Asserts.assertNotEmpty(clientId, "client id");
+    Asserts.assertNotEmpty(clientSecret, "client secret");
+    Asserts.assertNotEmpty(apiUrl, "api url");
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.apiUrl = apiUrl;
