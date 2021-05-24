@@ -15,12 +15,12 @@ public class IncogniaAPI {
   private final String apiUrl;
   private final OkHttpClient httpClient;
 
-  public IncogniaAPI(String clientId, String clientSecret, Region region) {
-    this(clientId, clientSecret, API_URLS.get(region));
-  }
-
   public IncogniaAPI(String clientId, String clientSecret) {
     this(clientId, clientSecret, Region.US);
+  }
+
+  public IncogniaAPI(String clientId, String clientSecret, Region region) {
+    this(clientId, clientSecret, API_URLS.get(region));
   }
 
   IncogniaAPI(String clientId, String clientSecret, String apiUrl) {
