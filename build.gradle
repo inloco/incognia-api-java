@@ -1,0 +1,52 @@
+plugins {
+    id 'java-library'
+    id "com.diffplug.spotless" version "5.12.4"
+}
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    testCompileOnly.extendsFrom compileOnly
+    testAnnotationProcessor.extendsFrom annotationProcessor
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.14'
+    annotationProcessor 'org.projectlombok:lombok:1.18.14'
+    implementation platform("com.squareup.okhttp3:okhttp-bom:4.9.1")
+    implementation "com.squareup.okhttp3:okhttp"
+    implementation "com.squareup.okhttp3:logging-interceptor"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.2"
+    implementation 'com.auth0:java-jwt:3.16.0'
+
+    testImplementation 'commons-io:commons-io:2.8.0'
+    testImplementation 'org.assertj:assertj-core:3.19.0'
+    testImplementation 'org.mockito:mockito-core:3.10.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:3.10.0'
+    testImplementation "com.squareup.okhttp3:mockwebserver"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(8)
+    }
+}
+
+compileJava {
+    sourceCompatibility '1.8'
+    targetCompatibility '1.8'
+}
+
+spotless {
+    java {
+        googleJavaFormat()
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
