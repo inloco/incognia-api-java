@@ -1,8 +1,14 @@
 plugins {
     id 'java-library'
-    id "com.diffplug.spotless" version "5.12.4"
+    id 'maven-publish'
+    id 'signing'
+    id 'com.diffplug.spotless' version '5.12.4'
     id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
+
+group = "com.incognia"
+version = "0.1.0"
 
 repositories {
     mavenCentral()
@@ -35,6 +41,8 @@ java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)
     }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 compileJava {
@@ -56,4 +64,51 @@ shadowJar {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) { publication ->
+            publication.artifactId = 'incognia-api-client'
+            project.shadow.component(publication)
+            artifact tasks.javadocJar
+            artifact tasks.sourcesJar
+            pom {
+                name = 'Incognia API Client'
+                description = "Java client library for Incognia's API"
+                url = 'https://github.com/inloco/incognia-api-java-wrapper'
+                developers {
+                    developer {
+                        id = 'racevedoo'
+                        name = 'Rafael Acevedo'
+                        email = 'rafael.acevedo@incognia.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/inloco/incognia-api-java-wrapper.git'
+                    developerConnection = 'scm:git:ssh://github.com/inloco/incognia-api-java-wrapper.git'
+                    url = 'https://github.com/inloco/incognia-api-java-wrapper'
+                }
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                    }
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        }
+    }
 }
