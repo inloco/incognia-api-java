@@ -11,10 +11,7 @@ public class IncogniaAPI {
   private static final Map<Region, String> API_URLS = buildApiUrls();
   private static final Region DEFAULT_REGION = Region.US;
 
-  private final String clientId;
-  private final String clientSecret;
-  private final String apiUrl;
-  private final OkHttpClient httpClient;
+  private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
   public IncogniaAPI(String clientId, String clientSecret) {
     this(clientId, clientSecret, DEFAULT_REGION);
@@ -28,14 +25,25 @@ public class IncogniaAPI {
     Asserts.assertNotEmpty(clientId, "client id");
     Asserts.assertNotEmpty(clientSecret, "client secret");
     Asserts.assertNotEmpty(apiUrl, "api url");
-    this.clientId = clientId;
-    this.clientSecret = clientSecret;
-    this.apiUrl = apiUrl;
     // TODO (rato): set client timeout
-    this.httpClient = new OkHttpClient.Builder().build();
+    tokenAwareNetworkingClient =
+        new TokenAwareNetworkingClient(
+            new OkHttpClient.Builder().build(), apiUrl, clientId, clientSecret);
   }
 
-  // POST onboarding
+  public SignupResponse registerSignup(String installationId, Address address)
+      throws IncogniaException {
+    Asserts.assertNotEmpty(installationId, "installation id");
+    Asserts.assertNotNull(address, "address");
+    PostSignupRequestBody postSignupRequestBody =
+        new PostSignupRequestBody(
+            installationId,
+            address.getAddressLine(),
+            address.getStructuredAddress(),
+            address.getCoordinates());
+    return tokenAwareNetworkingClient.doPost(
+        "api/v2/onboarding/signups", postSignupRequestBody, SignupResponse.class);
+  }
   // GET onboarding
   // login
   // payment

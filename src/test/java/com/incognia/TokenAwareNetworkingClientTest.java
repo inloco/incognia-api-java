@@ -3,19 +3,10 @@ package com.incognia;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.incognia.fixtures.TestRequestBody;
 import com.incognia.fixtures.TestResponseBody;
-import com.incognia.fixtures.TokenAwareDispatcher;
+import com.incognia.fixtures.TokenCreationFixture;
 import java.io.IOException;
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.interfaces.RSAPublicKey;
-import java.time.Instant;
-import java.util.Date;
-import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -45,7 +36,7 @@ class TokenAwareNetworkingClientTest {
   @Test
   @DisplayName("should call the api with the same valid token")
   void testDoPost_whenNoTokenExistsYetAndCredentialsAreValid() throws IncogniaException {
-    String token = createToken();
+    String token = TokenCreationFixture.createToken();
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     mockServer.setDispatcher(dispatcher);
     for (int i = 0; i < 2; i++) {
@@ -60,7 +51,7 @@ class TokenAwareNetworkingClientTest {
   @Test
   @DisplayName("should get a 401 error")
   void testDoPost_whenNoTokenExistsYetAndCredentialsAreInvalid() {
-    String token = createToken();
+    String token = TokenCreationFixture.createToken();
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, "invalid", CLIENT_SECRET);
     mockServer.setDispatcher(dispatcher);
     assertThatThrownBy(
@@ -76,19 +67,5 @@ class TokenAwareNetworkingClientTest {
                     .extracting(IncogniaAPIException.class::cast)
                     .extracting(IncogniaAPIException::getStatusCode)
                     .isEqualTo(401));
-  }
-
-  @SneakyThrows
-  private String createToken() {
-    KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-    keyGen.initialize(1024);
-    KeyPair keyPair = keyGen.generateKeyPair();
-    RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-    RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-    Algorithm algorithm = Algorithm.RSA256(publicKey, privateKey);
-    return JWT.create()
-        .withIssuer("incognia")
-        .withExpiresAt(Date.from(Instant.now().plusSeconds(100)))
-        .sign(algorithm);
   }
 }
