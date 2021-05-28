@@ -20,7 +20,7 @@ configurations {
 }
 
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.14'
+    compileOnly 'org.projectlombok:lombok:1.18.20'
     annotationProcessor 'org.projectlombok:lombok:1.18.14'
     implementation platform("com.squareup.okhttp3:okhttp-bom:4.9.1")
     implementation "com.squareup.okhttp3:okhttp"
