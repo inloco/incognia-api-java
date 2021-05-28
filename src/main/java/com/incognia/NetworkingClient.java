@@ -2,7 +2,6 @@ package com.incognia;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.type.MapType;
 import java.io.IOException;
 import java.util.Collections;
@@ -27,8 +26,7 @@ public class NetworkingClient {
 
   public NetworkingClient(OkHttpClient httpClient, String baseUrl) {
     this.httpClient = httpClient;
-    this.objectMapper =
-        new ObjectMapper().setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+    this.objectMapper = ObjectMapperFactory.OBJECT_MAPPER;
     this.baseUrl = HttpUrl.parse(baseUrl);
     this.mapType =
         objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class);
