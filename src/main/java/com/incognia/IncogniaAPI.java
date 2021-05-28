@@ -2,9 +2,12 @@ package com.incognia;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
+import org.jetbrains.annotations.NotNull;
 
 public class IncogniaAPI {
   private static final String BR_API_URL = "https://incognia.inloco.com.br";
@@ -51,8 +54,78 @@ public class IncogniaAPI {
     String path = String.format("api/v2/onboarding/signups/%s", signupId);
     return tokenAwareNetworkingClient.doGet(path, SignupAssessment.class);
   }
-  // login
-  // payment
+
+  public void registerLogin(String installationId, String accountId) throws IncogniaException {
+    registerLogin(installationId, accountId, null);
+  }
+
+  public TransactionAssessment registerLogin(
+      String installationId, String accountId, String externalId) throws IncogniaException {
+    Asserts.assertNotEmpty(installationId, "installation id");
+    Asserts.assertNotEmpty(accountId, "account id");
+    PostTransactionRequestBody requestBody =
+        PostTransactionRequestBody.builder()
+            .installationId(installationId)
+            .accountId(accountId)
+            .externalId(externalId)
+            .type("login")
+            .build();
+    return tokenAwareNetworkingClient.doPost(
+        "api/v2/authentication/transactions", requestBody, TransactionAssessment.class);
+  }
+
+  public TransactionAssessment registerPayment(String installationId, String accountId)
+      throws IncogniaException {
+    return registerPayment(installationId, accountId, null, Collections.emptyMap());
+  }
+
+  public TransactionAssessment registerPayment(
+      String installationId, String accountId, String externalId) throws IncogniaException {
+    return registerPayment(installationId, accountId, externalId, Collections.emptyMap());
+  }
+
+  public TransactionAssessment registerPayment(
+      String installationId, String accountId, Map<AddressType, Address> addresses)
+      throws IncogniaException {
+    return registerPayment(installationId, accountId, null, addresses);
+  }
+
+  public TransactionAssessment registerPayment(
+      String installationId,
+      String accountId,
+      String externalId,
+      Map<AddressType, Address> addresses)
+      throws IncogniaException {
+    Asserts.assertNotEmpty(installationId, "installation id");
+    Asserts.assertNotEmpty(accountId, "account id");
+    List<TransactionAddress> transactionAddresses = addressMapToTransactionAddresses(addresses);
+    PostTransactionRequestBody requestBody =
+        PostTransactionRequestBody.builder()
+            .installationId(installationId)
+            .accountId(accountId)
+            .externalId(externalId)
+            .type("payment")
+            .addresses(transactionAddresses)
+            .build();
+    return tokenAwareNetworkingClient.doPost(
+        "api/v2/authentication/transactions", requestBody, TransactionAssessment.class);
+  }
+
+  @NotNull
+  private List<TransactionAddress> addressMapToTransactionAddresses(
+      Map<AddressType, Address> addresses) {
+    return addresses.entrySet().stream()
+        .map(
+            entry -> {
+              Address address = entry.getValue();
+              return new TransactionAddress(
+                  entry.getKey().name().toLowerCase(),
+                  address.getAddressLine(),
+                  address.getStructuredAddress(),
+                  address.getCoordinates());
+            })
+        .collect(Collectors.toList());
+  }
   // feedback
 
   private static Map<Region, String> buildApiUrls() {
