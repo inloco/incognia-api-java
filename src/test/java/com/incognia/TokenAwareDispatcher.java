@@ -3,12 +3,9 @@ package com.incognia;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.incognia.fixtures.ResourceUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
-import java.util.stream.Collectors;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -51,7 +48,7 @@ public class TokenAwareDispatcher extends Dispatcher {
           objectMapper.readValue(request.getBody().inputStream(), PostSignupRequestBody.class);
       assertThat(postSignupRequestBody.getInstallationId()).isEqualTo(expectedInstallationId);
       assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
-      String response = getResourceFileAsString("post_onboarding_response.json");
+      String response = ResourceUtils.getResourceFileAsString("post_onboarding_response.json");
       return new MockResponse().setResponseCode(200).setBody(response);
     }
     if ("/api/v1/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
@@ -82,17 +79,5 @@ public class TokenAwareDispatcher extends Dispatcher {
                   + "\",\"expires_in\": 100,\"token_type\": \"Bearer\"}");
     }
     return new MockResponse().setResponseCode(401);
-  }
-
-  @SneakyThrows
-  static String getResourceFileAsString(String fileName) {
-    ClassLoader classLoader = ClassLoader.getSystemClassLoader();
-    try (InputStream is = classLoader.getResourceAsStream(fileName)) {
-      if (is == null) return null;
-      try (InputStreamReader isr = new InputStreamReader(is);
-          BufferedReader reader = new BufferedReader(isr)) {
-        return reader.lines().collect(Collectors.joining(System.lineSeparator()));
-      }
-    }
   }
 }
