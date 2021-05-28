@@ -76,7 +76,7 @@ publishing {
             pom {
                 name = 'Incognia API Client'
                 description = "Java client library for Incognia's API"
-                url = 'https://github.com/inloco/incognia-api-java-wrapper'
+                url = 'https://github.com/inloco/incognia-api-java'
                 developers {
                     developer {
                         id = 'racevedoo'
@@ -85,9 +85,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git:git://github.com/inloco/incognia-api-java-wrapper.git'
-                    developerConnection = 'scm:git:ssh://github.com/inloco/incognia-api-java-wrapper.git'
-                    url = 'https://github.com/inloco/incognia-api-java-wrapper'
+                    connection = 'scm:git:git://github.com/inloco/incognia-api-java.git'
+                    developerConnection = 'scm:git:ssh://github.com/inloco/incognia-api-java.git'
+                    url = 'https://github.com/inloco/incognia-api-java'
                 }
                 licenses {
                     license {

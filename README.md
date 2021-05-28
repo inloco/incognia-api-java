@@ -1,1 +1,1 @@
-# incognia-api-java-wrapper
+# incognia-api-java
