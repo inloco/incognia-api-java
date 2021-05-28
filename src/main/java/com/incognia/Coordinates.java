@@ -1,9 +1,10 @@
 package com.incognia;
 
+import lombok.NonNull;
 import lombok.Value;
 
 @Value
 public class Coordinates {
-  double lat;
-  double lng;
+  @NonNull Double lat;
+  @NonNull Double lng;
 }
