@@ -42,19 +42,25 @@ public class TokenAwareDispatcher extends Dispatcher {
     }
     if ("/api/v2/onboarding/signups".equals(request.getPath())
         && "POST".equals(request.getMethod())) {
-      assertThat(request.getHeader("Content-Type")).contains("application/json");
-      assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
-      PostSignupRequestBody postSignupRequestBody =
-          objectMapper.readValue(request.getBody().inputStream(), PostSignupRequestBody.class);
-      assertThat(postSignupRequestBody.getInstallationId()).isEqualTo(expectedInstallationId);
-      assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
-      String response = ResourceUtils.getResourceFileAsString("post_onboarding_response.json");
-      return new MockResponse().setResponseCode(200).setBody(response);
+      return handlePostSignup(request);
     }
     if ("/api/v1/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handleTokenRequest(request);
     }
     return new MockResponse().setResponseCode(404);
+  }
+
+  @NotNull
+  private MockResponse handlePostSignup(@NotNull RecordedRequest request)
+      throws java.io.IOException {
+    assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
+    PostSignupRequestBody postSignupRequestBody =
+        objectMapper.readValue(request.getBody().inputStream(), PostSignupRequestBody.class);
+    assertThat(postSignupRequestBody.getInstallationId()).isEqualTo(expectedInstallationId);
+    assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
+    String response = ResourceUtils.getResourceFileAsString("post_onboarding_response.json");
+    return new MockResponse().setResponseCode(200).setBody(response);
   }
 
   @NotNull
