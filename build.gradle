@@ -25,7 +25,7 @@ dependencies {
     implementation platform("com.squareup.okhttp3:okhttp-bom:4.9.1")
     implementation "com.squareup.okhttp3:okhttp"
     implementation "com.squareup.okhttp3:logging-interceptor"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.2"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.12.3"
     implementation 'com.auth0:java-jwt:3.16.0'
 
     testImplementation 'commons-io:commons-io:2.8.0'
