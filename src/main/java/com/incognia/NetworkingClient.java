@@ -62,6 +62,22 @@ public class NetworkingClient {
     }
   }
 
+  public <T> T doGet(String path, Class<T> responseType, Map<String, String> headers)
+      throws IncogniaException {
+    Request request =
+        new Builder()
+            .url(baseUrl.newBuilder().addPathSegments(path).build())
+            .get()
+            .headers(Headers.of(headers))
+            .build();
+    try (Response response = httpClient.newCall(request).execute()) {
+      return parseResponse(response, responseType);
+    } catch (IOException e) {
+      // TODO(rato): handle timeout
+      throw new IncogniaException("network call failed", e);
+    }
+  }
+
   private <U> U parseResponse(Response response, Class<U> responseType) throws IncogniaException {
     if (!response.isSuccessful()) {
       String payload;
