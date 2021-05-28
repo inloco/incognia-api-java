@@ -45,8 +45,8 @@ class IncogniaAPITest {
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedInstallationId(installationId);
     mockServer.setDispatcher(dispatcher);
-    SignupResponse signupResponse = client.registerSignup(installationId, address);
-    assertThat(signupResponse)
+    SignupAssessment signupAssessment = client.registerSignup(installationId, address);
+    assertThat(signupAssessment)
         .extracting("id", "requestId", "riskAssessment")
         .containsExactly(
             UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
@@ -71,7 +71,7 @@ class IncogniaAPITest {
     expectedEvidence.put("location_services", locationServices);
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
-    assertThat(signupResponse.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+    assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
   }
 
   @Test

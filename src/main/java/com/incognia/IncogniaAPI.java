@@ -31,7 +31,7 @@ public class IncogniaAPI {
             new OkHttpClient.Builder().build(), apiUrl, clientId, clientSecret);
   }
 
-  public SignupResponse registerSignup(String installationId, Address address)
+  public SignupAssessment registerSignup(String installationId, Address address)
       throws IncogniaException {
     Asserts.assertNotEmpty(installationId, "installation id");
     Asserts.assertNotNull(address, "address");
@@ -42,7 +42,7 @@ public class IncogniaAPI {
             address.getStructuredAddress(),
             address.getCoordinates());
     return tokenAwareNetworkingClient.doPost(
-        "api/v2/onboarding/signups", postSignupRequestBody, SignupResponse.class);
+        "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
   }
   // GET onboarding
   // login

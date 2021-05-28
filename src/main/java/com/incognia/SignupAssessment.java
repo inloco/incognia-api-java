@@ -5,7 +5,7 @@ import java.util.UUID;
 import lombok.Value;
 
 @Value
-public class SignupResponse {
+public class SignupAssessment {
   UUID id;
   UUID requestId;
   Assessment riskAssessment;
