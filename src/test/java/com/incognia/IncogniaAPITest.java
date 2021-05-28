@@ -86,6 +86,15 @@ class IncogniaAPITest {
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
+  void testRegisterSignup_whenNullInstallationId() {
+    assertThatThrownBy(() -> client.registerSignup(null, AddressFixture.ADDRESS_ADDRESS_LINE))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'installation id' cannot be empty");
+  }
+
+  @Test
+  @DisplayName("should throw illegal argument exception with correct message")
+  @SneakyThrows
   void testRegisterSignup_whenNullAddress() {
     assertThatThrownBy(() -> client.registerSignup("installation-id", null))
         .isInstanceOf(IllegalArgumentException.class)
