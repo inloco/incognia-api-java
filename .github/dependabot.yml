@@ -1,0 +1,12 @@
+version: 2
+updates:
+- package-ecosystem: gradle
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "03:00"
+  open-pull-requests-limit: 3
+  assignees:
+      - "racevedoo"
+  reviewers:
+      - "racevedoo"
