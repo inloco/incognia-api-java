@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.incognia.fixtures.AddressFixture;
 import com.incognia.fixtures.TokenCreationFixture;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -212,6 +213,39 @@ class IncogniaAPITest {
             externalId,
             Collections.singletonMap(AddressType.SHIPPING, address));
     assertTransactionAssessment(transactionAssessment);
+  }
+
+  @Test
+  @DisplayName("should be successful")
+  @SneakyThrows
+  void testRegisterFeedback_whenDataIsValid() {
+    String token = TokenCreationFixture.createToken();
+    String installationId = "installation-id";
+    String accountId = "account-id";
+    String externalId = "external-id";
+    String signupId = UUID.randomUUID().toString();
+    Instant timestamp = Instant.now();
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedFeedbackRequestBody(
+        PostFeedbackRequestBody.builder()
+            .installationId(installationId)
+            .externalId(externalId)
+            .signupId(signupId)
+            .accountId(accountId)
+            .event(FeedbackEvent.ACCOUNT_TAKEOVER)
+            .timestamp(timestamp.toEpochMilli())
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    client.registerFeedback(
+        FeedbackEvent.ACCOUNT_TAKEOVER,
+        timestamp,
+        FeedbackIdentifiers.builder()
+            .installationId(installationId)
+            .accountId(accountId)
+            .externalId(externalId)
+            .signupId(signupId)
+            .build());
   }
 
   @Test

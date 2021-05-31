@@ -24,6 +24,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedAddressLine;
   @Setter private UUID expectedSignupId;
   @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
+  @Setter private PostFeedbackRequestBody expectedFeedbackRequestBody;
   @Getter private int tokenRequestCount;
 
   public TokenAwareDispatcher(String token, String clientId, String clientSecret) {
@@ -59,10 +60,23 @@ public class TokenAwareDispatcher extends Dispatcher {
         && "POST".equals(request.getMethod())) {
       return handlePostTransaction(request);
     }
+    if ("/api/v2/feedbacks".equals(request.getPath()) && "POST".equals(request.getMethod())) {
+      return handlePostFeedback(request);
+    }
     if ("/api/v1/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handleTokenRequest(request);
     }
     return new MockResponse().setResponseCode(404);
+  }
+
+  @SneakyThrows
+  private MockResponse handlePostFeedback(RecordedRequest request) {
+    assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
+    PostFeedbackRequestBody postFeedbackRequestBody =
+        objectMapper.readValue(request.getBody().inputStream(), PostFeedbackRequestBody.class);
+    assertThat(postFeedbackRequestBody).isEqualTo(expectedFeedbackRequestBody);
+    return new MockResponse().setResponseCode(200);
   }
 
   @SneakyThrows

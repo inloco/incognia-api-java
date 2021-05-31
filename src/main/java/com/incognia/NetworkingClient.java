@@ -16,6 +16,7 @@ import okhttp3.Request.Builder;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
+import org.jetbrains.annotations.NotNull;
 
 public class NetworkingClient {
   private static final MediaType MEDIA_TYPE_JSON = MediaType.get("application/json; charset=utf-8");
@@ -43,19 +44,20 @@ public class NetworkingClient {
 
   public <T, U> U doPost(String path, T body, Class<U> responseType, Map<String, String> headers)
       throws IncogniaException {
-    Builder requestBuilder = new Builder().url(baseUrl.newBuilder().addPathSegments(path).build());
-    RequestBody requestBody;
-    try {
-      requestBody =
-          body == null
-              ? RequestBody.create("", null)
-              : RequestBody.create(objectMapper.writeValueAsBytes(body), MEDIA_TYPE_JSON);
-    } catch (JsonProcessingException e) {
-      throw new IncogniaException("failed writing request body", e);
-    }
-    Request request = requestBuilder.post(requestBody).headers(Headers.of(headers)).build();
+    Request request = buildPostRequest(path, body, headers);
     try (Response response = httpClient.newCall(request).execute()) {
       return parseResponse(response, responseType);
+    } catch (IOException e) {
+      // TODO(rato): handle timeout
+      throw new IncogniaException("network call failed", e);
+    }
+  }
+
+  public <T> void doPost(String path, T body, Map<String, String> headers)
+      throws IncogniaException {
+    Request request = buildPostRequest(path, body, headers);
+    try {
+      httpClient.newCall(request).execute().close();
     } catch (IOException e) {
       // TODO(rato): handle timeout
       throw new IncogniaException("network call failed", e);
@@ -76,6 +78,22 @@ public class NetworkingClient {
       // TODO(rato): handle timeout
       throw new IncogniaException("network call failed", e);
     }
+  }
+
+  @NotNull
+  private <T> Request buildPostRequest(String path, T body, Map<String, String> headers)
+      throws IncogniaException {
+    Builder requestBuilder = new Builder().url(baseUrl.newBuilder().addPathSegments(path).build());
+    RequestBody requestBody;
+    try {
+      requestBody =
+          body == null
+              ? RequestBody.create("", null)
+              : RequestBody.create(objectMapper.writeValueAsBytes(body), MEDIA_TYPE_JSON);
+    } catch (JsonProcessingException e) {
+      throw new IncogniaException("failed writing request body", e);
+    }
+    return requestBuilder.post(requestBody).headers(Headers.of(headers)).build();
   }
 
   private <U> U parseResponse(Response response, Class<U> responseType) throws IncogniaException {

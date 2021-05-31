@@ -37,6 +37,12 @@ public class TokenAwareNetworkingClient {
         Collections.singletonMap(AUTHORIZATION_HEADER, "Bearer " + token.getToken()));
   }
 
+  public <T> void doPost(String path, T body) throws IncogniaException {
+    refreshTokenIfNeeded();
+    networkingClient.doPost(
+        path, body, Collections.singletonMap(AUTHORIZATION_HEADER, "Bearer " + token.getToken()));
+  }
+
   public <T> T doGet(String path, Class<T> responseType) throws IncogniaException {
     refreshTokenIfNeeded();
     return networkingClient.doGet(
