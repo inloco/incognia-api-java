@@ -29,17 +29,29 @@ public class TokenAwareNetworkingClient {
   }
 
   public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
+    refreshTokenIfNeeded();
+    return networkingClient.doPost(
+        path,
+        body,
+        responseType,
+        Collections.singletonMap(AUTHORIZATION_HEADER, "Bearer " + token.getToken()));
+  }
+
+  public <T> T doGet(String path, Class<T> responseType) throws IncogniaException {
+    refreshTokenIfNeeded();
+    return networkingClient.doGet(
+        path,
+        responseType,
+        Collections.singletonMap(AUTHORIZATION_HEADER, "Bearer " + token.getToken()));
+  }
+
+  private void refreshTokenIfNeeded() throws IncogniaException {
     if (token == null
         || Instant.now().until(token.getExpiresAt().toInstant(), ChronoUnit.SECONDS)
             <= TOKEN_REFRESH_BEFORE_SECONDS) {
       // TODO(rato): handle concurrent requests
       token = getNewToken();
     }
-    return networkingClient.doPost(
-        path,
-        body,
-        responseType,
-        Collections.singletonMap(AUTHORIZATION_HEADER, "Bearer " + token.getToken()));
   }
 
   private DecodedJWT getNewToken() throws IncogniaException {

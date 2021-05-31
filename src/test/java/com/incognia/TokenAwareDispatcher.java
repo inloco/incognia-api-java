@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.incognia.fixtures.ResourceUtils;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -21,6 +22,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   private final ObjectMapper objectMapper;
   @Setter private String expectedInstallationId;
   @Setter private String expectedAddressLine;
+  @Setter private UUID expectedSignupId;
   @Getter private int tokenRequestCount;
 
   public TokenAwareDispatcher(String token, String clientId, String clientSecret) {
@@ -40,14 +42,29 @@ public class TokenAwareDispatcher extends Dispatcher {
       assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
       return new MockResponse().setResponseCode(200).setBody("{\"name\": \"my awesome name\"}");
     }
+    if ("/api/v2/onboarding".equals(request.getPath()) && "GET".equals(request.getMethod())) {
+      assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
+      return new MockResponse().setResponseCode(200).setBody("{\"name\": \"my awesome name\"}");
+    }
     if ("/api/v2/onboarding/signups".equals(request.getPath())
         && "POST".equals(request.getMethod())) {
       return handlePostSignup(request);
+    }
+    if (("/api/v2/onboarding/signups/" + expectedSignupId).equals(request.getPath())
+        && "GET".equals(request.getMethod())) {
+      return handleGetSignup(request);
     }
     if ("/api/v1/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handleTokenRequest(request);
     }
     return new MockResponse().setResponseCode(404);
+  }
+
+  @NotNull
+  private MockResponse handleGetSignup(@NotNull RecordedRequest request) {
+    assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
+    String response = ResourceUtils.getResourceFileAsString("get_onboarding_response.json");
+    return new MockResponse().setResponseCode(200).setBody(response);
   }
 
   @NotNull

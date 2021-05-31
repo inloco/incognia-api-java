@@ -100,4 +100,42 @@ class IncogniaAPITest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'address' cannot be null");
   }
+
+  @Test
+  @DisplayName("should return the expected signup response")
+  @SneakyThrows
+  void testGetSignupAssessment_whenDataIsValid() {
+    String token = TokenCreationFixture.createToken();
+    UUID signupId = UUID.randomUUID();
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedSignupId(signupId);
+    mockServer.setDispatcher(dispatcher);
+    SignupAssessment signupAssessment = client.getSignupAssessment(signupId);
+    assertThat(signupAssessment)
+        .extracting("id", "requestId", "riskAssessment")
+        .containsExactly(
+            UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
+            UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
+            Assessment.LOW_RISK);
+    Map<String, Object> locationServices = new HashMap<>();
+    locationServices.put("location_permission_enabled", true);
+    locationServices.put("location_sensors_enabled", true);
+    Map<String, Object> deviceIntegrity = new HashMap<>();
+    deviceIntegrity.put("probable_root", false);
+    deviceIntegrity.put("emulator", false);
+    deviceIntegrity.put("gps_spoofing", false);
+    deviceIntegrity.put("from_official_store", true);
+
+    Map<String, Object> expectedEvidence = new HashMap<>();
+    expectedEvidence.put("device_model", "Moto Z2 Play");
+    expectedEvidence.put("geocode_quality", "good");
+    expectedEvidence.put("address_quality", "good");
+    expectedEvidence.put("address_match", "street");
+    expectedEvidence.put("location_events_near_address", 38);
+    expectedEvidence.put("location_events_quantity", 288);
+    expectedEvidence.put("location_services", locationServices);
+    expectedEvidence.put("device_integrity", deviceIntegrity);
+
+    assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+  }
 }

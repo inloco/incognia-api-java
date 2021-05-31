@@ -3,6 +3,7 @@ package com.incognia;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import okhttp3.OkHttpClient;
 
 public class IncogniaAPI {
@@ -44,7 +45,12 @@ public class IncogniaAPI {
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
   }
-  // GET onboarding
+
+  public SignupAssessment getSignupAssessment(UUID signupId) throws IncogniaException {
+    Asserts.assertNotNull(signupId, "signup id");
+    String path = String.format("api/v2/onboarding/signups/%s", signupId);
+    return tokenAwareNetworkingClient.doGet(path, SignupAssessment.class);
+  }
   // login
   // payment
   // feedback
