@@ -23,6 +23,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedInstallationId;
   @Setter private String expectedAddressLine;
   @Setter private UUID expectedSignupId;
+  @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
   @Getter private int tokenRequestCount;
 
   public TokenAwareDispatcher(String token, String clientId, String clientSecret) {
@@ -54,10 +55,25 @@ public class TokenAwareDispatcher extends Dispatcher {
         && "GET".equals(request.getMethod())) {
       return handleGetSignup(request);
     }
+    if ("/api/v2/authentication/transactions".equals(request.getPath())
+        && "POST".equals(request.getMethod())) {
+      return handlePostTransaction(request);
+    }
     if ("/api/v1/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handleTokenRequest(request);
     }
     return new MockResponse().setResponseCode(404);
+  }
+
+  @SneakyThrows
+  private MockResponse handlePostTransaction(RecordedRequest request) {
+    assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
+    PostTransactionRequestBody postTransactionRequestBody =
+        objectMapper.readValue(request.getBody().inputStream(), PostTransactionRequestBody.class);
+    assertThat(postTransactionRequestBody).isEqualTo(expectedTransactionRequestBody);
+    String response = ResourceUtils.getResourceFileAsString("post_transaction_response.json");
+    return new MockResponse().setResponseCode(200).setBody(response);
   }
 
   @NotNull
