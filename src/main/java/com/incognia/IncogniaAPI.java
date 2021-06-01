@@ -1,5 +1,6 @@
 package com.incognia;
 
+import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -109,6 +110,23 @@ public class IncogniaAPI {
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/authentication/transactions", requestBody, TransactionAssessment.class);
+  }
+
+  public void registerFeedback(
+      FeedbackEvent feedbackEvent, Instant timestamp, FeedbackIdentifiers identifiers)
+      throws IncogniaException {
+    PostFeedbackRequestBody requestBody =
+        PostFeedbackRequestBody.builder()
+            .event(feedbackEvent)
+            .timestamp(timestamp.toEpochMilli())
+            .installationId(identifiers.getInstallationId())
+            .accountId(identifiers.getAccountId())
+            .loginId(identifiers.getLoginId())
+            .paymentId(identifiers.getPaymentId())
+            .signupId(identifiers.getSignupId())
+            .externalId(identifiers.getExternalId())
+            .build();
+    tokenAwareNetworkingClient.doPost("api/v2/feedbacks", requestBody);
   }
 
   @NotNull
