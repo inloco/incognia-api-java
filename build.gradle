@@ -19,9 +19,13 @@ configurations {
     testAnnotationProcessor.extendsFrom annotationProcessor
 }
 
+ext {
+    lombokVersion = '1.18.20'
+}
+
 dependencies {
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-    annotationProcessor 'org.projectlombok:lombok:1.18.14'
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     implementation platform("com.squareup.okhttp3:okhttp-bom:4.9.1")
     implementation "com.squareup.okhttp3:okhttp"
     implementation "com.squareup.okhttp3:logging-interceptor"
