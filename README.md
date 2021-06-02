@@ -1,7 +1,8 @@
 # Incognia API Java Client
 ![test workflow](https://github.com/inloco/incognia-api-java/actions/workflows/test.yaml/badge.svg)
+![maven central](https://img.shields.io/maven-central/v/com.incognia/incognia-api-client)
 
-java lightweight client library for [Incognia APIs](https://dash.incognia.com/api-reference).
+Java lightweight client library for [Incognia APIs](https://dash.incognia.com/api-reference).
 
 ## Installation
 
