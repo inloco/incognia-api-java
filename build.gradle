@@ -32,7 +32,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:2.12.3"
     implementation 'com.auth0:java-jwt:3.16.0'
 
-    testImplementation 'commons-io:commons-io:2.9.0'
+    testImplementation 'commons-io:commons-io:2.10.0'
     testImplementation 'org.assertj:assertj-core:3.19.0'
     testImplementation 'org.mockito:mockito-core:3.11.0'
     testImplementation 'org.mockito:mockito-junit-jupiter:3.11.1'
