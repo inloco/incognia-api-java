@@ -20,6 +20,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class NetworkingClient {
   private static final MediaType MEDIA_TYPE_JSON = MediaType.get("application/json; charset=utf-8");
+  private static final MediaType MEDIA_TYPE_FORM_URLENCODED =
+      MediaType.get("application/x-www-form-urlencoded; charset=utf-8");
   private final OkHttpClient httpClient;
   private final ObjectMapper objectMapper;
   private final HttpUrl baseUrl;
@@ -37,14 +39,27 @@ public class NetworkingClient {
     return doPost(path, body, responseType, Collections.emptyMap());
   }
 
-  public <U> U doPost(String path, Class<U> responseType, Map<String, String> headers)
-      throws IncogniaException {
-    return doPost(path, null, responseType, headers);
-  }
-
   public <T, U> U doPost(String path, T body, Class<U> responseType, Map<String, String> headers)
       throws IncogniaException {
     Request request = buildPostRequest(path, body, headers);
+    try (Response response = httpClient.newCall(request).execute()) {
+      return parseResponse(response, responseType);
+    } catch (IOException e) {
+      // TODO(rato): handle timeout
+      throw new IncogniaException("network call failed", e);
+    }
+  }
+
+  public <T> T doPostFormUrlEncoded(
+      String path, String body, Class<T> responseType, Map<String, String> headers)
+      throws IncogniaException {
+    RequestBody requestBody = RequestBody.create(body, MEDIA_TYPE_FORM_URLENCODED);
+    Request request =
+        new Builder()
+            .url(baseUrl.newBuilder().addPathSegments(path).build())
+            .post(requestBody)
+            .headers(Headers.of(headers))
+            .build();
     try (Response response = httpClient.newCall(request).execute()) {
       return parseResponse(response, responseType);
     } catch (IOException e) {

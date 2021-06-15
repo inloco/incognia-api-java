@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
+import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class TokenAwareDispatcher extends Dispatcher {
@@ -110,12 +111,14 @@ public class TokenAwareDispatcher extends Dispatcher {
     return new MockResponse().setResponseCode(200).setBody(response);
   }
 
-  @NotNull
+  @SneakyThrows
   private MockResponse handleTokenRequest(@NotNull RecordedRequest request) {
     tokenRequestCount++;
     String authorizationHeader = request.getHeader("Authorization");
     assertThat(authorizationHeader).startsWith("Basic");
     assertThat(request.getHeader("Content-Type")).contains("application/x-www-form-urlencoded");
+    String body = IOUtils.toString(request.getBody().inputStream(), StandardCharsets.UTF_8);
+    assertThat(body).isEqualTo("grant_type=client_credentials");
     String[] idAndSecret =
         new String(
                 Base64.getUrlDecoder().decode(authorizationHeader.split(" ")[1]),
