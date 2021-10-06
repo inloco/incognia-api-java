@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Automatically handles token generation and renewal.
  */
 public class IncogniaAPI {
-  private static final String BR_API_URL = "https://incognia.inloco.com.br";
+  private static final String BR_API_URL = "https://api.br.incognia.com";
   private static final String US_API_URL = "https://api.us.incognia.com";
   private static final Map<Region, String> API_URLS = buildApiUrls();
   private static final Region DEFAULT_REGION = Region.US;
