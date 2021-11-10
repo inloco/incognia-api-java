@@ -138,7 +138,7 @@ try {
      Map<AddressType, Address> addresses = Map.of(
          AddressType.SHIPPING, address
          AddressType.BILLING, address);
-     TransactionAssessment assessment = api.registerPayment("installation-id", "account-id", "external-id");
+     TransactionAssessment assessment = api.registerPayment("installation-id", "account-id", "external-id", addresses);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
