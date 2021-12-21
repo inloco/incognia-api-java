@@ -9,4 +9,5 @@ public class TransactionAssessment {
   UUID id;
   Assessment riskAssessment;
   Map<String, Object> evidence;
+  String deviceId;
 }

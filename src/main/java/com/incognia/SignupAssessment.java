@@ -10,4 +10,5 @@ public class SignupAssessment {
   UUID requestId;
   Assessment riskAssessment;
   Map<String, Object> evidence;
+  String deviceId;
 }

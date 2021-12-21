@@ -50,11 +50,12 @@ class IncogniaAPITest {
     mockServer.setDispatcher(dispatcher);
     SignupAssessment signupAssessment = client.registerSignup(installationId, address);
     assertThat(signupAssessment)
-        .extracting("id", "requestId", "riskAssessment")
+        .extracting("id", "requestId", "riskAssessment", "deviceId")
         .containsExactly(
             UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
             UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
-            Assessment.LOW_RISK);
+            Assessment.LOW_RISK,
+            "1df6d999-556d-42c3-8c63-357e5d08d95b");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
@@ -115,11 +116,12 @@ class IncogniaAPITest {
     mockServer.setDispatcher(dispatcher);
     SignupAssessment signupAssessment = client.getSignupAssessment(signupId);
     assertThat(signupAssessment)
-        .extracting("id", "requestId", "riskAssessment")
+        .extracting("id", "requestId", "riskAssessment", "deviceId")
         .containsExactly(
             UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
             UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
-            Assessment.LOW_RISK);
+            Assessment.LOW_RISK,
+            "1df6d999-556d-42c3-8c63-357e5d08d95b");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
@@ -298,9 +300,11 @@ class IncogniaAPITest {
 
   private void assertTransactionAssessment(TransactionAssessment transactionAssessment) {
     assertThat(transactionAssessment)
-        .extracting("id", "riskAssessment")
+        .extracting("id", "riskAssessment", "deviceId")
         .containsExactly(
-            UUID.fromString("dfe1f2ff-8f0d-4ce8-aed1-af8435143044"), Assessment.LOW_RISK);
+            UUID.fromString("dfe1f2ff-8f0d-4ce8-aed1-af8435143044"),
+            Assessment.LOW_RISK,
+            "1df6d999-556d-42c3-8c63-357e5d08d95b");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
