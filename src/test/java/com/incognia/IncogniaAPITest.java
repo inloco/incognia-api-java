@@ -163,8 +163,31 @@ class IncogniaAPITest {
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment =
-        client.registerLogin(installationId, accountId, externalId);
+        client.registerLogin(installationId, accountId, externalId, true);
     assertTransactionAssessment(transactionAssessment);
+  }
+
+  @Test
+  @DisplayName("should return an empty response")
+  @SneakyThrows
+  void testRegisterLogin_whenEvalIsFalse() {
+    String token = TokenCreationFixture.createToken();
+    String installationId = "installation-id";
+    String accountId = "account-id";
+    String externalId = "external-id";
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedTransactionRequestBody(
+        PostTransactionRequestBody.builder()
+            .installationId(installationId)
+            .externalId(externalId)
+            .accountId(accountId)
+            .type("login")
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    TransactionAssessment transactionAssessment =
+        client.registerLogin(installationId, accountId, externalId, false);
+    assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());
   }
 
   @Test
@@ -213,8 +236,62 @@ class IncogniaAPITest {
             installationId,
             accountId,
             externalId,
-            Collections.singletonMap(AddressType.SHIPPING, address));
+            Collections.singletonMap(AddressType.SHIPPING, address),
+            true);
     assertTransactionAssessment(transactionAssessment);
+  }
+
+  @Test
+  @DisplayName("should return and empty response")
+  @SneakyThrows
+  void testRegisterPayment_whenEvalIsFalse() {
+    String token = TokenCreationFixture.createToken();
+    String installationId = "installation-id";
+    String accountId = "account-id";
+    String externalId = "external-id";
+    Address address =
+        Address.builder()
+            .structuredAddress(
+                StructuredAddress.builder()
+                    .countryCode("US")
+                    .countryName("United States of America")
+                    .locale("en-US")
+                    .state("NY")
+                    .city("New York City")
+                    .borough("Manhattan")
+                    .neighborhood("Midtown")
+                    .street("W 34th St.")
+                    .number("20")
+                    .complements("Floor 2")
+                    .postalCode("10001")
+                    .build())
+            .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+            .build();
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+
+    List<TransactionAddress> transactionAddresses =
+        Collections.singletonList(
+            new TransactionAddress(
+                "shipping", null, address.getStructuredAddress(), address.getCoordinates()));
+    dispatcher.setExpectedTransactionRequestBody(
+        PostTransactionRequestBody.builder()
+            .installationId(installationId)
+            .externalId(externalId)
+            .accountId(accountId)
+            .type("payment")
+            .addresses(transactionAddresses)
+            .build());
+    mockServer.setDispatcher(dispatcher);
+
+    TransactionAssessment transactionAssessment =
+        client.registerPayment(
+            installationId,
+            accountId,
+            externalId,
+            Collections.singletonMap(AddressType.SHIPPING, address),
+            false);
+    assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());
   }
 
   @Test
@@ -254,10 +331,10 @@ class IncogniaAPITest {
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
   void testRegisterPayment_whenInstallationIdIsNotValid() {
-    assertThatThrownBy(() -> client.registerPayment(null, "account id"))
+    assertThatThrownBy(() -> client.registerPayment(null, "account id", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'installation id' cannot be empty");
-    assertThatThrownBy(() -> client.registerPayment("", "account id"))
+    assertThatThrownBy(() -> client.registerPayment("", "account id", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'installation id' cannot be empty");
   }
@@ -266,10 +343,10 @@ class IncogniaAPITest {
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
   void testRegisterLogin_whenInstallationIdIsNotValid() {
-    assertThatThrownBy(() -> client.registerLogin(null, "account id"))
+    assertThatThrownBy(() -> client.registerLogin(null, "account id", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'installation id' cannot be empty");
-    assertThatThrownBy(() -> client.registerLogin("", "account id"))
+    assertThatThrownBy(() -> client.registerLogin("", "account id", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'installation id' cannot be empty");
   }
@@ -278,10 +355,10 @@ class IncogniaAPITest {
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
   void testRegisterPayment_whenAccountIdIsNotValid() {
-    assertThatThrownBy(() -> client.registerPayment("installation id", null))
+    assertThatThrownBy(() -> client.registerPayment("installation id", null, true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");
-    assertThatThrownBy(() -> client.registerPayment("installation id", ""))
+    assertThatThrownBy(() -> client.registerPayment("installation id", "", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");
   }
@@ -290,10 +367,10 @@ class IncogniaAPITest {
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
   void testRegisterLogin_whenAccountIdIsNotValid() {
-    assertThatThrownBy(() -> client.registerLogin("installation id", null))
+    assertThatThrownBy(() -> client.registerLogin("installation id", null, true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");
-    assertThatThrownBy(() -> client.registerLogin("installation id", ""))
+    assertThatThrownBy(() -> client.registerLogin("installation id", "", true))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");
   }
