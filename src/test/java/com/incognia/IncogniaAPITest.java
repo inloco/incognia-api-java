@@ -18,6 +18,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class IncogniaAPITest {
   private static final String CLIENT_ID = "client-id";
@@ -144,10 +147,12 @@ class IncogniaAPITest {
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
   }
 
-  @Test
+  @ParameterizedTest
+  @ValueSource(booleans = {true})
+  @NullSource
   @DisplayName("should return the expected login transaction response")
   @SneakyThrows
-  void testRegisterLogin_whenDataIsValid() {
+  void testRegisterLogin_whenDataIsValid(Boolean eval) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String accountId = "account-id";
@@ -163,7 +168,7 @@ class IncogniaAPITest {
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment =
-        client.registerLogin(installationId, accountId, externalId, true);
+        client.registerLogin(installationId, accountId, externalId, eval);
     assertTransactionAssessment(transactionAssessment);
   }
 
@@ -190,10 +195,12 @@ class IncogniaAPITest {
     assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());
   }
 
-  @Test
+  @ParameterizedTest
+  @ValueSource(booleans = {true})
+  @NullSource
   @DisplayName("should return the expected payment transaction response")
   @SneakyThrows
-  void testRegisterPayment_whenDataIsValid() {
+  void testRegisterPayment_whenDataIsValid(Boolean eval) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String accountId = "account-id";
@@ -237,7 +244,7 @@ class IncogniaAPITest {
             accountId,
             externalId,
             Collections.singletonMap(AddressType.SHIPPING, address),
-            true);
+            eval);
     assertTransactionAssessment(transactionAssessment);
   }
 

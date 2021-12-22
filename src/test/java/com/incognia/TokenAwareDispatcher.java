@@ -57,8 +57,9 @@ public class TokenAwareDispatcher extends Dispatcher {
         && "GET".equals(request.getMethod())) {
       return handleGetSignup(request);
     }
-    if ("/api/v2/authentication/transactions?eval=true".equals(request.getPath())
-        && "POST".equals(request.getMethod())) {
+    if (("/api/v2/authentication/transactions?eval=true".equals(request.getPath())
+        || ("/api/v2/authentication/transactions".equals(request.getPath()))
+            && "POST".equals(request.getMethod()))) {
       return handlePostTransaction(request);
     }
     if ("/api/v2/authentication/transactions?eval=false".equals(request.getPath())
