@@ -6,8 +6,7 @@ import lombok.Value;
 @Value
 @Builder
 public class PaymentMethod {
-  String type;
-
+  CardType type;
   CardInfo creditCardInfo;
   CardInfo debitCardInfo;
 }
