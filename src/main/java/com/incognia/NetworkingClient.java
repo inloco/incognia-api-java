@@ -36,12 +36,22 @@ public class NetworkingClient {
   }
 
   public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
-    return doPost(path, body, responseType, Collections.emptyMap());
+    return doPost(path, body, responseType, Collections.emptyMap(), Collections.emptyMap());
   }
 
   public <T, U> U doPost(String path, T body, Class<U> responseType, Map<String, String> headers)
       throws IncogniaException {
-    Request request = buildPostRequest(path, body, headers);
+    return doPost(path, body, responseType, headers, Collections.emptyMap());
+  }
+
+  public <T, U> U doPost(
+      String path,
+      T body,
+      Class<U> responseType,
+      Map<String, String> headers,
+      Map<String, String> queryParameters)
+      throws IncogniaException {
+    Request request = buildPostRequest(path, body, headers, queryParameters);
     try (Response response = httpClient.newCall(request).execute()) {
       return parseResponse(response, responseType);
     } catch (IOException e) {
@@ -95,10 +105,20 @@ public class NetworkingClient {
     }
   }
 
-  @NotNull
   private <T> Request buildPostRequest(String path, T body, Map<String, String> headers)
       throws IncogniaException {
-    Builder requestBuilder = new Builder().url(baseUrl.newBuilder().addPathSegments(path).build());
+    return buildPostRequest(path, body, headers, Collections.emptyMap());
+  }
+
+  @NotNull
+  private <T> Request buildPostRequest(
+      String path, T body, Map<String, String> headers, Map<String, String> queryParameters)
+      throws IncogniaException {
+    HttpUrl.Builder urlBuilder = baseUrl.newBuilder().addPathSegments(path);
+    for (String parameter : queryParameters.keySet()) {
+      urlBuilder.addQueryParameter(parameter, queryParameters.get(parameter));
+    }
+    Builder requestBuilder = new Builder().url(urlBuilder.build());
     RequestBody requestBody;
     try {
       requestBody =

@@ -14,4 +14,6 @@ public class PostTransactionRequestBody {
   String type;
   String externalId;
   @Builder.Default List<TransactionAddress> addresses = Collections.emptyList();
+  PaymentValue paymentValue;
+  @Builder.Default List<PaymentMethod> paymentMethods = Collections.emptyList();
 }

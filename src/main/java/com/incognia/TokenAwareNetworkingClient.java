@@ -28,6 +28,18 @@ public class TokenAwareNetworkingClient {
     this.tokenExpiration = null;
   }
 
+  public <T, U> U doPost(
+      String path, T body, Class<U> responseType, Map<String, String> queryParameters)
+      throws IncogniaException {
+    refreshTokenIfNeeded();
+    return networkingClient.doPost(
+        path,
+        body,
+        responseType,
+        Collections.singletonMap(AUTHORIZATION_HEADER, buildAuthorizationHeader()),
+        queryParameters);
+  }
+
   public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
     refreshTokenIfNeeded();
     return networkingClient.doPost(

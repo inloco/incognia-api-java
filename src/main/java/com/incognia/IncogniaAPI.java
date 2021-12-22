@@ -21,6 +21,7 @@ public class IncogniaAPI {
   private static final String US_API_URL = "https://api.us.incognia.com";
   private static final Map<Region, String> API_URLS = buildApiUrls();
   private static final Region DEFAULT_REGION = Region.US;
+  private static final String EVALUATION_PARAMETER = "eval";
 
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
@@ -144,18 +145,20 @@ public class IncogniaAPI {
   /**
    * Registers a login without external id.
    *
-   * @see #registerLogin(String, String, String)
+   * @see #registerLogin(String, String, String, Boolean)
    * @param installationId the <a
    *     href="https://docs.incognia.com/learning/concepts/identifiers/installation-id">installation
    *     id</a>
    * @param accountId the account id
+   * @param eval if false, turns of the risk assessment, allowing for only a registration of the *
+   *     transaction
    * @return the assessment for the login
    * @throws IncogniaAPIException in case of api errors
    * @throws IncogniaException in case of unexpected errors
    */
-  public TransactionAssessment registerLogin(String installationId, String accountId)
+  public TransactionAssessment registerLogin(String installationId, String accountId, Boolean eval)
       throws IncogniaException {
-    return registerLogin(installationId, accountId, null);
+    return registerLogin(installationId, accountId, null, eval);
   }
 
   /**
@@ -179,12 +182,15 @@ public class IncogniaAPI {
    *     id</a>
    * @param accountId the account id
    * @param externalId client-owned transaction identifier
+   * @param eval if false, turns of the risk assessment, allowing for only a registration of the
+   *     transaction
    * @return the assessment for the login
    * @throws IncogniaAPIException in case of api errors
    * @throws IncogniaException in case of unexpected errors
    */
   public TransactionAssessment registerLogin(
-      String installationId, String accountId, String externalId) throws IncogniaException {
+      String installationId, String accountId, String externalId, Boolean eval)
+      throws IncogniaException {
     Asserts.assertNotEmpty(installationId, "installation id");
     Asserts.assertNotEmpty(accountId, "account id");
     PostTransactionRequestBody requestBody =
@@ -194,41 +200,50 @@ public class IncogniaAPI {
             .externalId(externalId)
             .type("login")
             .build();
+    Map<String, String> queryParameters = new HashMap<>();
+    if (eval != null) {
+      queryParameters.put(EVALUATION_PARAMETER, eval.toString());
+    }
     return tokenAwareNetworkingClient.doPost(
-        "api/v2/authentication/transactions", requestBody, TransactionAssessment.class);
+        "api/v2/authentication/transactions",
+        requestBody,
+        TransactionAssessment.class,
+        queryParameters);
   }
 
   /**
    * Registers a payment without external id and addresses. Equivalent to {@link
-   * #registerPayment(String, String, String, Map)} with null external id and empty addresses.
+   * #registerPayment(String, String, String, Map, Boolean)} with null external id and empty
+   * addresses.
    *
-   * @see #registerPayment(String, String, String, Map)
+   * @see #registerPayment(String, String, String, Map, Boolean)
    */
-  public TransactionAssessment registerPayment(String installationId, String accountId)
-      throws IncogniaException {
-    return registerPayment(installationId, accountId, null, Collections.emptyMap());
+  public TransactionAssessment registerPayment(
+      String installationId, String accountId, Boolean eval) throws IncogniaException {
+    return registerPayment(installationId, accountId, null, Collections.emptyMap(), eval);
   }
 
   /**
    * Registers a payment without addresses. Equivalent to {@link #registerPayment(String, String,
-   * String, Map)} with empty addresses.
+   * String, Map, Boolean)} with empty addresses.
    *
-   * @see #registerPayment(String, String, String, Map)
+   * @see #registerPayment(String, String, String, Map, Boolean)
    */
   public TransactionAssessment registerPayment(
-      String installationId, String accountId, String externalId) throws IncogniaException {
-    return registerPayment(installationId, accountId, externalId, Collections.emptyMap());
+      String installationId, String accountId, String externalId, Boolean eval)
+      throws IncogniaException {
+    return registerPayment(installationId, accountId, externalId, Collections.emptyMap(), eval);
   }
   /**
    * Registers a payment without external id. Equivalent to {@link #registerPayment(String, String,
-   * String, Map)} with null external id.
+   * String, Map, Boolean)} with null external id.
    *
-   * @see #registerPayment(String, String, String, Map)
+   * @see #registerPayment(String, String, String, Map, Boolean)
    */
   public TransactionAssessment registerPayment(
-      String installationId, String accountId, Map<AddressType, Address> addresses)
+      String installationId, String accountId, Map<AddressType, Address> addresses, Boolean eval)
       throws IncogniaException {
-    return registerPayment(installationId, accountId, null, addresses);
+    return registerPayment(installationId, accountId, null, addresses, eval);
   }
 
   /**
@@ -274,6 +289,8 @@ public class IncogniaAPI {
    * @param accountId the account id
    * @param externalId client-owned transaction identifier
    * @param addresses addresses related to this payment
+   * @param eval if false, turns of the risk assessment, allowing for only a registration of the
+   *     transaction
    * @return the payment's risk assessment
    * @throws IncogniaAPIException in case of api errors
    * @throws IncogniaException in case of unexpected errors
@@ -282,7 +299,8 @@ public class IncogniaAPI {
       String installationId,
       String accountId,
       String externalId,
-      Map<AddressType, Address> addresses)
+      Map<AddressType, Address> addresses,
+      Boolean eval)
       throws IncogniaException {
     Asserts.assertNotEmpty(installationId, "installation id");
     Asserts.assertNotEmpty(accountId, "account id");
@@ -295,8 +313,15 @@ public class IncogniaAPI {
             .type("payment")
             .addresses(transactionAddresses)
             .build();
+    Map<String, String> queryParameters = new HashMap<>();
+    if (eval != null) {
+      queryParameters.put(EVALUATION_PARAMETER, eval.toString());
+    }
     return tokenAwareNetworkingClient.doPost(
-        "api/v2/authentication/transactions", requestBody, TransactionAssessment.class);
+        "api/v2/authentication/transactions",
+        requestBody,
+        TransactionAssessment.class,
+        queryParameters);
   }
 
   /**
