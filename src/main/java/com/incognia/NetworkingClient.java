@@ -125,7 +125,6 @@ public class NetworkingClient {
           body == null
               ? RequestBody.create("", null)
               : RequestBody.create(objectMapper.writeValueAsBytes(body), MEDIA_TYPE_JSON);
-      System.out.println(objectMapper.writeValueAsString(body));
     } catch (JsonProcessingException e) {
       throw new IncogniaException("failed writing request body", e);
     }
