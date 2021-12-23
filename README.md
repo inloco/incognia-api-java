@@ -51,7 +51,7 @@ This method registers a new signup for the given installation and address, retur
 ```java
 IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
 try {
-     Address address = Address address =
+     Address address =
         Address.builder()
             .structuredAddress(
                 StructuredAddress.builder()
@@ -69,7 +69,11 @@ try {
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
             .build();
-     SignupAssessment assessment = api.registerSignup("installation id", address);
+    RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
+        .address(address)
+        .installationId("installation id")
+        .build();
+     SignupAssessment assessment = api.registerSignup(signupRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
@@ -101,7 +105,14 @@ This method also includes some overloads that do not require optional parameters
 ```java
 IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
 try {
-     TransactionAssessment assessment = api.registerLogin("installation-id", "account-id", "external-id");
+     RegisterLoginRequest registerLoginRequest =
+        RegisterLoginRequest.builder()
+          .installationId("installation id")
+          .accountId("account id")
+          .externalId("external id")
+          .evaluateTransaction(true) // can be omitted if you want this to be evaluated
+          .build();
+     TransactionAssessment assessment = api.registerLogin(registerLoginRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
@@ -135,10 +146,36 @@ try {
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
             .build();
+     
      Map<AddressType, Address> addresses = Map.of(
          AddressType.SHIPPING, address
          AddressType.BILLING, address);
-     TransactionAssessment assessment = api.registerPayment("installation-id", "account-id", "external-id", addresses);
+     
+     List<PaymentMethod> paymentMethods = new ArrayList<>();
+        paymentMethods.add(
+            PaymentMethod.builder()
+                .creditCardInfo(
+                    CardInfo.builder()
+                        .bin("123456")
+                        .expiryMonth("10")
+                        .expiryYear("2028")
+                        .lastFourDigits("4321")
+                        .build())
+                .type(CardType.CREDIT_CARD)
+                .build());
+        
+     RegisterPaymentRequest registerPaymentRequest =
+         RegisterPaymentRequest.builder()
+             .installationId( "installation-id")
+             .accountId("account-id")
+             .externalId("external-id")
+             .addresses(addresses)
+             .evaluateTransaction(true) // can be omitted if you want this to be evaluated
+             .paymentValue(PaymentValue.builder().currency("BRL").amount(10.0).build())
+             .paymentMethods(paymentMethods)
+             .build();
+    
+     TransactionAssessment assessment = api.registerPayment(registerPaymentRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
