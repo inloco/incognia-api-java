@@ -3,7 +3,11 @@ package com.incognia;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.incognia.clients.ObjectMapperFactory;
 import com.incognia.fixtures.ResourceUtils;
+import com.incognia.requests.body.PostFeedbackRequestBody;
+import com.incognia.requests.body.PostSignupRequestBody;
+import com.incognia.requests.body.PostTransactionRequestBody;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;

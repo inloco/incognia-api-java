@@ -5,6 +5,27 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.incognia.fixtures.AddressFixture;
 import com.incognia.fixtures.TokenCreationFixture;
+import com.incognia.requests.Address;
+import com.incognia.requests.CardInfo;
+import com.incognia.requests.Coordinates;
+import com.incognia.requests.FeedbackIdentifiers;
+import com.incognia.requests.PaymentMethod;
+import com.incognia.requests.PaymentValue;
+import com.incognia.requests.RegisterLoginRequest;
+import com.incognia.requests.RegisterPaymentRequest;
+import com.incognia.requests.RegisterSignupRequest;
+import com.incognia.requests.StructuredAddress;
+import com.incognia.requests.body.PostFeedbackRequestBody;
+import com.incognia.requests.body.PostTransactionRequestBody;
+import com.incognia.requests.body.TransactionAddress;
+import com.incognia.responses.SignupAssessment;
+import com.incognia.responses.TransactionAssessment;
+import com.incognia.types.AddressType;
+import com.incognia.types.Assessment;
+import com.incognia.types.CardType;
+import com.incognia.types.FeedbackEvent;
+import com.incognia.types.PaymentType;
+
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;

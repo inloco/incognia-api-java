@@ -1,5 +1,22 @@
 package com.incognia;
 
+import com.incognia.clients.TokenAwareNetworkingClient;
+import com.incognia.exceptions.IncogniaAPIException;
+import com.incognia.exceptions.IncogniaException;
+import com.incognia.requests.Address;
+import com.incognia.requests.FeedbackIdentifiers;
+import com.incognia.requests.RegisterLoginRequest;
+import com.incognia.requests.RegisterPaymentRequest;
+import com.incognia.requests.RegisterSignupRequest;
+import com.incognia.requests.body.PostFeedbackRequestBody;
+import com.incognia.requests.body.PostSignupRequestBody;
+import com.incognia.requests.body.PostTransactionRequestBody;
+import com.incognia.requests.body.TransactionAddress;
+import com.incognia.responses.SignupAssessment;
+import com.incognia.responses.TransactionAssessment;
+import com.incognia.types.AddressType;
+import com.incognia.types.FeedbackEvent;
+import com.incognia.types.Region;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.HashMap;
