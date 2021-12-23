@@ -229,14 +229,32 @@ public class IncogniaAPI {
    *      Map<AddressType, Address> addresses = Map.of(
    *          AddressType.SHIPPING, address
    *          AddressType.BILLING, address);
-   *      RegisterPaymentRequest paymentRequest = RegisterPaymentRequest.builder()
-   *         .installationId("installation-id")
-   *         .accountId("account-id")
-   *         .externalId("external-id")
-   *         .addresses(addresses)
-   *         .evaluateTransaction(true)
-   *         .build();
-   *      TransactionAssessment assessment = api.registerPayment(paymentRequest);
+   *
+   *      List<PaymentMethod> paymentMethods = new ArrayList<>();
+   *        paymentMethods.add(
+   *           PaymentMethod.builder()
+   *               .creditCardInfo(
+   *                   CardInfo.builder()
+   *                       .bin("123456")
+   *                       .expiryMonth("10")
+   *                       .expiryYear("2028")
+   *                       .lastFourDigits("4321")
+   *                       .build())
+   *               .type(CardType.CREDIT_CARD)
+   *               .build());
+   *
+   *      RegisterPaymentRequest registerPaymentRequest =
+   *          RegisterPaymentRequest.builder()
+   *              .installationId( "installation-id")
+   *              .accountId("account-id")
+   *              .externalId("external-id")
+   *              .addresses(addresses)
+   *              .evaluateTransaction(true) // can be omitted if you want this to be evaluated
+   *              .paymentValue(PaymentValue.builder().currency("BRL").amount(10.0).build())
+   *              .paymentMethods(paymentMethods)
+   *              .build();
+   *
+   *      TransactionAssessment assessment = api.registerPayment(registerPaymentRequest);
    * } catch (IncogniaAPIException e) {
    *      //Some api error happened (invalid data, invalid credentials)
    * } catch (IncogniaException e) {
