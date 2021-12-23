@@ -5,6 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public enum FeedbackEvent {
   @JsonProperty("payment_accepted")
   PAYMENT_ACCEPTED,
+  @JsonProperty("payment_accepted_by_third_party")
+  PAYMENT_ACCEPTED_BY_THIRD_PARTY,
+  @JsonProperty("payment_accepted_by_control_group")
+  PAYMENT_ACCEPTED_BY_CONTROL_GROUP,
   @JsonProperty("payment_declined")
   PAYMENT_DECLINED,
   @JsonProperty("payment_declined_by_risk_analysis")
@@ -33,12 +37,16 @@ public enum FeedbackEvent {
   PASSWORD_CHANGE_FAILED,
   @JsonProperty("verified")
   VERIFIED,
-  @JsonProperty("not_verified")
-  NOT_VERIFIED,
+  @JsonProperty("identity_fraud")
+  IDENTITY_FRAUD,
+  @JsonProperty("chargeback_notification")
+  CHARGEBACK_NOTIFICATION,
   @JsonProperty("chargeback")
   CHARGEBACK,
   @JsonProperty("promotion_abuse")
   PROMOTION_ABUSE,
   @JsonProperty("account_takeover")
-  ACCOUNT_TAKEOVER;
+  ACCOUNT_TAKEOVER,
+  @JsonProperty("mpos_fraud")
+  MPOS_FRAUD;
 }
