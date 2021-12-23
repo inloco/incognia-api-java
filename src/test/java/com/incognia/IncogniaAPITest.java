@@ -391,6 +391,15 @@ class IncogniaAPITest {
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'installation id' cannot be empty");
+    assertThatThrownBy(
+            () ->
+                client.registerPayment(
+                    RegisterPaymentRequest.builder()
+                        .installationId(null)
+                        .accountId("account id")
+                        .build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'installation id' cannot be empty");
   }
 
   @Test
@@ -402,6 +411,15 @@ class IncogniaAPITest {
                 client.registerLogin(
                     RegisterLoginRequest.builder()
                         .installationId("")
+                        .accountId("account id")
+                        .build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'installation id' cannot be empty");
+    assertThatThrownBy(
+            () ->
+                client.registerLogin(
+                    RegisterLoginRequest.builder()
+                        .installationId(null)
                         .accountId("account id")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
@@ -421,6 +439,15 @@ class IncogniaAPITest {
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");
+    assertThatThrownBy(
+            () ->
+                client.registerPayment(
+                    RegisterPaymentRequest.builder()
+                        .installationId("installation-id")
+                        .accountId(null)
+                        .build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'account id' cannot be empty");
   }
 
   @Test
@@ -433,6 +460,15 @@ class IncogniaAPITest {
                     RegisterLoginRequest.builder()
                         .installationId("installation id")
                         .accountId("")
+                        .build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'account id' cannot be empty");
+    assertThatThrownBy(
+            () ->
+                client.registerLogin(
+                    RegisterLoginRequest.builder()
+                        .installationId("installation id")
+                        .accountId(null)
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");

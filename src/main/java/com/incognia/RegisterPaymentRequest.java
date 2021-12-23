@@ -6,14 +6,13 @@ import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Value;
 
 @Value
 @Builder
 public class RegisterPaymentRequest {
-  @NonNull String installationId;
-  @NonNull String accountId;
+  String installationId;
+  String accountId;
   String externalId;
   @Builder.Default Map<AddressType, Address> addresses = Collections.emptyMap();
   @Builder.Default List<PaymentMethod> paymentMethods = Collections.emptyList();
