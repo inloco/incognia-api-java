@@ -13,13 +13,13 @@ Incognia API Java Client is available on Maven Central.
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>1.1.0</version>
+  <version>2.0.0</version>
 </dependency>
 ```
 
 ### Gradle
 ```gradle
-implementation 'com.incognia:incognia-api-client:1.1.0'
+implementation 'com.incognia:incognia-api-client:2.0.0'
 ```
 We support Java 8+.
 
