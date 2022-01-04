@@ -1,5 +1,6 @@
 package com.incognia.requests;
 
+import com.incognia.types.PaymentType;
 import lombok.Builder;
 import lombok.Value;
 
