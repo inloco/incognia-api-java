@@ -275,7 +275,7 @@ class IncogniaAPITest {
   }
 
   @Test
-  @DisplayName("should return and empty response")
+  @DisplayName("should return an empty response")
   @SneakyThrows
   void testRegisterPayment_whenEvalIsFalse() {
     String token = TokenCreationFixture.createToken();
