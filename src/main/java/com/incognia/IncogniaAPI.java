@@ -153,7 +153,7 @@ public class IncogniaAPI {
    *         .installationId("installation-id")
    *         .accountId("account-id")
    *         .externalId("external-id")
-   *         .evaluateTransaction(true)
+   *         .evaluateTransaction(true) // can be omitted as it uses true as the default value
    *         .build();
    *      TransactionAssessment assessment = api.registerLogin(loginRequest);
    * } catch (IncogniaAPIException e) {
@@ -171,13 +171,6 @@ public class IncogniaAPI {
    */
   public TransactionAssessment registerLogin(RegisterLoginRequest request)
       throws IncogniaException {
-    RegisterLoginRequest loginRequest =
-        RegisterLoginRequest.builder()
-            .installationId("installation-id")
-            .accountId("account-id")
-            .externalId("external-id")
-            .evaluateTransaction(true)
-            .build();
     Asserts.assertNotNull(request, "register login request");
     Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
@@ -240,7 +233,7 @@ public class IncogniaAPI {
    *                       .expiryYear("2028")
    *                       .lastFourDigits("4321")
    *                       .build())
-   *               .type(CardType.CREDIT_CARD)
+   *               .type(PaymentType.CREDIT_CARD)
    *               .build());
    *
    *      RegisterPaymentRequest registerPaymentRequest =
@@ -249,7 +242,7 @@ public class IncogniaAPI {
    *              .accountId("account-id")
    *              .externalId("external-id")
    *              .addresses(addresses)
-   *              .evaluateTransaction(true) // can be omitted if you want this to be evaluated
+   *              .evaluateTransaction(true) // can be omitted as it uses true as the default value
    *              .paymentValue(PaymentValue.builder().currency("BRL").amount(10.0).build())
    *              .paymentMethods(paymentMethods)
    *              .build();

@@ -44,6 +44,8 @@ The implementation is based on the [Incognia API Reference](https://dash.incogni
 
 Authentication is done transparently, so you don't need to worry about it.
 
+If you are curious about how we handle it, you can check the TokenAwareNetworkingClient class
+
 #### Registering Signup
 
 This method registers a new signup for the given installation and address, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
@@ -110,7 +112,7 @@ try {
           .installationId("installation id")
           .accountId("account id")
           .externalId("external id")
-          .evaluateTransaction(true) // can be omitted if you want this to be evaluated
+          .evaluateTransaction(true) // can be omitted as it uses true as the default value
           .build();
      TransactionAssessment assessment = api.registerLogin(registerLoginRequest);
 } catch (IncogniaAPIException e) {
@@ -161,7 +163,7 @@ try {
                         .expiryYear("2028")
                         .lastFourDigits("4321")
                         .build())
-                .type(CardType.CREDIT_CARD)
+                .type(PaymentType.CREDIT_CARD)
                 .build());
         
      RegisterPaymentRequest registerPaymentRequest =
@@ -170,7 +172,7 @@ try {
              .accountId("account-id")
              .externalId("external-id")
              .addresses(addresses)
-             .evaluateTransaction(true) // can be omitted if you want this to be evaluated
+             .evaluateTransaction(true) // can be omitted as it uses true as the default value
              .paymentValue(PaymentValue.builder().currency("BRL").amount(10.0).build())
              .paymentMethods(paymentMethods)
              .build();
@@ -182,6 +184,28 @@ try {
      //Something unexpected happened
 }
 ```
+
+### Registering Payment or Login without evaluating its risk assessment
+
+Turning off the risk assessment evaluation allows you to register a new transaction (Login or Payment), but the response (`TransactionAssessment`) will be empty. For instance, if you're using the risk assessment only for some payment transactions, you should still register all the other ones: this will avoid any bias on the risk assessment computation.
+
+To register a login or a payment without evaluating its risk assessment, you should use the `evaluateTransaction` boolean set to false
+
+Example:
+
+
+```java
+RegisterLoginRequest registerLoginRequest =
+        RegisterLoginRequest.builder()
+          .installationId("installation id")
+          .accountId("account id")
+          .externalId("external id")
+          .evaluateTransaction(false)
+          .build();
+```
+Would return an empty risk assessment response:
+
+``{}``
 
 #### Sending Feedback
 

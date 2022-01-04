@@ -240,7 +240,7 @@ class IncogniaAPITest {
                     .expiryYear("28")
                     .lastFourDigits("4321")
                     .build())
-            .type(CardType.CREDIT_CARD)
+            .type(PaymentType.CREDIT_CARD)
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
 
@@ -317,7 +317,7 @@ class IncogniaAPITest {
                     .expiryYear("28")
                     .lastFourDigits("4321")
                     .build())
-            .type(CardType.CREDIT_CARD)
+            .type(PaymentType.CREDIT_CARD)
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
     dispatcher.setExpectedTransactionRequestBody(
