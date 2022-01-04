@@ -1,6 +1,5 @@
 package com.incognia.requests;
 
-import com.incognia.types.CardType;
 import lombok.Builder;
 import lombok.Value;
 

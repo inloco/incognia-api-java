@@ -22,10 +22,8 @@ import com.incognia.responses.SignupAssessment;
 import com.incognia.responses.TransactionAssessment;
 import com.incognia.types.AddressType;
 import com.incognia.types.Assessment;
-import com.incognia.types.CardType;
 import com.incognia.types.FeedbackEvent;
 import com.incognia.types.PaymentType;
-
 import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
