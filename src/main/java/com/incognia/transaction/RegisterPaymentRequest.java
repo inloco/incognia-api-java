@@ -3,7 +3,6 @@ package com.incognia.transaction;
 import com.incognia.common.Address;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentValue;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

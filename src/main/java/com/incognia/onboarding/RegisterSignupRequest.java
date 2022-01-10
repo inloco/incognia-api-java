@@ -1,7 +1,6 @@
 package com.incognia.onboarding;
 
 import com.incognia.common.Address;
-
 import lombok.Builder;
 import lombok.Value;
 

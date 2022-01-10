@@ -1,7 +1,6 @@
 package com.incognia.api.clients;
 
 import com.incognia.common.exceptions.IncogniaException;
-
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
