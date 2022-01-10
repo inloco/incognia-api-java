@@ -1,6 +1,7 @@
 {
   "id": "dfe1f2ff-8f0d-4ce8-aed1-af8435143044",
   "risk_assessment": "low_risk",
+  "device_id": "1df6d999-556d-42c3-8c63-357e5d08d95b",
   "evidence": {
     "device_model": "Moto Z2 Play",
     "known_account": true,

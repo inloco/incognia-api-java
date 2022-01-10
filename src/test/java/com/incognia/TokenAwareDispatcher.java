@@ -57,9 +57,14 @@ public class TokenAwareDispatcher extends Dispatcher {
         && "GET".equals(request.getMethod())) {
       return handleGetSignup(request);
     }
-    if ("/api/v2/authentication/transactions".equals(request.getPath())
-        && "POST".equals(request.getMethod())) {
+    if (("/api/v2/authentication/transactions?eval=true".equals(request.getPath())
+        || ("/api/v2/authentication/transactions".equals(request.getPath()))
+            && "POST".equals(request.getMethod()))) {
       return handlePostTransaction(request);
+    }
+    if ("/api/v2/authentication/transactions?eval=false".equals(request.getPath())
+        && "POST".equals(request.getMethod())) {
+      return handlePostTransactionGivenFalseEval(request);
     }
     if ("/api/v2/feedbacks".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handlePostFeedback(request);
@@ -88,6 +93,18 @@ public class TokenAwareDispatcher extends Dispatcher {
         objectMapper.readValue(request.getBody().inputStream(), PostTransactionRequestBody.class);
     assertThat(postTransactionRequestBody).isEqualTo(expectedTransactionRequestBody);
     String response = ResourceUtils.getResourceFileAsString("post_transaction_response.json");
+    return new MockResponse().setResponseCode(200).setBody(response);
+  }
+
+  @SneakyThrows
+  private MockResponse handlePostTransactionGivenFalseEval(RecordedRequest request) {
+    assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
+    PostTransactionRequestBody postTransactionRequestBody =
+        objectMapper.readValue(request.getBody().inputStream(), PostTransactionRequestBody.class);
+    assertThat(postTransactionRequestBody).isEqualTo(expectedTransactionRequestBody);
+    String response =
+        ResourceUtils.getResourceFileAsString("post_transaction_given_false_eval_response.json");
     return new MockResponse().setResponseCode(200).setBody(response);
   }
 
