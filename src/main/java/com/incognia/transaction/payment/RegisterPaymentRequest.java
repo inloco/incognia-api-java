@@ -1,8 +1,7 @@
-package com.incognia.transaction;
+package com.incognia.transaction.payment;
 
 import com.incognia.common.Address;
-import com.incognia.transaction.payment.PaymentMethod;
-import com.incognia.transaction.payment.PaymentValue;
+import com.incognia.transaction.AddressType;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
