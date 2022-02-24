@@ -18,7 +18,6 @@ import com.incognia.transaction.TransactionAssessment;
 import com.incognia.transaction.login.RegisterLoginRequest;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,41 +33,29 @@ import org.jetbrains.annotations.NotNull;
  * <p>Automatically handles token generation and renewal.
  */
 public class IncogniaAPI {
-  private static final String BR_API_URL = "https://incognia.inloco.com.br";
-  private static final String US_API_URL = "https://api.us.incognia.com";
-  private static final Map<Region, String> API_URLS = buildApiUrls();
-  private static final Region DEFAULT_REGION = Region.US;
+  private static final String API_URL = "api.incognia.com";
   private static final String EVALUATION_PARAMETER = "eval";
 
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
   /**
-   * Creates a new instance for a given client id/secret. Uses the default {@link Region}
-   * (Region.US)
+   * Creates a new instance for a given client id/secret.
    *
    * @param clientId the client id
    * @param clientSecret the client secret
-   * @see #IncogniaAPI(String, String, Region)
+   * @see #IncogniaAPI(String, String)
    */
   public IncogniaAPI(String clientId, String clientSecret) {
-    this(clientId, clientSecret, DEFAULT_REGION);
+    this(clientId, clientSecret, API_URL);
   }
 
   /**
-   * Creates a new instance for a given client id/secret and a {@link Region}
+   * Creates a new instance for a given client id/secret
    *
    * @param clientId the client id
    * @param clientSecret the client secret
-   * @param region the region to be used
    */
-  public IncogniaAPI(String clientId, String clientSecret, Region region) {
-    this(clientId, clientSecret, API_URLS.get(region != null ? region : DEFAULT_REGION));
-  }
-
   IncogniaAPI(String clientId, String clientSecret, String apiUrl) {
-    Asserts.assertNotEmpty(clientId, "client id");
-    Asserts.assertNotEmpty(clientSecret, "client secret");
-    Asserts.assertNotEmpty(apiUrl, "api url");
     // TODO (rato): set client timeout
     tokenAwareNetworkingClient =
         new TokenAwareNetworkingClient(
@@ -369,13 +356,5 @@ public class IncogniaAPI {
                   address.getCoordinates());
             })
         .collect(Collectors.toList());
-  }
-  // feedback
-
-  private static Map<Region, String> buildApiUrls() {
-    HashMap<Region, String> apiUrls = new HashMap<>();
-    apiUrls.put(Region.BR, BR_API_URL);
-    apiUrls.put(Region.US, US_API_URL);
-    return Collections.unmodifiableMap(apiUrls);
   }
 }
