@@ -33,7 +33,7 @@ Before calling the API methods, you need to create an instance of the `IncogniaA
 // to use the BR region
 IncogniaAPI api = new IncogniaAPI("your-client-id", "your-client-secret");
 ```
-This is only needed once in the lifetime of the application, it must be instantiated before any calls to the api.
+Ideally you should use the instance of api as a singleton, so it can correctly generate tokens in the right interval.
 
 ### Incognia API
 
