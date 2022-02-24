@@ -33,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Automatically handles token generation and renewal.
  */
 public class IncogniaAPI {
-  private static final String API_URL = "api.incognia.com";
+  private static final String API_URL = "https://api.incognia.com";
   private static final String EVALUATION_PARAMETER = "eval";
 
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
@@ -49,13 +49,10 @@ public class IncogniaAPI {
     this(clientId, clientSecret, API_URL);
   }
 
-  /**
-   * Creates a new instance for a given client id/secret
-   *
-   * @param clientId the client id
-   * @param clientSecret the client secret
-   */
   IncogniaAPI(String clientId, String clientSecret, String apiUrl) {
+    Asserts.assertNotEmpty(clientId, "client id");
+    Asserts.assertNotEmpty(clientSecret, "client secret");
+    Asserts.assertNotEmpty(apiUrl, "api url");
     // TODO (rato): set client timeout
     tokenAwareNetworkingClient =
         new TokenAwareNetworkingClient(
