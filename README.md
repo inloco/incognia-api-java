@@ -31,10 +31,9 @@ Before calling the API methods, you need to create an instance of the `IncogniaA
 
 ```java
 // to use the BR region
-IncogniaAPI api = new IncogniaAPI("your-client-id", "your-client-secret", Region.BR);
-// to use the US region
-IncogniaAPI api = new IncogniaAPI("your-client-id", "your-client-secret", Region.US);
+IncogniaAPI api = new IncogniaAPI("your-client-id", "your-client-secret");
 ```
+This is only needed once in the lifetime of the application, it must be instantiated before any calls to the api.
 
 ### Incognia API
 
@@ -51,7 +50,7 @@ If you are curious about how we handle it, you can check the TokenAwareNetworkin
 This method registers a new signup for the given installation and address, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
      Address address =
         Address.builder()
@@ -88,7 +87,7 @@ try {
 This method allows you to query the latest assessment for a given signup event, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
      UUID signupId = UUID.fromString("c9ac2803-c868-4b7a-8323-8a6b96298ebe");
      SignupAssessment assessment = api.getSignupAssessment(signupId);
@@ -105,7 +104,7 @@ This method registers a new login for the given installation and account, return
 This method also includes some overloads that do not require optional parameters, like `externalId`.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
      RegisterLoginRequest registerLoginRequest =
         RegisterLoginRequest.builder()
@@ -128,7 +127,7 @@ This method registers a new payment for the given installation and account, retu
 This method also includes some overloads that do not require optional parameters, like `externalId` and `addresses`.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
      Address address = Address address =
         Address.builder()
@@ -212,7 +211,7 @@ Would return an empty risk assessment response:
 This method registers a feedback event for the given identifiers (represented in `FeedbackIdentifiers`) related to a signup, login or payment.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
     Instant timestamp = Instant.now();
     client.registerFeedback(
