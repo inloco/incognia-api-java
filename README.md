@@ -9,6 +9,14 @@ Java lightweight client library for [Incognia APIs](https://dash.incognia.com/ap
 Incognia API Java Client is available on Maven Central.
 
 ### Maven
+Add our maven repository
+```
+maven {
+    url 'https://repo.incognia.com/java'
+}
+```
+
+And then download the artifact incognia-api-client
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
@@ -30,7 +38,6 @@ We support Java 8+.
 Before calling the API methods, you need to create an instance of the `IncogniaAPI` class.
 
 ```java
-// to use the BR region
 IncogniaAPI api = new IncogniaAPI("your-client-id", "your-client-secret");
 ```
 Ideally you should use the instance of api as a singleton, so it can correctly generate tokens in the right interval.
