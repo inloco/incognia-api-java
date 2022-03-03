@@ -9,7 +9,7 @@ import java.util.Map;
 import okhttp3.OkHttpClient;
 
 public class TokenAwareNetworkingClient {
-  private static final String TOKEN_PATH = "api/v1/token";
+  private static final String TOKEN_PATH = "api/v2/token";
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final int TOKEN_REFRESH_BEFORE_SECONDS = 10;
   private static final String TOKEN_REQUEST_BODY = "grant_type=client_credentials";
