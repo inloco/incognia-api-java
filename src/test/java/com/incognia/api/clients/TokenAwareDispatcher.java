@@ -72,7 +72,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     if ("/api/v2/feedbacks".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handlePostFeedback(request);
     }
-    if ("/api/v1/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
+    if ("/api/v2/token".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       return handleTokenRequest(request);
     }
     return new MockResponse().setResponseCode(404);

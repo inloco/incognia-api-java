@@ -47,7 +47,7 @@ class NetworkingClientTest {
           @NotNull
           @Override
           public MockResponse dispatch(@NotNull RecordedRequest request) {
-            if ("/v1/testurl".equals(request.getPath()) && "POST".equals(request.getMethod())) {
+            if ("/v2/testurl".equals(request.getPath()) && "POST".equals(request.getMethod())) {
               String body =
                   IOUtils.toString(request.getBody().inputStream(), StandardCharsets.UTF_8);
               assertThat(body).isEqualTo("{\"id\":\"id\",\"long_id\":123}");
@@ -59,7 +59,7 @@ class NetworkingClientTest {
           }
         });
     TestResponseBody response =
-        client.doPost("v1/testurl", new TestRequestBody("id", 123), TestResponseBody.class);
+        client.doPost("v2/testurl", new TestRequestBody("id", 123), TestResponseBody.class);
     assertThat(response.getName()).isEqualTo("my awesome name");
   }
 
@@ -72,7 +72,7 @@ class NetworkingClientTest {
           @NotNull
           @Override
           public MockResponse dispatch(@NotNull RecordedRequest request) {
-            if ("/v1/testurl".equals(request.getPath()) && "GET".equals(request.getMethod())) {
+            if ("/v2/testurl".equals(request.getPath()) && "GET".equals(request.getMethod())) {
               return new MockResponse()
                   .setResponseCode(200)
                   .setBody("{\"name\": \"my awesome name\"}");
@@ -81,7 +81,7 @@ class NetworkingClientTest {
           }
         });
     TestResponseBody response =
-        client.doGet("v1/testurl", TestResponseBody.class, Collections.emptyMap());
+        client.doGet("v2/testurl", TestResponseBody.class, Collections.emptyMap());
     assertThat(response.getName()).isEqualTo("my awesome name");
   }
 
@@ -94,7 +94,7 @@ class NetworkingClientTest {
           @NotNull
           @Override
           public MockResponse dispatch(@NotNull RecordedRequest request) {
-            if ("/v1/testurl".equals(request.getPath()) && "POST".equals(request.getMethod())) {
+            if ("/v2/testurl".equals(request.getPath()) && "POST".equals(request.getMethod())) {
               String body =
                   IOUtils.toString(request.getBody().inputStream(), StandardCharsets.UTF_8);
               assertThat(body).isEqualTo("{\"id\":\"id\",\"long_id\":123}");
@@ -105,7 +105,7 @@ class NetworkingClientTest {
         });
     assertThatThrownBy(
             () ->
-                client.doPost("v1/testurl", new TestRequestBody("id", 123), TestResponseBody.class))
+                client.doPost("v2/testurl", new TestRequestBody("id", 123), TestResponseBody.class))
         .satisfies(
             e -> {
               assertThat(e).isInstanceOf(IncogniaAPIException.class);
