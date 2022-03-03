@@ -103,17 +103,19 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            def productionUrl = 's3://inloco-global-maven/releases'
+            def stagingUrl = 's3://inloco-global-maven/snapshots'
+
+            url = project.version.endsWith('SNAPSHOT') ? stagingUrl : productionUrl
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+        }
+    }
 }
 
 signing {
     sign publishing.publications.mavenJava
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
-    }
 }
