@@ -1,6 +1,6 @@
 package com.incognia.fixtures;
 
-import com.incognia.Address;
+import com.incognia.common.Address;
 
 public class AddressFixture {
   public static Address ADDRESS_ADDRESS_LINE =

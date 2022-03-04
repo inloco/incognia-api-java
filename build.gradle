@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.incognia"
-version = "1.1.1-SNAPSHOT"
+version = "2.0.0"
 
 repositories {
     mavenCentral()
@@ -103,17 +103,16 @@ publishing {
             }
         }
     }
+    repositories {
+        maven {
+            url 's3://repo.incognia.com/java'
+            authentication {
+                awsIm(AwsImAuthentication)
+            }
+        }
+    }
 }
 
 signing {
     sign publishing.publications.mavenJava
-}
-
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
-        }
-    }
 }
