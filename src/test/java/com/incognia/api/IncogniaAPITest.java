@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
+import com.incognia.common.Reason;
 import com.incognia.common.StructuredAddress;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
@@ -101,6 +102,9 @@ class IncogniaAPITest {
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+
+    Reason expectedReason = Reason.builder().code("trusted_location").source("local").build();
+    assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
   @Test
@@ -155,6 +159,9 @@ class IncogniaAPITest {
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+
+    Reason expectedReason = Reason.builder().code("trusted_location").source("local").build();
+    assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
   @ParameterizedTest
@@ -520,5 +527,8 @@ class IncogniaAPITest {
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
     assertThat(transactionAssessment.getEvidence()).containsAllEntriesOf(expectedEvidence);
+
+    Reason expectedReason = Reason.builder().code("trusted_location").source("local").build();
+    assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
   }
 }
