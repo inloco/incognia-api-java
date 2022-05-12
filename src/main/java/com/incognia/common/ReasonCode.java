@@ -16,7 +16,6 @@ public enum ReasonCode {
   SDK_TAMPERING("sdk_tampering"),
   RECENT_HIGH_RISK_ACCOUNT("recent_high_risk_account"),
   MACHINE_LEARNING_MODEL("machine_learning_model"),
-  LOCATION_FINGERPRINT_MATCH("location_fingerprint_match"),
   DEVICE_LINKED_TO_MPOS_FRAUD("device_linked_to_mpos_fraud"),
   VERIFIED("verified"),
   SIGNUP_ACCEPTED("signup_accepted"),
