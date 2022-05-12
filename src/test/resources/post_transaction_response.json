@@ -4,7 +4,7 @@
   "device_id": "1df6d999-556d-42c3-8c63-357e5d08d95b",
   "reasons": [
     {
-      "code": "trusted_location",
+      "code": "location_behavior",
       "source": "local"
     }
   ],

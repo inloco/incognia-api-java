@@ -7,6 +7,7 @@ import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
 import com.incognia.common.Reason;
+import com.incognia.common.ReasonCode;
 import com.incognia.common.StructuredAddress;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
@@ -103,7 +104,8 @@ class IncogniaAPITest {
 
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
 
-    Reason expectedReason = Reason.builder().code("trusted_location").source("local").build();
+    Reason expectedReason =
+        Reason.builder().code(ReasonCode.LOCATION_BEHAVIOR.getCode()).source("local").build();
     assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
@@ -160,7 +162,8 @@ class IncogniaAPITest {
 
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
 
-    Reason expectedReason = Reason.builder().code("trusted_location").source("local").build();
+    Reason expectedReason =
+        Reason.builder().code(ReasonCode.LOCATION_BEHAVIOR.getCode()).source("local").build();
     assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
@@ -528,7 +531,8 @@ class IncogniaAPITest {
 
     assertThat(transactionAssessment.getEvidence()).containsAllEntriesOf(expectedEvidence);
 
-    Reason expectedReason = Reason.builder().code("trusted_location").source("local").build();
+    Reason expectedReason =
+        Reason.builder().code(ReasonCode.LOCATION_BEHAVIOR.getCode()).source("local").build();
     assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
   }
 }
