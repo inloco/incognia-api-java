@@ -8,6 +8,7 @@ import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
 import com.incognia.common.Reason;
 import com.incognia.common.ReasonCode;
+import com.incognia.common.ReasonSource;
 import com.incognia.common.StructuredAddress;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
@@ -105,7 +106,10 @@ class IncogniaAPITest {
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
 
     Reason expectedReason =
-        Reason.builder().code(ReasonCode.TRUSTED_LOCATION.getCode()).source("local").build();
+        Reason.builder()
+            .code(ReasonCode.TRUSTED_LOCATION.getCode())
+            .source(ReasonSource.LOCAL.getSource())
+            .build();
     assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
@@ -163,7 +167,10 @@ class IncogniaAPITest {
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
 
     Reason expectedReason =
-        Reason.builder().code(ReasonCode.TRUSTED_LOCATION.getCode()).source("local").build();
+        Reason.builder()
+            .code(ReasonCode.TRUSTED_LOCATION.getCode())
+            .source(ReasonSource.LOCAL.getSource())
+            .build();
     assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
@@ -532,7 +539,10 @@ class IncogniaAPITest {
     assertThat(transactionAssessment.getEvidence()).containsAllEntriesOf(expectedEvidence);
 
     Reason expectedReason =
-        Reason.builder().code(ReasonCode.TRUSTED_LOCATION.getCode()).source("local").build();
+        Reason.builder()
+            .code(ReasonCode.TRUSTED_LOCATION.getCode())
+            .source(ReasonSource.LOCAL.getSource())
+            .build();
     assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
   }
 }
