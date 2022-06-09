@@ -80,9 +80,10 @@ public class NetworkingClient {
     }
   }
 
-  public <T> void doPost(String path, T body, Map<String, String> headers)
+  public <T> void doPost(
+      String path, T body, Map<String, String> headers, Map<String, String> queryParameters)
       throws IncogniaException {
-    Request request = buildPostRequest(path, body, headers);
+    Request request = buildPostRequest(path, body, headers, queryParameters);
     try {
       httpClient.newCall(request).execute().close();
     } catch (IOException e) {

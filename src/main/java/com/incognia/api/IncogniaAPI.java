@@ -35,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 public class IncogniaAPI {
   private static final String API_URL = "https://api.incognia.com";
   private static final String EVALUATION_PARAMETER = "eval";
-
+  private static final String DRY_RUN_PARAMETER = "dry_run";
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
   /**
@@ -325,6 +325,15 @@ public class IncogniaAPI {
   public void registerFeedback(
       FeedbackEvent feedbackEvent, Instant timestamp, FeedbackIdentifiers identifiers)
       throws IncogniaException {
+    registerFeedback(feedbackEvent, timestamp, identifiers, Boolean.FALSE);
+  }
+
+  public void registerFeedback(
+      FeedbackEvent feedbackEvent,
+      Instant timestamp,
+      FeedbackIdentifiers identifiers,
+      Boolean dryRun)
+      throws IncogniaException {
     PostFeedbackRequestBody requestBody =
         PostFeedbackRequestBody.builder()
             .event(feedbackEvent)
@@ -336,7 +345,9 @@ public class IncogniaAPI {
             .signupId(identifiers.getSignupId())
             .externalId(identifiers.getExternalId())
             .build();
-    tokenAwareNetworkingClient.doPost("api/v2/feedbacks", requestBody);
+    Map<String, String> queryParameters = new HashMap<>();
+    queryParameters.put(DRY_RUN_PARAMETER, dryRun.toString());
+    tokenAwareNetworkingClient.doPost("api/v2/feedbacks", requestBody, queryParameters);
   }
 
   @NotNull

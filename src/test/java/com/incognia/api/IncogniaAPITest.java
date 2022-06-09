@@ -381,10 +381,12 @@ class IncogniaAPITest {
     assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());
   }
 
-  @Test
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  @NullSource
   @DisplayName("should be successful")
   @SneakyThrows
-  void testRegisterFeedback_whenDataIsValid() {
+  void testRegisterFeedback_whenDataIsValid(Boolean eval) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String accountId = "account-id";
@@ -411,7 +413,8 @@ class IncogniaAPITest {
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)
-            .build());
+            .build(),
+        eval == null ? Boolean.FALSE : eval);
   }
 
   @Test
