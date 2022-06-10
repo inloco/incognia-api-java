@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
@@ -36,6 +37,7 @@ public class IncogniaAPI {
   private static final String API_URL = "https://api.incognia.com";
   private static final String EVALUATION_PARAMETER = "eval";
   private static final String DRY_RUN_PARAMETER = "dry_run";
+
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
   /**
@@ -345,6 +347,7 @@ public class IncogniaAPI {
             .signupId(identifiers.getSignupId())
             .externalId(identifiers.getExternalId())
             .build();
+
     Map<String, String> queryParameters = new HashMap<>();
     queryParameters.put(DRY_RUN_PARAMETER, dryRun.toString());
     tokenAwareNetworkingClient.doPost("api/v2/feedbacks", requestBody, queryParameters);
