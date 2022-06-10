@@ -386,7 +386,7 @@ class IncogniaAPITest {
   @NullSource
   @DisplayName("should be successful")
   @SneakyThrows
-  void testRegisterFeedback_whenDataIsValid(Boolean eval) {
+  void testRegisterFeedback_whenDataIsValid(Boolean dryRun) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String accountId = "account-id";
@@ -414,7 +414,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .signupId(signupId)
             .build(),
-        eval == null ? Boolean.FALSE : eval);
+        dryRun);
   }
 
   @Test

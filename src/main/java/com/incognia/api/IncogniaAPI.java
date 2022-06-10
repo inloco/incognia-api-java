@@ -349,6 +349,7 @@ public class IncogniaAPI {
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();
+    dryRun = Objects.isNull(dryRun) ? false : dryRun;
     queryParameters.put(DRY_RUN_PARAMETER, dryRun.toString());
     tokenAwareNetworkingClient.doPost("api/v2/feedbacks", requestBody, queryParameters);
   }
