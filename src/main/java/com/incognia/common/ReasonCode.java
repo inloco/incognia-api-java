@@ -46,9 +46,12 @@ public enum ReasonCode {
   TRUSTED_LOCATION("trusted_location"),
   MULTI_DEVICE_ACCOUNT("multi_device_account"),
   CUSTOM_POS_ATM_FRAUD("custom_pos_atm_fraud"),
-  CUSTOM_ORDER_FLOW_FRAUD("custom_order_flow_fraud"),
+  CUSTOM_COLLUSION_FRAUD("custom_collusion_fraud"),
+  CUSTOM_OTHER_FRAUD("custom_other_fraud"),
+  CUSTOM_DISCIPLINE_BLOCK("custom_discipline_block"),
   DEVICE_LINKED_TO_CUSTOM_POS_ATM_FRAUD("device_linked_to_custom_pos_atm_fraud"),
-  DEVICE_LINKED_TO_CUSTOM_ORDER_FLOW_FRAUD("device_linked_to_custom_order_flow_fraud"),
+  DEVICE_LINKED_TO_CUSTOM_OTHER_FRAUD("device_linked_to_custom_other_fraud"),
+  DEVICE_LINKED_TO_CUSTOM_DISCIPLINE_BLOCK("device_linked_to_custom_discipline_block"),
   DEVICE_LINKED_TO_CUSTOM_COLLUSION_FRAUD("device_linked_to_custom_collusion_fraud");
 
   private final String code;
