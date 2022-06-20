@@ -327,14 +327,14 @@ public class IncogniaAPI {
   public void registerFeedback(
       FeedbackEvent feedbackEvent, Instant timestamp, FeedbackIdentifiers identifiers)
       throws IncogniaException {
-    registerFeedback(feedbackEvent, timestamp, identifiers, Boolean.FALSE);
+    registerFeedback(feedbackEvent, timestamp, identifiers, false);
   }
 
   public void registerFeedback(
       FeedbackEvent feedbackEvent,
       Instant timestamp,
       FeedbackIdentifiers identifiers,
-      Boolean dryRun)
+      boolean dryRun)
       throws IncogniaException {
     PostFeedbackRequestBody requestBody =
         PostFeedbackRequestBody.builder()
@@ -349,8 +349,7 @@ public class IncogniaAPI {
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();
-    dryRun = Objects.isNull(dryRun) ? false : dryRun;
-    queryParameters.put(DRY_RUN_PARAMETER, dryRun.toString());
+    queryParameters.put(DRY_RUN_PARAMETER, String.valueOf(dryRun));
     tokenAwareNetworkingClient.doPost("api/v2/feedbacks", requestBody, queryParameters);
   }
 

@@ -383,10 +383,9 @@ class IncogniaAPITest {
 
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
-  @NullSource
   @DisplayName("should be successful")
   @SneakyThrows
-  void testRegisterFeedback_whenDataIsValid(Boolean dryRun) {
+  void testRegisterFeedback_whenDataIsValid(boolean dryRun) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String accountId = "account-id";
