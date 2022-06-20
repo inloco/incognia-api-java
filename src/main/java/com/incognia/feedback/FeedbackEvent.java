@@ -48,5 +48,15 @@ public enum FeedbackEvent {
   @JsonProperty("password_change_failed")
   PASSWORD_CHANGE_FAILED,
   @JsonProperty("promotion_abuse")
-  PROMOTION_ABUSE;
+  PROMOTION_ABUSE,
+  @JsonProperty("custom_other_fraud")
+  CUSTOM_OTHER_FRAUD,
+  @JsonProperty("custom_discipline_block")
+  CUSTOM_DISCIPLINE_BLOCK,
+  @JsonProperty("custom_pos_atm_fraud")
+  CUSTOM_POS_ATM_FRAUD,
+  @JsonProperty("custom_collusion_fraud")
+  CUSTOM_COLLUSION_FRAUD,
+  @JsonProperty("custom_cargo_fraud")
+  CUSTOM_CARGO_FRAUD;
 }
