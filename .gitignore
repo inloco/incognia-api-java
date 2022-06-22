@@ -5,3 +5,6 @@
 build
 
 .idea
+
+# Ignore ProjectVersion file
+src/main/java/com/incognia/api/ProjectVersion.java
