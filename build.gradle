@@ -22,7 +22,6 @@ public class ProjectVersion {
     }
 }
 compileJava.dependsOn createProjectVersionFile
-build.dependsOn createProjectVersionFile
 
 repositories {
     mavenCentral()
