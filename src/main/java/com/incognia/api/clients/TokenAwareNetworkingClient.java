@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient;
 public class TokenAwareNetworkingClient {
   private static final String TOKEN_PATH = "api/v2/token";
   private static final String USER_AGENT_HEADER = "User-Agent";
+  private static final String USER_AGENT_HEADER_CONTENT = buildUserAgentHeader();
   private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final int TOKEN_REFRESH_BEFORE_SECONDS = 10;
   private static final String TOKEN_REQUEST_BODY = "grant_type=client_credentials";
@@ -38,7 +39,7 @@ public class TokenAwareNetworkingClient {
     Map<String, String> headers =
         new HashMap<String, String>() {
           {
-            put(USER_AGENT_HEADER, buildUserAgentHeader());
+            put(USER_AGENT_HEADER, USER_AGENT_HEADER_CONTENT);
             put(AUTHORIZATION_HEADER, buildAuthorizationHeader());
           }
         };
@@ -50,7 +51,7 @@ public class TokenAwareNetworkingClient {
     Map<String, String> headers =
         new HashMap<String, String>() {
           {
-            put(USER_AGENT_HEADER, buildUserAgentHeader());
+            put(USER_AGENT_HEADER, USER_AGENT_HEADER_CONTENT);
             put(AUTHORIZATION_HEADER, buildAuthorizationHeader());
           }
         };
@@ -63,7 +64,7 @@ public class TokenAwareNetworkingClient {
     Map<String, String> headers =
         new HashMap<String, String>() {
           {
-            put(USER_AGENT_HEADER, buildUserAgentHeader());
+            put(USER_AGENT_HEADER, USER_AGENT_HEADER_CONTENT);
             put(AUTHORIZATION_HEADER, buildAuthorizationHeader());
           }
         };
@@ -75,7 +76,7 @@ public class TokenAwareNetworkingClient {
     Map<String, String> headers =
         new HashMap<String, String>() {
           {
-            put(USER_AGENT_HEADER, buildUserAgentHeader());
+            put(USER_AGENT_HEADER, USER_AGENT_HEADER_CONTENT);
             put(AUTHORIZATION_HEADER, buildAuthorizationHeader());
           }
         };
@@ -86,7 +87,7 @@ public class TokenAwareNetworkingClient {
     return token.getTokenType() + " " + token.getAccessToken();
   }
 
-  private String buildUserAgentHeader() {
+  private static String buildUserAgentHeader() {
     return String.format(
         "incognia-api-java/%s (%s %s %s) Java/%s",
         com.incognia.api.ProjectVersion.PROJECT_VERSION,
