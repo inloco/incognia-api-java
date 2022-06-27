@@ -11,9 +11,10 @@ Incognia API Java Client is available on Maven Central.
 ### Maven
 Add our maven repository
 ```
-maven {
-    url 'https://repo.incognia.com/java'
-}
+<repository> 
+     <id>incognia</id>
+     <url>https://repo.incognia.com/java</url>
+</repository>
 ```
 
 And then download the artifact incognia-api-client
