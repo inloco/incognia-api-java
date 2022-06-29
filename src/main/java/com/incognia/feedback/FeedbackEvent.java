@@ -58,5 +58,7 @@ public enum FeedbackEvent {
   @JsonProperty("custom_collusion_fraud")
   CUSTOM_COLLUSION_FRAUD,
   @JsonProperty("custom_cargo_fraud")
-  CUSTOM_CARGO_FRAUD;
+  CUSTOM_CARGO_FRAUD,
+  @JsonProperty("custom_churn_debt20d")
+  CUSTOM_CHURN_DEBT20D;
 }
