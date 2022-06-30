@@ -20,6 +20,14 @@ import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class TokenAwareDispatcher extends Dispatcher {
+  private static final String USER_AGENT_HEADER =
+      String.format(
+          "incognia-api-java/%s (%s %s %s) Java/%s",
+          com.incognia.api.ProjectVersion.PROJECT_VERSION,
+          System.getProperty("os.name"),
+          System.getProperty("os.version"),
+          System.getProperty("os.arch"),
+          System.getProperty("java.version"));
   private final String token;
   private final String clientId;
   private final String clientSecret;
@@ -45,10 +53,12 @@ public class TokenAwareDispatcher extends Dispatcher {
   public MockResponse dispatch(@NotNull RecordedRequest request) {
     if ("/api/v2/onboarding".equals(request.getPath()) && "POST".equals(request.getMethod())) {
       assertThat(request.getHeader("Content-Type")).contains("application/json");
+      assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
       assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
       return new MockResponse().setResponseCode(200).setBody("{\"name\": \"my awesome name\"}");
     }
     if ("/api/v2/onboarding".equals(request.getPath()) && "GET".equals(request.getMethod())) {
+      assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
       assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
       return new MockResponse().setResponseCode(200).setBody("{\"name\": \"my awesome name\"}");
     }
@@ -81,6 +91,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @SneakyThrows
   private MockResponse handlePostFeedback(RecordedRequest request) {
     assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
     assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
     PostFeedbackRequestBody postFeedbackRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostFeedbackRequestBody.class);
@@ -91,6 +102,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @SneakyThrows
   private MockResponse handlePostTransaction(RecordedRequest request) {
     assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
     assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
     PostTransactionRequestBody postTransactionRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostTransactionRequestBody.class);
@@ -102,6 +114,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @SneakyThrows
   private MockResponse handlePostTransactionGivenFalseEval(RecordedRequest request) {
     assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
     assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
     PostTransactionRequestBody postTransactionRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostTransactionRequestBody.class);
@@ -113,6 +126,7 @@ public class TokenAwareDispatcher extends Dispatcher {
 
   @NotNull
   private MockResponse handleGetSignup(@NotNull RecordedRequest request) {
+    assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
     assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
     String response = ResourceUtils.getResourceFileAsString("get_onboarding_response.json");
     return new MockResponse().setResponseCode(200).setBody(response);
@@ -122,6 +136,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   private MockResponse handlePostSignup(@NotNull RecordedRequest request)
       throws java.io.IOException {
     assertThat(request.getHeader("Content-Type")).contains("application/json");
+    assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
     assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
     PostSignupRequestBody postSignupRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostSignupRequestBody.class);

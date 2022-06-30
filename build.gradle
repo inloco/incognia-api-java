@@ -10,6 +10,20 @@ plugins {
 group = "com.incognia"
 version = "2.2.0"
 
+task createProjectVersionFile {
+    def projectVersionDir = "$projectDir/src/main/java/com/incognia/api"
+    doLast {
+        new File(projectVersionDir, "ProjectVersion.java").text =
+"""package com.incognia.api;
+
+public class ProjectVersion {
+  public static final String PROJECT_VERSION = "$project.version";
+}
+"""
+    }
+}
+compileJava.dependsOn createProjectVersionFile
+
 repositories {
     mavenCentral()
 }
