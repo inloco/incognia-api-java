@@ -3,7 +3,6 @@ plugins {
     id 'maven-publish'
     id 'signing'
     id 'com.diffplug.spotless' version '6.2.2'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
     id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
@@ -74,13 +73,6 @@ spotless {
     }
 }
 
-shadowJar {
-    classifier = ''
-    relocate 'okhttp3', 'shadow.okhttp3'
-    relocate 'com.fasterxml', 'shadow.com.fasterxml'
-    relocate 'com.auth0', 'shadow.com.auth0'
-}
-
 tasks.named('test') {
     useJUnitPlatform()
 }
@@ -89,7 +81,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) { publication ->
             publication.artifactId = 'incognia-api-client'
-            project.shadow.component(publication)
+            artifact tasks.jar
             artifact tasks.javadocJar
             artifact tasks.sourcesJar
             pom {
