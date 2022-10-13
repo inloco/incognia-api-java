@@ -43,7 +43,7 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp"
     implementation "com.fasterxml.jackson.core:jackson-databind:2.13.4"
 
-    testImplementation 'com.auth0:java-jwt:3.18.3'
+    testImplementation 'com.auth0:java-jwt:4.1.0'
     testImplementation 'commons-io:commons-io:2.11.0'
     testImplementation 'org.assertj:assertj-core:3.23.1'
     testImplementation 'org.mockito:mockito-core:4.8.0'
