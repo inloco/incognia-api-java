@@ -33,6 +33,9 @@ public class TokenAwareDispatcher extends Dispatcher {
   private final String clientSecret;
   private final ObjectMapper objectMapper;
   @Setter private String expectedInstallationId;
+  @Setter private String expectedExternalId;
+  @Setter private String expectedAccountId;
+  @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
   @Setter private UUID expectedSignupId;
   @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
@@ -141,6 +144,9 @@ public class TokenAwareDispatcher extends Dispatcher {
     PostSignupRequestBody postSignupRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostSignupRequestBody.class);
     assertThat(postSignupRequestBody.getInstallationId()).isEqualTo(expectedInstallationId);
+    assertThat(postSignupRequestBody.getAccountId()).isEqualTo(expectedAccountId);
+    assertThat(postSignupRequestBody.getExternalId()).isEqualTo(expectedExternalId);
+    assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
     String response = ResourceUtils.getResourceFileAsString("post_onboarding_response.json");
     return new MockResponse().setResponseCode(200).setBody(response);

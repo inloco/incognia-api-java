@@ -68,14 +68,26 @@ class IncogniaAPITest {
   void testRegisterSignup_whenDataIsValid() {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
+    String accountId = "my-account";
+    String policyId = UUID.randomUUID().toString();
+    String externalId = "external-id";
     Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedInstallationId(installationId);
+    dispatcher.setExpectedExternalId(externalId);
+    dispatcher.setExpectedPolicyId(policyId);
+    dispatcher.setExpectedAccountId(accountId);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
-        RegisterSignupRequest.builder().installationId(installationId).address(address).build();
+        RegisterSignupRequest.builder()
+            .installationId(installationId)
+            .accountId(accountId)
+            .policyId(policyId)
+            .externalId(externalId)
+            .address(address)
+            .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
         .extracting("id", "requestId", "riskAssessment", "deviceId")

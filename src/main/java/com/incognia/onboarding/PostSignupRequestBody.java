@@ -12,4 +12,7 @@ public class PostSignupRequestBody {
   String addressLine;
   StructuredAddress structuredAddress;
   Coordinates addressCoordinates;
+  String externalId;
+  String policyId;
+  String accountId;
 }
