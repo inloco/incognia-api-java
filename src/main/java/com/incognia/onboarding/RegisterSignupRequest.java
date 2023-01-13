@@ -9,4 +9,7 @@ import lombok.Value;
 public class RegisterSignupRequest {
   String installationId;
   Address address;
+  String externalId;
+  String policyId;
+  String accountId;
 }
