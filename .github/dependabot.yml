@@ -3,10 +3,7 @@ updates:
 - package-ecosystem: gradle
   directory: "/"
   schedule:
-    interval: daily
+    interval: "weekly"
+    day: "monday"
     time: "03:00"
-  open-pull-requests-limit: 3
-  assignees:
-      - "racevedoo"
-  reviewers:
-      - "racevedoo"
+  open-pull-requests-limit: 20
