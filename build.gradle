@@ -33,7 +33,7 @@ configurations {
 }
 
 ext {
-    lombokVersion = '1.18.26'
+    lombokVersion = '1.18.28'
 }
 
 dependencies {
