@@ -22,7 +22,7 @@ And then download the artifact incognia-api-client
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.3.2</version>
+  <version>2.3.3</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.3.2'
+     implementation 'com.incognia:incognia-api-client:2.3.3'
 }
 ```
 We support Java 8+.
