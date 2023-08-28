@@ -81,9 +81,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) { publication ->
             publication.artifactId = 'incognia-api-client'
-            artifact tasks.jar
-            artifact tasks.javadocJar
-            artifact tasks.sourcesJar
+            from components.java
             pom {
                 name = 'Incognia API Client'
                 description = "Java client library for Incognia's API"
