@@ -113,7 +113,8 @@ public class IncogniaAPI {
             request.getAddress().getCoordinates(),
             request.getExternalId(),
             request.getPolicyId(),
-            request.getAccountId());
+            request.getAccountId(),
+            request.getAdditionalLocations());
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
   }

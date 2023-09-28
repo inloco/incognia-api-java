@@ -15,4 +15,5 @@ public class SignupAssessment {
   Set<Reason> reasons;
   Map<String, Object> evidence;
   String deviceId;
+  String installationId;
 }
