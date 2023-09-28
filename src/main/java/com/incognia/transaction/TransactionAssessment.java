@@ -16,4 +16,5 @@ public class TransactionAssessment {
   List<Reason> reasons;
   Map<String, Object> evidence;
   String deviceId;
+  String installationId;
 }
