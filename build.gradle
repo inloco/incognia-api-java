@@ -41,7 +41,7 @@ dependencies {
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
     implementation platform("com.squareup.okhttp3:okhttp-bom:4.11.0")
     implementation "com.squareup.okhttp3:okhttp"
-    implementation "com.fasterxml.jackson.core:jackson-databind:2.15.2"
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.15.3"
 
     testImplementation 'com.auth0:java-jwt:4.4.0'
     testImplementation 'commons-io:commons-io:2.13.0'
