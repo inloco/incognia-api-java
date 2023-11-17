@@ -22,6 +22,7 @@ import com.incognia.transaction.PostTransactionRequestBody;
 import com.incognia.transaction.TransactionAddress;
 import com.incognia.transaction.TransactionAssessment;
 import com.incognia.transaction.login.RegisterLoginRequest;
+import com.incognia.transaction.login.RegisterWebLoginRequest;
 import com.incognia.transaction.payment.CardInfo;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentType;
@@ -216,6 +217,42 @@ class IncogniaAPITest {
             .evaluateTransaction(eval)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
+    assertTransactionAssessment(transactionAssessment);
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true})
+  @NullSource
+  @DisplayName("should return the expected web login transaction response")
+  @SneakyThrows
+  void testRegisterWebLogin_whenDataIsValid(Boolean eval) {
+    String token = TokenCreationFixture.createToken();
+    String installationId = "installation-id";
+    String accountId = "account-id";
+    String externalId = "external-id";
+    String sessionToken = "session-token";
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedTransactionRequestBody(
+        PostTransactionRequestBody.builder()
+            .installationId(installationId)
+            .externalId(externalId)
+            .accountId(accountId)
+            .type("login")
+            .sessionToken(sessionToken)
+            .addresses(null)
+            .paymentMethods(null)
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    RegisterWebLoginRequest loginRequest =
+        RegisterWebLoginRequest.builder()
+            .installationId(installationId)
+            .accountId(accountId)
+            .externalId(externalId)
+            .evaluateTransaction(eval)
+            .sessionToken(sessionToken)
+            .build();
+    TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
   }
 

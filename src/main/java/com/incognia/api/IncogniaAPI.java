@@ -16,6 +16,7 @@ import com.incognia.transaction.PostTransactionRequestBody;
 import com.incognia.transaction.TransactionAddress;
 import com.incognia.transaction.TransactionAssessment;
 import com.incognia.transaction.login.RegisterLoginRequest;
+import com.incognia.transaction.login.RegisterWebLoginRequest;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
 import java.time.Instant;
 import java.util.HashMap;
@@ -185,6 +186,61 @@ public class IncogniaAPI {
             .installationId(request.getInstallationId())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
+            .type("login")
+            .build();
+
+    Map<String, String> queryParameters = new HashMap<>();
+    if (request.shouldEvaluateTransaction() != null) {
+      queryParameters.put(EVALUATION_PARAMETER, request.shouldEvaluateTransaction().toString());
+    }
+    return tokenAwareNetworkingClient.doPost(
+        "api/v2/authentication/transactions",
+        requestBody,
+        TransactionAssessment.class,
+        queryParameters);
+  }
+
+  /**
+   * Registers a web login to obtain a risk assessment. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/transactions-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * try {
+   *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
+   *         .installationId("installation-id")
+   *         .accountId("account-id")
+   *         .externalId("external-id")
+   *         .sessionToken("session-token")
+   *         .evaluateTransaction(true) // can be omitted as it uses true as the default value
+   *         .build();
+   *      TransactionAssessment assessment = api.registerLogin(loginRequest);
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param request the {@link RegisterWebLoginRequest} model with the properties we need to make
+   *     the assessment
+   * @return the assessment for the login
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
+  public TransactionAssessment registerWebLogin(RegisterWebLoginRequest request)
+      throws IncogniaException {
+    Asserts.assertNotNull(request, "register login request");
+    Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
+    Asserts.assertNotEmpty(request.getAccountId(), "account id");
+    Asserts.assertNotEmpty(request.getSessionToken(), "session token");
+    PostTransactionRequestBody requestBody =
+        PostTransactionRequestBody.builder()
+            .installationId(request.getInstallationId())
+            .accountId(request.getAccountId())
+            .externalId(request.getExternalId())
+            .sessionToken(request.getSessionToken())
             .type("login")
             .build();
 

@@ -13,6 +13,7 @@ import lombok.Value;
 public class PostTransactionRequestBody {
   String installationId;
   String accountId;
+  String sessionToken;
 
   String type;
   String externalId;
