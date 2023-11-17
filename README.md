@@ -22,7 +22,7 @@ And then download the artifact incognia-api-client
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.4.1</version>
+  <version>2.5.0</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.4.1'
+     implementation 'com.incognia:incognia-api-client:2.5.0'
 }
 ```
 We support Java 8+.
@@ -134,6 +134,29 @@ try {
           .evaluateTransaction(true) // can be omitted as it uses true as the default value
           .build();
      TransactionAssessment assessment = api.registerLogin(registerLoginRequest);
+} catch (IncogniaAPIException e) {
+     //Some api error happened (invalid data, invalid credentials)
+} catch (IncogniaException e) {
+     //Something unexpected happened
+}
+```
+
+#### Registering Web Login
+
+This method registers a new web login for the given installation and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
+
+```java
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+try {
+     RegisterLoginRequest registerLoginRequest =
+        RegisterLoginRequest.builder()
+          .installationId("installation id")
+          .accountId("account id")
+          .externalId("external id")
+          .sessionToken("session-token")
+          .evaluateTransaction(true) // can be omitted as it uses true as the default value
+          .build();
+     TransactionAssessment assessment = api.registerWebLogin(registerLoginRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
