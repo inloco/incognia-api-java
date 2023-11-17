@@ -209,7 +209,6 @@ public class IncogniaAPI {
    * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
-   *         .installationId("installation-id")
    *         .accountId("account-id")
    *         .externalId("external-id")
    *         .sessionToken("session-token")
@@ -232,12 +231,10 @@ public class IncogniaAPI {
   public TransactionAssessment registerWebLogin(RegisterWebLoginRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register login request");
-    Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     Asserts.assertNotEmpty(request.getSessionToken(), "session token");
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
-            .installationId(request.getInstallationId())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .sessionToken(request.getSessionToken())

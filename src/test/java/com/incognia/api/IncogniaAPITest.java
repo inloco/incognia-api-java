@@ -227,7 +227,6 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterWebLogin_whenDataIsValid(Boolean eval) {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
     String accountId = "account-id";
     String externalId = "external-id";
     String sessionToken = "session-token";
@@ -235,7 +234,6 @@ class IncogniaAPITest {
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
-            .installationId(installationId)
             .externalId(externalId)
             .accountId(accountId)
             .type("login")
@@ -246,7 +244,6 @@ class IncogniaAPITest {
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
         RegisterWebLoginRequest.builder()
-            .installationId(installationId)
             .accountId(accountId)
             .externalId(externalId)
             .evaluateTransaction(eval)
