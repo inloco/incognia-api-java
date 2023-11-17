@@ -8,7 +8,6 @@ import lombok.Value;
 @Value
 @Builder
 public class RegisterWebLoginRequest {
-  String installationId;
   String accountId;
   String externalId;
   String sessionToken;

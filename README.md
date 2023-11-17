@@ -150,7 +150,6 @@ IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
      RegisterLoginRequest registerLoginRequest =
         RegisterLoginRequest.builder()
-          .installationId("installation id")
           .accountId("account id")
           .externalId("external id")
           .sessionToken("session-token")
