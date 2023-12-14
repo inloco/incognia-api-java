@@ -165,9 +165,9 @@ public class TokenAwareDispatcher extends Dispatcher {
                 Base64.getUrlDecoder().decode(authorizationHeader.split(" ")[1]),
                 StandardCharsets.UTF_8)
             .split(":", 2);
-    String clientId = idAndSecret[0];
-    String clientSecret = idAndSecret[1];
-    if (this.clientId.equals(clientId) && this.clientSecret.equals(clientSecret)) {
+    String requestClientId = idAndSecret[0];
+    String requestClientSecret = idAndSecret[1];
+    if (this.clientId.equals(requestClientId) && this.clientSecret.equals(requestClientSecret)) {
       return new MockResponse()
           .setResponseCode(200)
           .setBody(
