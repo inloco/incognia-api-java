@@ -10,6 +10,7 @@ import com.incognia.feedback.FeedbackIdentifiers;
 import com.incognia.feedback.PostFeedbackRequestBody;
 import com.incognia.onboarding.PostSignupRequestBody;
 import com.incognia.onboarding.RegisterSignupRequest;
+import com.incognia.onboarding.RegisterWebSignupRequest;
 import com.incognia.onboarding.SignupAssessment;
 import com.incognia.transaction.AddressType;
 import com.incognia.transaction.PostTransactionRequestBody;
@@ -109,6 +110,7 @@ public class IncogniaAPI {
     PostSignupRequestBody postSignupRequestBody =
         new PostSignupRequestBody(
             request.getInstallationId(),
+            null,
             request.getAddress().getAddressLine(),
             request.getAddress().getStructuredAddress(),
             request.getAddress().getCoordinates(),
@@ -186,6 +188,7 @@ public class IncogniaAPI {
             .installationId(request.getInstallationId())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
+            .policyId(request.getPolicyId())
             .type("login")
             .build();
 
@@ -238,6 +241,7 @@ public class IncogniaAPI {
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .sessionToken(request.getSessionToken())
+            .policyId(request.getPolicyId())
             .type("login")
             .build();
 
@@ -250,6 +254,44 @@ public class IncogniaAPI {
         requestBody,
         TransactionAssessment.class,
         queryParameters);
+  }
+
+  /**
+   * Registers a new signup for the given installation and address. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/signup-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * try {
+   *      RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder().sessionToken(sessionToken).address(address).build();
+   *      SignupAssessment assessment = api.registerSignup(webSignupRequest);
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param request the {@link RegisterWebSignupRequest} model that contains the properties we need
+   *     to make an assessment.
+   * @return the assessment
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
+  public SignupAssessment registerWebSignup(RegisterWebSignupRequest request)
+      throws IncogniaException {
+    Asserts.assertNotNull(request, "register signup request");
+    Asserts.assertNotEmpty(request.getSessionToken(), "session token");
+    PostSignupRequestBody postSignupRequestBody =
+        PostSignupRequestBody.builder()
+            .sessionToken(request.getSessionToken())
+            .externalId(request.getExternalId())
+            .policyId(request.getPolicyId())
+            .accountId(request.getAccountId())
+            .build();
+    return tokenAwareNetworkingClient.doPost(
+        "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
   }
 
   /**
