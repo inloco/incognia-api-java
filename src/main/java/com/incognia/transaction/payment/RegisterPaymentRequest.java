@@ -16,6 +16,7 @@ public class RegisterPaymentRequest {
   String installationId;
   String accountId;
   String externalId;
+  String policyId;
   @Builder.Default Map<AddressType, Address> addresses = Collections.emptyMap();
   @Builder.Default List<PaymentMethod> paymentMethods = Collections.emptyList();
   PaymentValue paymentValue;

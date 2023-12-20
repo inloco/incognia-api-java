@@ -108,16 +108,16 @@ public class IncogniaAPI {
     Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
     Asserts.assertNotNull(request.getAddress(), "address");
     PostSignupRequestBody postSignupRequestBody =
-        new PostSignupRequestBody(
-            request.getInstallationId(),
-            null,
-            request.getAddress().getAddressLine(),
-            request.getAddress().getStructuredAddress(),
-            request.getAddress().getCoordinates(),
-            request.getExternalId(),
-            request.getPolicyId(),
-            request.getAccountId(),
-            request.getAdditionalLocations());
+        PostSignupRequestBody.builder()
+            .installationId(request.getInstallationId())
+            .addressLine(request.getAddress().getAddressLine())
+            .structuredAddress(request.getAddress().getStructuredAddress())
+            .addressCoordinates(request.getAddress().getCoordinates())
+            .externalId(request.getExternalId())
+            .policyId(request.getPolicyId())
+            .accountId(request.getAccountId())
+            .additionalLocations(request.getAdditionalLocations())
+            .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
   }
@@ -162,6 +162,7 @@ public class IncogniaAPI {
    *         .installationId("installation-id")
    *         .accountId("account-id")
    *         .externalId("external-id")
+   *         .policyId("policy-id")
    *         .evaluateTransaction(true) // can be omitted as it uses true as the default value
    *         .build();
    *      TransactionAssessment assessment = api.registerLogin(loginRequest);
@@ -215,6 +216,7 @@ public class IncogniaAPI {
    *         .accountId("account-id")
    *         .externalId("external-id")
    *         .sessionToken("session-token")
+   *         .policyId("policy-id")
    *         .evaluateTransaction(true) // can be omitted as it uses true as the default value
    *         .build();
    *      TransactionAssessment assessment = api.registerLogin(loginRequest);
@@ -342,6 +344,7 @@ public class IncogniaAPI {
    *              .installationId( "installation-id")
    *              .accountId("account-id")
    *              .externalId("external-id")
+   *              .policyId("policy-id")
    *              .addresses(addresses)
    *              .evaluateTransaction(true) // can be omitted as it uses true as the default value
    *              .paymentValue(PaymentValue.builder().currency("BRL").amount(10.0).build())
@@ -373,6 +376,7 @@ public class IncogniaAPI {
             .installationId(request.getInstallationId())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
+            .policyId(request.getPolicyId())
             .type("payment")
             .addresses(transactionAddresses)
             .paymentValue(request.getPaymentValue())
