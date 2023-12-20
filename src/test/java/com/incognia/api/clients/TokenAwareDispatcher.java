@@ -37,6 +37,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedAccountId;
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
+  @Setter private String expectedSessionToken;
   @Setter private UUID expectedSignupId;
   @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
   @Setter private PostFeedbackRequestBody expectedFeedbackRequestBody;

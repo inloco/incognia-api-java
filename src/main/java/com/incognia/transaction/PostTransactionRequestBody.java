@@ -14,7 +14,7 @@ public class PostTransactionRequestBody {
   String installationId;
   String accountId;
   String sessionToken;
-
+  String policyId;
   String type;
   String externalId;
 

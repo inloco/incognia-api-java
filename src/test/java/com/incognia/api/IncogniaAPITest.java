@@ -16,6 +16,7 @@ import com.incognia.feedback.PostFeedbackRequestBody;
 import com.incognia.fixtures.AddressFixture;
 import com.incognia.fixtures.TokenCreationFixture;
 import com.incognia.onboarding.RegisterSignupRequest;
+import com.incognia.onboarding.RegisterWebSignupRequest;
 import com.incognia.onboarding.SignupAssessment;
 import com.incognia.transaction.AddressType;
 import com.incognia.transaction.PostTransactionRequestBody;
@@ -127,6 +128,67 @@ class IncogniaAPITest {
   }
 
   @Test
+  @DisplayName("should return the expected web signup response")
+  @SneakyThrows
+  void testRegisterWebSignup_whenDataIsValid() {
+    String token = TokenCreationFixture.createToken();
+    String sessionToken = "session-token";
+    String accountId = "my-account";
+    String policyId = UUID.randomUUID().toString();
+    String externalId = "external-id";
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedSessionToken(sessionToken);
+    dispatcher.setExpectedExternalId(externalId);
+    dispatcher.setExpectedPolicyId(policyId);
+    dispatcher.setExpectedAccountId(accountId);
+    mockServer.setDispatcher(dispatcher);
+    RegisterWebSignupRequest registerSignupRequest =
+        RegisterWebSignupRequest.builder()
+            .sessionToken(sessionToken)
+            .accountId(accountId)
+            .policyId(policyId)
+            .externalId(externalId)
+            .build();
+    SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
+    assertThat(webSignupAssessment)
+        .extracting("id", "requestId", "riskAssessment", "deviceId")
+        .containsExactly(
+            UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
+            UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
+            Assessment.LOW_RISK,
+            "1df6d999-556d-42c3-8c63-357e5d08d95b");
+    Map<String, Object> locationServices = new HashMap<>();
+    locationServices.put("location_permission_enabled", true);
+    locationServices.put("location_sensors_enabled", true);
+    Map<String, Object> deviceIntegrity = new HashMap<>();
+    deviceIntegrity.put("probable_root", false);
+    deviceIntegrity.put("emulator", false);
+    deviceIntegrity.put("gps_spoofing", false);
+    deviceIntegrity.put("from_official_store", true);
+
+    Map<String, Object> expectedEvidence = new HashMap<>();
+    expectedEvidence.put("device_model", "Moto Z2 Play");
+    expectedEvidence.put("geocode_quality", "good");
+    expectedEvidence.put("address_quality", "good");
+    expectedEvidence.put("address_match", "street");
+    expectedEvidence.put("location_events_near_address", 38);
+    expectedEvidence.put("location_events_quantity", 288);
+    expectedEvidence.put("location_services", locationServices);
+    expectedEvidence.put("device_integrity", deviceIntegrity);
+
+    assertThat(webSignupAssessment.getEvidence())
+        .containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+
+    Reason expectedReason =
+        Reason.builder()
+            .code(ReasonCode.TRUSTED_LOCATION.getCode())
+            .source(ReasonSource.LOCAL.getSource())
+            .build();
+    assertThat(webSignupAssessment.getReasons()).containsExactly(expectedReason);
+  }
+
+  @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
   void testRegisterSignup_whenEmptyInstallationId() {
@@ -139,6 +201,18 @@ class IncogniaAPITest {
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'installation id' cannot be empty");
+  }
+
+  @Test
+  @DisplayName("should throw illegal argument exception with correct message")
+  @SneakyThrows
+  void testRegisterWebSignup_whenEmptySessionToken() {
+    assertThatThrownBy(
+            () ->
+                client.registerWebSignup(
+                    RegisterWebSignupRequest.builder().sessionToken("").build()))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'session token' cannot be empty");
   }
 
   @Test
@@ -197,6 +271,7 @@ class IncogniaAPITest {
     String installationId = "installation-id";
     String accountId = "account-id";
     String externalId = "external-id";
+    String policyId = "policy-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
@@ -207,6 +282,7 @@ class IncogniaAPITest {
             .type("login")
             .addresses(null)
             .paymentMethods(null)
+            .policyId(policyId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -215,6 +291,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .externalId(externalId)
             .evaluateTransaction(eval)
+            .policyId(policyId)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -230,6 +307,7 @@ class IncogniaAPITest {
     String accountId = "account-id";
     String externalId = "external-id";
     String sessionToken = "session-token";
+    String policyId = "policy-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
@@ -240,6 +318,7 @@ class IncogniaAPITest {
             .sessionToken(sessionToken)
             .addresses(null)
             .paymentMethods(null)
+            .policyId(policyId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -248,6 +327,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .evaluateTransaction(eval)
             .sessionToken(sessionToken)
+            .policyId(policyId)
             .build();
     TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -261,6 +341,7 @@ class IncogniaAPITest {
     String installationId = "installation-id";
     String accountId = "account-id";
     String externalId = "external-id";
+    String policyId = "policy-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
@@ -271,6 +352,7 @@ class IncogniaAPITest {
             .type("login")
             .addresses(null)
             .paymentMethods(null)
+            .policyId(policyId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -279,6 +361,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .externalId(externalId)
             .evaluateTransaction(false)
+            .policyId(policyId)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());

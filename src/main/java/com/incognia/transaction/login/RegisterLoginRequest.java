@@ -11,6 +11,7 @@ public class RegisterLoginRequest {
   String installationId;
   String accountId;
   String externalId;
+  String policyId;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;

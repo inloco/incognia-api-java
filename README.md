@@ -22,7 +22,7 @@ And then download the artifact incognia-api-client
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.5.1</version>
+  <version>2.6.0</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.5.1'
+     implementation 'com.incognia:incognia-api-client:2.6.0'
 }
 ```
 We support Java 8+.
@@ -111,6 +111,24 @@ IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
      UUID signupId = UUID.fromString("c9ac2803-c868-4b7a-8323-8a6b96298ebe");
      SignupAssessment assessment = api.getSignupAssessment(signupId);
+} catch (IncogniaAPIException e) {
+     //Some api error happened (invalid data, invalid credentials)
+} catch (IncogniaException e) {
+     //Something unexpected happened
+}
+```
+
+#### Registering Web Signup
+
+This method registers a new web signup for the given session token, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
+
+```java
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+try {
+    RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder()
+        .sessionToken("session token")
+        .build();
+     SignupAssessment assessment = api.registerSignup(webSignupRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
