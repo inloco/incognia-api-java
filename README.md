@@ -118,6 +118,24 @@ try {
 }
 ```
 
+#### Registering Web Signup
+
+This method registers a new web signup for the given session token, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
+
+```java
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+try {
+    RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder()
+        .sessionToken("session token")
+        .build();
+     SignupAssessment assessment = api.registerSignup(webSignupRequest);
+} catch (IncogniaAPIException e) {
+     //Some api error happened (invalid data, invalid credentials)
+} catch (IncogniaException e) {
+     //Something unexpected happened
+}
+```
+
 #### Registering Login
 
 This method registers a new login for the given installation and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
