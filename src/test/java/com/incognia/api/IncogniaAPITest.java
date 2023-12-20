@@ -377,6 +377,7 @@ class IncogniaAPITest {
     String installationId = "installation-id";
     String accountId = "account-id";
     String externalId = "external-id";
+    String policyId = "policy-id";
     Address address =
         Address.builder()
             .structuredAddress(
@@ -419,6 +420,7 @@ class IncogniaAPITest {
             .installationId(installationId)
             .accountId(accountId)
             .externalId(externalId)
+            .policyId(policyId)
             .addresses(Collections.singletonMap(AddressType.SHIPPING, address))
             .evaluateTransaction(eval)
             .paymentValue(paymentValue)
@@ -428,6 +430,7 @@ class IncogniaAPITest {
         PostTransactionRequestBody.builder()
             .installationId(installationId)
             .externalId(externalId)
+            .policyId(policyId)
             .accountId(accountId)
             .type("payment")
             .addresses(transactionAddresses)
@@ -447,6 +450,7 @@ class IncogniaAPITest {
     String installationId = "installation-id";
     String accountId = "account-id";
     String externalId = "external-id";
+    String policyId = "policy-id";
     Address address =
         Address.builder()
             .structuredAddress(
@@ -489,6 +493,7 @@ class IncogniaAPITest {
         PostTransactionRequestBody.builder()
             .installationId(installationId)
             .externalId(externalId)
+            .policyId(policyId)
             .accountId(accountId)
             .type("payment")
             .addresses(transactionAddresses)
@@ -501,6 +506,7 @@ class IncogniaAPITest {
             .installationId(installationId)
             .accountId(accountId)
             .externalId(externalId)
+            .policyId(policyId)
             .addresses(Collections.singletonMap(AddressType.SHIPPING, address))
             .evaluateTransaction(false)
             .paymentValue(paymentValue)
