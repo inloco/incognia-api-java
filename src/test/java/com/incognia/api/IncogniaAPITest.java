@@ -523,6 +523,7 @@ class IncogniaAPITest {
   void testRegisterFeedback_whenDataIsValid(boolean dryRun) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
+    String sessionToken = "session-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
@@ -532,6 +533,7 @@ class IncogniaAPITest {
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
             .installationId(installationId)
+            .sessionToken(sessionToken)
             .externalId(externalId)
             .signupId(signupId)
             .accountId(accountId)
@@ -544,6 +546,7 @@ class IncogniaAPITest {
         timestamp,
         FeedbackIdentifiers.builder()
             .installationId(installationId)
+            .sessionToken(sessionToken)
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)
