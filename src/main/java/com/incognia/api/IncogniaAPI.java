@@ -409,6 +409,7 @@ public class IncogniaAPI {
    *         timestamp,
    *         FeedbackIdentifiers.builder()
    *             .installationId("installation-id")
+   *             .sessionToken("session-token")
    *             .accountId("account-id")
    *             .externalId("external-id")
    *             .signupId("c9ac2803-c868-4b7a-8323-8a6b96298ebe")
@@ -443,6 +444,7 @@ public class IncogniaAPI {
             .event(feedbackEvent)
             .timestamp(timestamp.toEpochMilli())
             .installationId(identifiers.getInstallationId())
+            .sessionToken(identifiers.getSessionToken())
             .accountId(identifiers.getAccountId())
             .loginId(identifiers.getLoginId())
             .paymentId(identifiers.getPaymentId())

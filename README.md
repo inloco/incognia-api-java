@@ -279,6 +279,7 @@ try {
        timestamp,
        FeedbackIdentifiers.builder()
            .installationId("installation-id")
+           .sessionToken("session-token")
            .accountId("account-id")
            .externalId("external-id")
            .signupId("c9ac2803-c868-4b7a-8323-8a6b96298ebe")
