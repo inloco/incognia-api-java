@@ -7,6 +7,7 @@ import lombok.Value;
 @Builder
 public class FeedbackIdentifiers {
   String installationId;
+  String sessionToken;
   String loginId;
   String paymentId;
   String signupId;

@@ -11,6 +11,7 @@ public class PostFeedbackRequestBody {
   String accountId;
   String externalId;
   String installationId;
+  String sessionToken;
   String paymentId;
   String loginId;
   String signupId;
