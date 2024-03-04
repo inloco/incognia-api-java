@@ -166,14 +166,14 @@ This method registers a new web login for the given installation and account, re
 ```java
 IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
 try {
-     RegisterLoginRequest registerLoginRequest =
-        RegisterLoginRequest.builder()
+     RegisterWebLoginRequest webLoginRequest =
+        RegisterWebLoginRequest.builder()
           .accountId("account id")
           .externalId("external id")
           .sessionToken("session-token")
           .evaluateTransaction(true) // can be omitted as it uses true as the default value
           .build();
-     TransactionAssessment assessment = api.registerWebLogin(registerLoginRequest);
+     TransactionAssessment assessment = api.registerWebLogin(webLoginRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
