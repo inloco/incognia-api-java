@@ -128,7 +128,7 @@ try {
     RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder()
         .sessionToken("session token")
         .build();
-     SignupAssessment assessment = api.registerSignup(webSignupRequest);
+     SignupAssessment assessment = api.registerWebSignup(webSignupRequest);
 } catch (IncogniaAPIException e) {
      //Some api error happened (invalid data, invalid credentials)
 } catch (IncogniaException e) {
