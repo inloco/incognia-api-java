@@ -5,12 +5,13 @@ import com.incognia.common.Address;
 import java.util.List;
 import lombok.Builder;
 import lombok.Value;
+import org.jetbrains.annotations.Nullable;
 
 @Value
 @Builder
 public class RegisterSignupRequest {
   String installationId;
-  Address address;
+  @Nullable Address address;
   String externalId;
   String policyId;
   String accountId;

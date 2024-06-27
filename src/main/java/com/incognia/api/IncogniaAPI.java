@@ -23,6 +23,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
@@ -106,13 +107,13 @@ public class IncogniaAPI {
   public SignupAssessment registerSignup(RegisterSignupRequest request) throws IncogniaException {
     Asserts.assertNotNull(request, "register signup request");
     Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
-    Asserts.assertNotNull(request.getAddress(), "address");
+    Optional<Address> address = Optional.ofNullable(request.getAddress());
     PostSignupRequestBody postSignupRequestBody =
         PostSignupRequestBody.builder()
             .installationId(request.getInstallationId())
-            .addressLine(request.getAddress().getAddressLine())
-            .structuredAddress(request.getAddress().getStructuredAddress())
-            .addressCoordinates(request.getAddress().getCoordinates())
+            .addressLine(address.map(Address::getAddressLine).orElse(null))
+            .structuredAddress(address.map(Address::getStructuredAddress).orElse(null))
+            .addressCoordinates(address.map(Address::getCoordinates).orElse(null))
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
             .accountId(request.getAccountId())

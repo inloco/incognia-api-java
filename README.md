@@ -102,6 +102,22 @@ try {
 }
 ```
 
+It's also possible to register a signup without an address:
+
+```java
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+try {
+    RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
+        .installationId("installation id")
+        .build();
+     SignupAssessment assessment = api.registerSignup(signupRequest);
+} catch (IncogniaAPIException e) {
+     //Some api error happened (invalid data, invalid credentials)
+} catch (IncogniaException e) {
+     //Something unexpected happened
+}
+```
+
 #### Getting a Signup
 
 This method allows you to query the latest assessment for a given signup event, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
