@@ -149,7 +149,12 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postSignupRequestBody.getExternalId()).isEqualTo(expectedExternalId);
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
-    String response = ResourceUtils.getResourceFileAsString("post_onboarding_response.json");
+    String response =
+        ResourceUtils.getResourceFileAsString(
+            postSignupRequestBody.getAddressLine() != null
+                    || postSignupRequestBody.getSessionToken() != null
+                ? "post_onboarding_response.json"
+                : "post_onboarding_response_no_address.json");
     return new MockResponse().setResponseCode(200).setBody(response);
   }
 

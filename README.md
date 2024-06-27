@@ -22,7 +22,7 @@ And then download the artifact incognia-api-client
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.6.2</version>
+  <version>2.7.0</version>
 </dependency>
 ```
 
@@ -39,7 +39,7 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.6.2'
+     implementation 'com.incognia:incognia-api-client:2.7.0'
 }
 ```
 We support Java 8+.
@@ -92,6 +92,22 @@ try {
             .build();
     RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
         .address(address)
+        .installationId("installation id")
+        .build();
+     SignupAssessment assessment = api.registerSignup(signupRequest);
+} catch (IncogniaAPIException e) {
+     //Some api error happened (invalid data, invalid credentials)
+} catch (IncogniaException e) {
+     //Something unexpected happened
+}
+```
+
+It's also possible to register a signup without an address:
+
+```java
+IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+try {
+    RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
         .installationId("installation id")
         .build();
      SignupAssessment assessment = api.registerSignup(signupRequest);
