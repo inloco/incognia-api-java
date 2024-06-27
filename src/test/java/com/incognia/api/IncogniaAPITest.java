@@ -128,7 +128,7 @@ class IncogniaAPITest {
   }
 
   @Test
-  @DisplayName("should return the expected signup response")
+  @DisplayName("should return the expected signup response when the address is empty")
   @SneakyThrows
   void testRegisterSignup_withEmptyAddress() {
     String token = TokenCreationFixture.createToken();
