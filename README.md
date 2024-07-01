@@ -6,7 +6,8 @@ Java lightweight client library for [Incognia APIs](https://dash.incognia.com/ap
 
 ## Installation
 
-Incognia API Java Client is available on Maven Central.
+Incognia API Java Client is available on Maven Central. We provide 2 artifact ids: `incognia-api-client` and `incognia-api-client-shaded`.
+`incognia-api-client-shaded` includes all of our dependencies shaded into a single jar, so you don't need to worry about dependency conflicts.
 
 ### Maven
 Add our maven repository
@@ -17,12 +18,20 @@ Add our maven repository
 </repository>
 ```
 
-And then download the artifact incognia-api-client
+And then add the artifact `incognia-api-client` **or** `incognia-api-client-shaded` as a dependency:
+
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.7.0</version>
+  <version>2.7.1</version>
+</dependency>
+```
+```xml
+<dependency>
+  <groupId>com.incognia</groupId>
+  <artifactId>incognia-api-client-shaded</artifactId>
+  <version>2.7.1</version>
 </dependency>
 ```
 
@@ -39,9 +48,16 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.7.0'
+     implementation 'com.incognia:incognia-api-client:2.7.1'
 }
 ```
+OR
+```gradle
+dependencies {
+     implementation 'com.incognia:incognia-api-client-shaded:2.7.1'
+}
+```
+
 We support Java 8+.
 
 ## Usage
