@@ -339,6 +339,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -375,6 +376,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -409,6 +411,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -492,6 +495,7 @@ class IncogniaAPITest {
             .addresses(transactionAddresses)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
@@ -555,6 +559,7 @@ class IncogniaAPITest {
             .addresses(transactionAddresses)
             .paymentMethods(paymentMethods)
             .paymentValue(paymentValue)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterPaymentRequest paymentRequest =

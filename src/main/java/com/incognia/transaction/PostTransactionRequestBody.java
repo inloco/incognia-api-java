@@ -5,6 +5,7 @@ import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentValue;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
 
@@ -28,4 +29,8 @@ public class PostTransactionRequestBody {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @Builder.Default
   List<PaymentMethod> paymentMethods = Collections.emptyList();
+
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  @Builder.Default
+  Map<String, Object> customProperties = Collections.emptyMap();
 }
