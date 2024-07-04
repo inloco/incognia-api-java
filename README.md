@@ -182,6 +182,9 @@ try {
           .accountId("account id")
           .externalId("external id")
           .evaluateTransaction(true) // can be omitted as it uses true as the default value
+          .customProperties(Map.of(
+            "custom-property-key", "custom-property-value",
+            "custom-double-property-key", 1.0))
           .build();
      TransactionAssessment assessment = api.registerLogin(registerLoginRequest);
 } catch (IncogniaAPIException e) {
