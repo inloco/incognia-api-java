@@ -328,6 +328,8 @@ class IncogniaAPITest {
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
+    Map<String, Object> map = new HashMap<>();
+    map.put("custom-property", "custom-value");
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
@@ -339,6 +341,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .customProperties(map)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -348,6 +351,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .evaluateTransaction(eval)
             .policyId(policyId)
+            .customProperties(map)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -375,6 +379,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -409,6 +414,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -492,6 +498,7 @@ class IncogniaAPITest {
             .addresses(transactionAddresses)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
@@ -555,6 +562,7 @@ class IncogniaAPITest {
             .addresses(transactionAddresses)
             .paymentMethods(paymentMethods)
             .paymentValue(paymentValue)
+            .customProperties(null)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterPaymentRequest paymentRequest =
