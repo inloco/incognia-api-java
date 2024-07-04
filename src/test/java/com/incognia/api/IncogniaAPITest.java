@@ -339,7 +339,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
-            .customProperties(null)
+            .customProperties(Map.of("custom-property", "custom-value"))
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -349,6 +349,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .evaluateTransaction(eval)
             .policyId(policyId)
+            .customProperties(Map.of("custom-property", "custom-value"))
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);

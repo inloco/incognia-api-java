@@ -191,6 +191,7 @@ public class IncogniaAPI {
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
+            .customProperties(request.getCustomProperties())
             .type("login")
             .build();
 
