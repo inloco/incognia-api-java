@@ -134,22 +134,6 @@ try {
 }
 ```
 
-#### Getting a Signup
-
-This method allows you to query the latest assessment for a given signup event, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
-
-```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
-try {
-     UUID signupId = UUID.fromString("c9ac2803-c868-4b7a-8323-8a6b96298ebe");
-     SignupAssessment assessment = api.getSignupAssessment(signupId);
-} catch (IncogniaAPIException e) {
-     //Some api error happened (invalid data, invalid credentials)
-} catch (IncogniaException e) {
-     //Something unexpected happened
-}
-```
-
 #### Registering Web Signup
 
 This method registers a new web signup for the given session token, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
@@ -344,16 +328,6 @@ along with the `getPayload` method, which returns the api response payload, whic
 
 If you have found a bug or if you have a feature request, please report them at this repository issues section.
 
-### Publishing a new version
-
-We use the [Gradle Nexus publish plugin](https://github.com/gradle-nexus/publish-plugin/) to publish artifacts to maven central.
-
-To publish a new version to a staging repository, run:
-```bash
-./gradlew publishToSonatype closeSonatypeStagingRepository
-```
-If the version ends with `-SNAPSHOT`, it is published to the Sonatype snapshots repository.
-
 ## What is Incognia?
 
 Incognia is a location identity platform for mobile apps that enables:
@@ -361,12 +335,6 @@ Incognia is a location identity platform for mobile apps that enables:
 - Real-time address verification for onboarding
 - Frictionless authentication
 - Real-time transaction verification
-
-## Create a Free Incognia Account
-
-1. Go to [Incognia](https://www.incognia.com/) and click on "Sign Up For Free"
-2. Create an Account
-3. You're ready to integrate [Incognia SDK](https://docs.incognia.com/sdk/getting-started) and use [Incognia APIs](https://dash.incognia.com/api-reference)
 
 ## License
 

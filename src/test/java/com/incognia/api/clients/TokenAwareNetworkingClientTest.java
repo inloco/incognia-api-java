@@ -51,19 +51,6 @@ class TokenAwareNetworkingClientTest {
   }
 
   @Test
-  @DisplayName("should call the api with the same valid token")
-  void testDoGet_whenNoTokenExistsYetAndCredentialsAreValid() throws IncogniaException {
-    String token = TokenCreationFixture.createToken();
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
-    mockServer.setDispatcher(dispatcher);
-    for (int i = 0; i < 2; i++) {
-      TestResponseBody testResponseBody = client.doGet("api/v2/onboarding", TestResponseBody.class);
-      assertThat(testResponseBody.getName()).isEqualTo("my awesome name");
-    }
-    assertThat(dispatcher.getTokenRequestCount()).isEqualTo(1);
-  }
-
-  @Test
   @DisplayName("should get a 401 error")
   void testDoPost_whenNoTokenExistsYetAndCredentialsAreInvalid() {
     String token = TokenCreationFixture.createToken();
