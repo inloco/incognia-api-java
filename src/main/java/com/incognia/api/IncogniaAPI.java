@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
@@ -121,34 +120,6 @@ public class IncogniaAPI {
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
-  }
-
-  /**
-   * Gets the latest assessment for a given signup. Check <a
-   * href="https://dash.incognia.com/api-reference#operation/signup-get">the docs</a><br>
-   * Example:
-   *
-   * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
-   * try {
-   *      UUID signupId = UUID.fromString("c9ac2803-c868-4b7a-8323-8a6b96298ebe");
-   *      SignupAssessment assessment = api.getSignupAssessment(signupId);
-   * } catch (IncogniaAPIException e) {
-   *      //Some api error happened (invalid data, invalid credentials)
-   * } catch (IncogniaException e) {
-   *      //Something unexpected happened
-   * }
-   * }</pre>
-   *
-   * @param signupId the signup id
-   * @return the latest assessment
-   * @throws IncogniaAPIException in case of api errors
-   * @throws IncogniaException in case of unexpected errors
-   */
-  public SignupAssessment getSignupAssessment(UUID signupId) throws IncogniaException {
-    Asserts.assertNotNull(signupId, "signup id");
-    String path = String.format("api/v2/onboarding/signups/%s", signupId);
-    return tokenAwareNetworkingClient.doGet(path, SignupAssessment.class);
   }
 
   /**

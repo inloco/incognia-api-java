@@ -9,7 +9,6 @@ import com.incognia.fixtures.TestRequestBody;
 import com.incognia.fixtures.TestResponseBody;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.Dispatcher;
@@ -60,28 +59,6 @@ class NetworkingClientTest {
         });
     TestResponseBody response =
         client.doPost("v2/testurl", new TestRequestBody("id", 123), TestResponseBody.class);
-    assertThat(response.getName()).isEqualTo("my awesome name");
-  }
-
-  @Test
-  @DisplayName("should get given url")
-  void testDoGet_whenSuccessfulResponse() throws IncogniaException {
-    mockServer.setDispatcher(
-        new Dispatcher() {
-          @SneakyThrows
-          @NotNull
-          @Override
-          public MockResponse dispatch(@NotNull RecordedRequest request) {
-            if ("/v2/testurl".equals(request.getPath()) && "GET".equals(request.getMethod())) {
-              return new MockResponse()
-                  .setResponseCode(200)
-                  .setBody("{\"name\": \"my awesome name\"}");
-            }
-            return new MockResponse().setResponseCode(404);
-          }
-        });
-    TestResponseBody response =
-        client.doGet("v2/testurl", TestResponseBody.class, Collections.emptyMap());
     assertThat(response.getName()).isEqualTo("my awesome name");
   }
 

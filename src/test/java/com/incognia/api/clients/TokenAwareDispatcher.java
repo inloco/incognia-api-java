@@ -70,10 +70,6 @@ public class TokenAwareDispatcher extends Dispatcher {
         && "POST".equals(request.getMethod())) {
       return handlePostSignup(request);
     }
-    if (("/api/v2/onboarding/signups/" + expectedSignupId).equals(request.getPath())
-        && "GET".equals(request.getMethod())) {
-      return handleGetSignup(request);
-    }
     if (("/api/v2/authentication/transactions?eval=true".equals(request.getPath())
         || ("/api/v2/authentication/transactions".equals(request.getPath()))
             && "POST".equals(request.getMethod()))) {
@@ -125,14 +121,6 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postTransactionRequestBody).isEqualTo(expectedTransactionRequestBody);
     String response =
         ResourceUtils.getResourceFileAsString("post_transaction_given_false_eval_response.json");
-    return new MockResponse().setResponseCode(200).setBody(response);
-  }
-
-  @NotNull
-  private MockResponse handleGetSignup(@NotNull RecordedRequest request) {
-    assertThat(request.getHeader("User-Agent")).isEqualTo(USER_AGENT_HEADER);
-    assertThat(request.getHeader("Authorization")).isEqualTo("Bearer " + token);
-    String response = ResourceUtils.getResourceFileAsString("get_onboarding_response.json");
     return new MockResponse().setResponseCode(200).setBody(response);
   }
 

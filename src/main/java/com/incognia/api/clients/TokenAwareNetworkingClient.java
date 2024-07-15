@@ -71,18 +71,6 @@ public class TokenAwareNetworkingClient {
     networkingClient.doPost(path, body, headers, queryParameters);
   }
 
-  public <T> T doGet(String path, Class<T> responseType) throws IncogniaException {
-    refreshTokenIfNeeded();
-    Map<String, String> headers =
-        new HashMap<String, String>() {
-          {
-            put(USER_AGENT_HEADER, USER_AGENT_HEADER_CONTENT);
-            put(AUTHORIZATION_HEADER, buildAuthorizationHeader());
-          }
-        };
-    return networkingClient.doGet(path, responseType, headers);
-  }
-
   private String buildAuthorizationHeader() {
     return token.getTokenType() + " " + token.getAccessToken();
   }
