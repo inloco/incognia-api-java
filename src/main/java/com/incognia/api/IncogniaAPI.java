@@ -68,7 +68,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
    *      Address address = Address address =
    *         Address.builder()
@@ -128,7 +128,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
    *         .installationId("installation-id")
@@ -183,7 +183,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
    *         .accountId("account-id")
@@ -237,7 +237,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
    *      RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder().sessionToken(sessionToken).address(address).build();
    *      SignupAssessment assessment = api.registerSignup(webSignupRequest);
@@ -275,7 +275,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
    *      Address address = Address address =
    *         Address.builder()
@@ -374,19 +374,16 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
-   *      Instant timestamp = Instant.now();
-   *      client.registerFeedback(
+   *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
+   *     api.registerFeedback(
    *         FeedbackEvent.ACCOUNT_TAKEOVER,
-   *         timestamp,
+   *         occurredAt,
    *         FeedbackIdentifiers.builder()
    *             .installationId("installation-id")
-   *             .sessionToken("session-token")
    *             .accountId("account-id")
-   *             .externalId("external-id")
-   *             .signupId("c9ac2803-c868-4b7a-8323-8a6b96298ebe")
-   *             .build();
+   *             .build());
    * } catch (IncogniaAPIException e) {
    *      //Some api error happened (invalid data, invalid credentials)
    * } catch (IncogniaException e) {
@@ -395,27 +392,57 @@ public class IncogniaAPI {
    * }</pre>
    *
    * @param feedbackEvent type of feedback event
-   * @param timestamp Instant when the fraud or event happened
+   * @param occurredAt Instant when the fraud or event happened
    * @param identifiers the user's identifiers
    * @throws IncogniaAPIException in case of api errors
    * @throws IncogniaException in case of unexpected errors
    */
   public void registerFeedback(
-      FeedbackEvent feedbackEvent, Instant timestamp, FeedbackIdentifiers identifiers)
+      FeedbackEvent feedbackEvent, Instant occurredAt, FeedbackIdentifiers identifiers)
       throws IncogniaException {
-    registerFeedback(feedbackEvent, timestamp, identifiers, false);
+    registerFeedback(feedbackEvent, occurredAt, identifiers, false);
   }
 
+  /**
+   * Shares feedback about a risk decision, improving the quality of risk assessments. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/feedbacks-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+   * try {
+   *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
+   *     api.registerFeedback(
+   *         FeedbackEvent.ACCOUNT_TAKEOVER,
+   *         occurredAt,
+   *         FeedbackIdentifiers.builder()
+   *             .installationId("installation-id")
+   *             .accountId("account-id")
+   *             .build());
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param feedbackEvent type of feedback event
+   * @param occurredAt Instant when the fraud or event happened
+   * @param identifiers the user's identifiers
+   * @param dryRun whether this request is a dry-run
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
   public void registerFeedback(
       FeedbackEvent feedbackEvent,
-      Instant timestamp,
+      Instant occurredAt,
       FeedbackIdentifiers identifiers,
       boolean dryRun)
       throws IncogniaException {
     PostFeedbackRequestBody requestBody =
         PostFeedbackRequestBody.builder()
             .event(feedbackEvent)
-            .timestamp(timestamp.toEpochMilli())
+            .occurredAt(occurredAt)
             .installationId(identifiers.getInstallationId())
             .sessionToken(identifiers.getSessionToken())
             .accountId(identifiers.getAccountId())

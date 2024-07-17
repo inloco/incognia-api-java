@@ -1,5 +1,6 @@
 package com.incognia.feedback;
 
+import java.time.Instant;
 import lombok.Builder;
 import lombok.Value;
 
@@ -7,7 +8,8 @@ import lombok.Value;
 @Builder
 public class PostFeedbackRequestBody {
   FeedbackEvent event;
-  Long timestamp;
+  @Deprecated Long timestamp;
+  Instant occurredAt;
   String accountId;
   String externalId;
   String installationId;

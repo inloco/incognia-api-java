@@ -556,7 +556,7 @@ class IncogniaAPITest {
             .signupId(signupId)
             .accountId(accountId)
             .event(FeedbackEvent.ACCOUNT_TAKEOVER)
-            .timestamp(timestamp.toEpochMilli())
+            .occurredAt(timestamp)
             .build());
     mockServer.setDispatcher(dispatcher);
     client.registerFeedback(
