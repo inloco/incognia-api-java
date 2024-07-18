@@ -31,6 +31,7 @@ import com.incognia.transaction.payment.PaymentValue;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
 import java.io.IOException;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -542,29 +543,35 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String sessionToken = "session-token";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
-    Instant timestamp = Instant.now();
+    Instant occurredAt = Instant.now();
+    Instant expiresAt = occurredAt.plus(30, ChronoUnit.DAYS);
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
             .installationId(installationId)
             .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .externalId(externalId)
             .signupId(signupId)
             .accountId(accountId)
             .event(FeedbackEvent.ACCOUNT_TAKEOVER.getEventName())
-            .occurredAt(timestamp)
+            .occurredAt(occurredAt)
+            .expiresAt(expiresAt)
             .build());
     mockServer.setDispatcher(dispatcher);
     client.registerFeedback(
         FeedbackEvent.ACCOUNT_TAKEOVER,
-        timestamp,
+        occurredAt,
+        expiresAt,
         FeedbackIdentifiers.builder()
             .installationId(installationId)
             .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)
@@ -580,29 +587,35 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String sessionToken = "session-token";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
-    Instant timestamp = Instant.now();
+    Instant occurredAt = Instant.now();
+    Instant expiresAt = occurredAt.plus(30, ChronoUnit.DAYS);
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
             .installationId(installationId)
             .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .externalId(externalId)
             .signupId(signupId)
             .accountId(accountId)
             .event("custom_feedback_type")
-            .occurredAt(timestamp)
+            .occurredAt(occurredAt)
+            .expiresAt(expiresAt)
             .build());
     mockServer.setDispatcher(dispatcher);
     client.registerFeedback(
         "custom_feedback_type",
-        timestamp,
+        occurredAt,
+        expiresAt,
         FeedbackIdentifiers.builder()
             .installationId(installationId)
             .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)

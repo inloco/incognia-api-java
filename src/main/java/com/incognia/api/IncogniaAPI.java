@@ -452,6 +452,91 @@ public class IncogniaAPI {
    * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
    * try {
    *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
+   *     Instant expiresAt = Instant.parse("2024-07-30T15:20:00Z");
+   *     api.registerFeedback(
+   *         FeedbackEvent.ACCOUNT_TAKEOVER,
+   *         occurredAt,
+   *         expiresAt,
+   *         FeedbackIdentifiers.builder()
+   *             .installationId("installation-id")
+   *             .accountId("account-id")
+   *             .build());
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param feedbackEvent type of feedback event
+   * @param occurredAt Instant when the fraud or event happened
+   * @param expiresAt Instant when the effects of this feedback expires (valid for specific events)
+   * @param identifiers the user's identifiers
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
+  public void registerFeedback(
+      FeedbackEvent feedbackEvent,
+      Instant occurredAt,
+      Instant expiresAt,
+      FeedbackIdentifiers identifiers)
+      throws IncogniaException {
+    registerFeedback(feedbackEvent, occurredAt, expiresAt, identifiers, false);
+  }
+
+  /**
+   * Shares feedback about a risk decision, improving the quality of risk assessments. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/feedbacks-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+   * try {
+   *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
+   *     Instant expiresAt = Instant.parse("2024-07-30T15:20:00Z");
+   *     api.registerFeedback(
+   *         FeedbackEvent.ACCOUNT_TAKEOVER,
+   *         occurredAt,
+   *         expiresAt,
+   *         FeedbackIdentifiers.builder()
+   *             .installationId("installation-id")
+   *             .accountId("account-id")
+   *             .build(),
+   *         false);
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param feedbackEvent type of feedback event
+   * @param occurredAt Instant when the fraud or event happened
+   * @param expiresAt Instant when the effects of this feedback expires (valid for specific events)
+   * @param identifiers the user's identifiers
+   * @param dryRun whether this request is a dry-run
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
+  public void registerFeedback(
+      FeedbackEvent feedbackEvent,
+      Instant occurredAt,
+      Instant expiresAt,
+      FeedbackIdentifiers identifiers,
+      boolean dryRun)
+      throws IncogniaException {
+    registerFeedback(feedbackEvent.getEventName(), occurredAt, expiresAt, identifiers, dryRun);
+  }
+
+  /**
+   * Shares feedback about a risk decision, improving the quality of risk assessments. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/feedbacks-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+   * try {
+   *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
    *     api.registerFeedback(
    *         "account_takeover",
    *         occurredAt,
@@ -512,12 +597,96 @@ public class IncogniaAPI {
   public void registerFeedback(
       String feedbackEvent, Instant occurredAt, FeedbackIdentifiers identifiers, boolean dryRun)
       throws IncogniaException {
+    registerFeedback(feedbackEvent, occurredAt, null, identifiers, dryRun);
+  }
+
+  /**
+   * Shares feedback about a risk decision, improving the quality of risk assessments. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/feedbacks-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+   * try {
+   *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
+   *     Instant expiresAt = Instant.parse("2024-07-30T15:20:00Z");
+   *     api.registerFeedback(
+   *         "account_takeover",
+   *         occurredAt,
+   *         expiresAt,
+   *         FeedbackIdentifiers.builder()
+   *             .installationId("installation-id")
+   *             .accountId("account-id")
+   *             .build());
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param feedbackEvent type of feedback event
+   * @param occurredAt Instant when the fraud or event happened
+   * @param expiresAt Instant when the effects of this feedback expires (valid for specific events)
+   * @param identifiers the user's identifiers
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
+  public void registerFeedback(
+      String feedbackEvent, Instant occurredAt, Instant expiresAt, FeedbackIdentifiers identifiers)
+      throws IncogniaException {
+    registerFeedback(feedbackEvent, occurredAt, expiresAt, identifiers, false);
+  }
+
+  /**
+   * Shares feedback about a risk decision, improving the quality of risk assessments. Check <a
+   * href="https://dash.incognia.com/api-reference#operation/feedbacks-post">the docs</a><br>
+   * Example:
+   *
+   * <pre>{@code
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+   * try {
+   *     Instant occurredAt = Instant.parse("2024-07-22T15:20:00Z");
+   *     Instant expiresAt = Instant.parse("2024-07-30T15:20:00Z");
+   *     api.registerFeedback(
+   *         "account_takeover",
+   *         occurredAt,
+   *         expiresAt,
+   *         FeedbackIdentifiers.builder()
+   *             .installationId("installation-id")
+   *             .accountId("account-id")
+   *             .build(),
+   *         false);
+   * } catch (IncogniaAPIException e) {
+   *      //Some api error happened (invalid data, invalid credentials)
+   * } catch (IncogniaException e) {
+   *      //Something unexpected happened
+   * }
+   * }</pre>
+   *
+   * @param feedbackEvent type of feedback event
+   * @param occurredAt Instant when the fraud or event happened
+   * @param expiresAt Instant when the effects of this feedback expires (valid for specific events)
+   * @param identifiers the user's identifiers
+   * @param dryRun whether this request is a dry-run
+   * @throws IncogniaAPIException in case of api errors
+   * @throws IncogniaException in case of unexpected errors
+   */
+  public void registerFeedback(
+      String feedbackEvent,
+      Instant occurredAt,
+      Instant expiresAt,
+      FeedbackIdentifiers identifiers,
+      boolean dryRun)
+      throws IncogniaException {
     PostFeedbackRequestBody requestBody =
         PostFeedbackRequestBody.builder()
             .event(feedbackEvent)
             .occurredAt(occurredAt)
+            .expiresAt(expiresAt)
             .installationId(identifiers.getInstallationId())
             .sessionToken(identifiers.getSessionToken())
+            .requestToken(identifiers.getRequestToken())
             .accountId(identifiers.getAccountId())
             .loginId(identifiers.getLoginId())
             .paymentId(identifiers.getPaymentId())
