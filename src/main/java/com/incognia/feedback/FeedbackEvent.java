@@ -61,4 +61,8 @@ public enum FeedbackEvent {
   CUSTOM_CARGO_FRAUD,
   @JsonProperty("custom_debt_churn_20d")
   CUSTOM_DEBT_CHURN_20D;
+
+  public String getEventName() {
+    return this.name().toLowerCase();
+  }
 }

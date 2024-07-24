@@ -538,7 +538,7 @@ class IncogniaAPITest {
   @ValueSource(booleans = {true, false})
   @DisplayName("should be successful")
   @SneakyThrows
-  void testRegisterFeedback_whenDataIsValid(boolean dryRun) {
+  void testRegisterFeedback_whenUsingFeedbackEventEnum_andDataIsValid(boolean dryRun) {
     String token = TokenCreationFixture.createToken();
     String installationId = "installation-id";
     String sessionToken = "session-token";
@@ -555,12 +555,50 @@ class IncogniaAPITest {
             .externalId(externalId)
             .signupId(signupId)
             .accountId(accountId)
-            .event(FeedbackEvent.ACCOUNT_TAKEOVER)
+            .event(FeedbackEvent.ACCOUNT_TAKEOVER.getEventName())
             .occurredAt(timestamp)
             .build());
     mockServer.setDispatcher(dispatcher);
     client.registerFeedback(
         FeedbackEvent.ACCOUNT_TAKEOVER,
+        timestamp,
+        FeedbackIdentifiers.builder()
+            .installationId(installationId)
+            .sessionToken(sessionToken)
+            .accountId(accountId)
+            .externalId(externalId)
+            .signupId(signupId)
+            .build(),
+        dryRun);
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  @DisplayName("should be successful")
+  @SneakyThrows
+  void testRegisterFeedback_whenUsingFeedbackEventAsString_andDataIsValid(boolean dryRun) {
+    String token = TokenCreationFixture.createToken();
+    String installationId = "installation-id";
+    String sessionToken = "session-token";
+    String accountId = "account-id";
+    String externalId = "external-id";
+    String signupId = UUID.randomUUID().toString();
+    Instant timestamp = Instant.now();
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedFeedbackRequestBody(
+        PostFeedbackRequestBody.builder()
+            .installationId(installationId)
+            .sessionToken(sessionToken)
+            .externalId(externalId)
+            .signupId(signupId)
+            .accountId(accountId)
+            .event("custom_feedback_type")
+            .occurredAt(timestamp)
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    client.registerFeedback(
+        "custom_feedback_type",
         timestamp,
         FeedbackIdentifiers.builder()
             .installationId(installationId)

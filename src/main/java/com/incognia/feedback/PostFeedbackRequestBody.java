@@ -7,7 +7,7 @@ import lombok.Value;
 @Value
 @Builder
 public class PostFeedbackRequestBody {
-  FeedbackEvent event;
+  String event;
   @Deprecated Long timestamp;
   Instant occurredAt;
   String accountId;
