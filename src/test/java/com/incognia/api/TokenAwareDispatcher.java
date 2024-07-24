@@ -1,12 +1,10 @@
-package com.incognia.api.clients;
+package com.incognia.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.incognia.feedback.PostFeedbackRequestBody;
+import com.incognia.api.clients.ObjectMapperFactory;
 import com.incognia.fixtures.ResourceUtils;
-import com.incognia.onboarding.PostSignupRequestBody;
-import com.incognia.transaction.PostTransactionRequestBody;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.UUID;

@@ -1,6 +1,7 @@
-package com.incognia.transaction;
+package com.incognia.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.incognia.transaction.TransactionAddress;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentValue;
 import java.util.Collections;
@@ -11,7 +12,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class PostTransactionRequestBody {
+class PostTransactionRequestBody {
   String installationId;
   String accountId;
   String sessionToken;

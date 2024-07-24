@@ -1,4 +1,4 @@
-package com.incognia.feedback;
+package com.incognia.api;
 
 import java.time.Instant;
 import lombok.Builder;
@@ -6,7 +6,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class PostFeedbackRequestBody {
+class PostFeedbackRequestBody {
   String event;
   Instant occurredAt;
   Instant expiresAt;

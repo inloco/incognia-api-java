@@ -3,6 +3,7 @@ package com.incognia.api.clients;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.incognia.api.TokenAwareDispatcher;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.fixtures.TestRequestBody;

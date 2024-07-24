@@ -1,4 +1,4 @@
-package com.incognia.onboarding;
+package com.incognia.api;
 
 import com.incognia.common.AdditionalLocation;
 import com.incognia.common.Coordinates;
@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class PostSignupRequestBody {
+class PostSignupRequestBody {
   String installationId;
   String sessionToken;
   String addressLine;
