@@ -9,6 +9,5 @@ import lombok.Value;
 public class AdditionalLocation {
   Double lat;
   Double lng;
-  @Deprecated Long timestamp;
   Instant collectedAt;
 }

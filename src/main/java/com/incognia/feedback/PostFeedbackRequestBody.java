@@ -8,7 +8,6 @@ import lombok.Value;
 @Builder
 public class PostFeedbackRequestBody {
   String event;
-  @Deprecated Long timestamp;
   Instant occurredAt;
   Instant expiresAt;
   String accountId;
