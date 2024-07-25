@@ -24,14 +24,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.10.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>2.10.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
@@ -48,13 +48,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.10.0'
+     implementation 'com.incognia:incognia-api-client:3.0.0'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:2.10.0'
+     implementation 'com.incognia:incognia-api-client-shaded:3.0.0'
 }
 ```
 
@@ -67,9 +67,47 @@ We support Java 8+.
 Before calling the API methods, you need to create an instance of the `IncogniaAPI` class.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("your-client-id", "your-client-secret");
+IncogniaAPI api = IncogniaAPI.init("your-client-id", "your-client-secret");
 ```
-Ideally you should use the instance of IncogniaAPI as a singleton, so that it can properly handle token renewal.
+
+This will create a singleton instance of the IncogniaAPI class, which will handle token renewal automatically. You should reuse this instance throughout your application.
+
+After calling `init`, you can get the singleton instance simply calling `IncogniaAPI.instance()`.
+
+#### Dependency Injection integration examples
+
+If you use a dependency injection framework, you can create a singleton bean for the `IncogniaAPI` class. Below are some examples using common java frameworks:
+
+Spring Boot:
+```java
+@Configuration
+public class IncogniaAPIConfig {
+    @Value("${incognia.client-id}")// change this to your property name
+    private String clientId;
+    
+    @Value("${incognia.client-secret}") //change this to your property name
+    private String clientSecret;
+    
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public IncogniaAPI incogniaAPI() {
+        return IncogniaAPI.init(clientId, clientSecret);
+    }
+}
+```
+
+Micronaut:
+```java
+@Factory
+public class IncogniaAPIFactory {
+    @Singleton
+    //change the @Value to your property name
+    public IncogniaAPI incogniaAPI(@Value("${incognia.client-id}") String clientId,
+        @Value("${incognia.client-secret}") String clientSecret) {
+        return IncogniaAPI.init(clientId, clientSecret);
+    }
+}
+```
 
 ### Incognia API
 
@@ -79,14 +117,14 @@ The implementation is based on the [Incognia API Reference](https://dash.incogni
 
 Authentication is done transparently, so you don't need to worry about it.
 
-If you are curious about how we handle it, you can check the TokenAwareNetworkingClient class
+If you are curious about how we handle it, you can check the `TokenAwareNetworkingClient` class
 
 #### Registering Signup
 
 This method registers a new signup for the given request token and address, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
      Address address =
         Address.builder()
@@ -121,7 +159,7 @@ try {
 It's also possible to register a signup without an address:
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
     RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
         .requestToken("request token")
@@ -139,7 +177,7 @@ try {
 This method registers a new web signup for the given request token, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
     RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder()
         .requestToken("request token")
@@ -158,7 +196,7 @@ This method registers a new login for the given request token and account, retur
 This method also includes some overloads that do not require optional parameters, like `externalId`.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
      RegisterLoginRequest registerLoginRequest =
         RegisterLoginRequest.builder()
@@ -183,7 +221,7 @@ try {
 This method registers a new web login for the given request token and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
      RegisterWebLoginRequest webLoginRequest =
         RegisterWebLoginRequest.builder()
@@ -206,7 +244,7 @@ This method registers a new payment for the given request token and account, ret
 This method also includes some overloads that do not require optional parameters, like `externalId` and `addresses`.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
      Address address = Address address =
         Address.builder()
@@ -290,7 +328,7 @@ Would return an empty risk assessment response:
 This method registers a feedback event for the given identifiers (represented in `FeedbackIdentifiers`) related to a signup, login or payment.
 
 ```java
-IncogniaAPI api = new IncogniaAPI("client-id", "client-secret");
+IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
     Instant timestamp = Instant.now();
     client.registerFeedback(
