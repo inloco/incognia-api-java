@@ -24,14 +24,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.9.0</version>
+  <version>2.9.1</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>2.9.0</version>
+  <version>2.9.1</version>
 </dependency>
 ```
 
@@ -48,13 +48,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.9.0'
+     implementation 'com.incognia:incognia-api-client:2.9.1'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:2.9.0'
+     implementation 'com.incognia:incognia-api-client-shaded:2.9.1'
 }
 ```
 
@@ -121,7 +121,7 @@ If you are curious about how we handle it, you can check the `TokenAwareNetworki
 
 #### Registering Signup
 
-This method registers a new signup for the given installation and address, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
+This method registers a new signup for the given request token and address, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
 
 ```java
 IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
@@ -146,7 +146,7 @@ try {
             .build();
     RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
         .address(address)
-        .installationId("installation id")
+        .requestToken("request token")
         .build();
      SignupAssessment assessment = api.registerSignup(signupRequest);
 } catch (IncogniaAPIException e) {
@@ -162,7 +162,7 @@ It's also possible to register a signup without an address:
 IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
     RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
-        .installationId("installation id")
+        .requestToken("request token")
         .build();
      SignupAssessment assessment = api.registerSignup(signupRequest);
 } catch (IncogniaAPIException e) {
@@ -174,13 +174,13 @@ try {
 
 #### Registering Web Signup
 
-This method registers a new web signup for the given session token, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
+This method registers a new web signup for the given request token, returning a `SignupAssessment`, containing the risk assessment and supporting evidence:
 
 ```java
 IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
     RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder()
-        .sessionToken("session token")
+        .requestToken("request token")
         .build();
      SignupAssessment assessment = api.registerWebSignup(webSignupRequest);
 } catch (IncogniaAPIException e) {
@@ -192,7 +192,7 @@ try {
 
 #### Registering Login
 
-This method registers a new login for the given installation and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
+This method registers a new login for the given request token and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
 This method also includes some overloads that do not require optional parameters, like `externalId`.
 
 ```java
@@ -200,7 +200,7 @@ IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
 try {
      RegisterLoginRequest registerLoginRequest =
         RegisterLoginRequest.builder()
-          .installationId("installation id")
+          .requestToken("request token")
           .accountId("account id")
           .externalId("external id")
           .evaluateTransaction(true) // can be omitted as it uses true as the default value
@@ -218,7 +218,7 @@ try {
 
 #### Registering Web Login
 
-This method registers a new web login for the given installation and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
+This method registers a new web login for the given request token and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
 
 ```java
 IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
@@ -227,7 +227,7 @@ try {
         RegisterWebLoginRequest.builder()
           .accountId("account id")
           .externalId("external id")
-          .sessionToken("session-token")
+          .requestToken("request-token")
           .evaluateTransaction(true) // can be omitted as it uses true as the default value
           .build();
      TransactionAssessment assessment = api.registerWebLogin(webLoginRequest);
@@ -240,7 +240,7 @@ try {
 
 #### Registering Payment
 
-This method registers a new payment for the given installation and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
+This method registers a new payment for the given request token and account, returning a `TransactionAssessment`, containing the risk assessment and supporting evidence.
 This method also includes some overloads that do not require optional parameters, like `externalId` and `addresses`.
 
 ```java
@@ -284,7 +284,7 @@ try {
         
      RegisterPaymentRequest registerPaymentRequest =
          RegisterPaymentRequest.builder()
-             .installationId( "installation-id")
+             .requestToken( "request-token")
              .accountId("account-id")
              .externalId("external-id")
              .addresses(addresses)
@@ -313,7 +313,7 @@ Example:
 ```java
 RegisterLoginRequest registerLoginRequest =
         RegisterLoginRequest.builder()
-          .installationId("installation id")
+          .requestToken("request token")
           .accountId("account id")
           .externalId("external id")
           .evaluateTransaction(false)
@@ -335,8 +335,7 @@ try {
        FeedbackEvent.ACCOUNT_TAKEOVER,
        timestamp,
        FeedbackIdentifiers.builder()
-           .installationId("installation-id")
-           .sessionToken("session-token")
+           .requestToken("request-token")
            .accountId("account-id")
            .externalId("external-id")
            .signupId("c9ac2803-c868-4b7a-8323-8a6b96298ebe")

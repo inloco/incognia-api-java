@@ -14,6 +14,7 @@ import lombok.Value;
 @Builder
 public class RegisterPaymentRequest {
   String installationId;
+  String requestToken;
   String accountId;
   String externalId;
   String policyId;

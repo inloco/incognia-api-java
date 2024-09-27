@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.incognia"
-version = "2.9.0"
+version = "2.9.1"
 
 task createProjectVersionFile {
     def projectVersionDir = "$projectDir/src/main/java/com/incognia/api"

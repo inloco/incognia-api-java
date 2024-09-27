@@ -83,7 +83,7 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterSignup_whenDataIsValid() {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
+    String requestToken = "request-token";
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
@@ -91,14 +91,14 @@ class IncogniaAPITest {
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(address.getAddressLine());
-    dispatcher.setExpectedInstallationId(installationId);
+    dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
         RegisterSignupRequest.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
@@ -146,21 +146,21 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterSignup_withEmptyAddress() {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
+    String requestToken = "request-token";
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(null);
-    dispatcher.setExpectedInstallationId(installationId);
+    dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
         RegisterSignupRequest.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
@@ -202,20 +202,20 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterWebSignup_whenDataIsValid() {
     String token = TokenCreationFixture.createToken();
-    String sessionToken = "session-token";
+    String requestToken = "request-token-web-signup";
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
-    dispatcher.setExpectedSessionToken(sessionToken);
+    dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
     mockServer.setDispatcher(dispatcher);
     RegisterWebSignupRequest registerSignupRequest =
         RegisterWebSignupRequest.builder()
-            .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
@@ -261,28 +261,28 @@ class IncogniaAPITest {
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
-  void testRegisterSignup_whenEmptyInstallationId() {
+  void testRegisterSignup_whenEmptyRequestToken() {
     assertThatThrownBy(
             () ->
                 client.registerSignup(
                     RegisterSignupRequest.builder()
-                        .installationId("")
+                        .requestToken("")
                         .address(AddressFixture.ADDRESS_ADDRESS_LINE)
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'installation id' cannot be empty");
+        .hasMessage("'request token' cannot be empty");
   }
 
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
-  void testRegisterWebSignup_whenEmptySessionToken() {
+  void testRegisterWebSignup_whenEmptyRequestToken() {
     assertThatThrownBy(
             () ->
                 client.registerWebSignup(
-                    RegisterWebSignupRequest.builder().sessionToken("").build()))
+                    RegisterWebSignupRequest.builder().requestToken("").build()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'session token' cannot be empty");
+        .hasMessage("'request token' cannot be empty");
   }
 
   @ParameterizedTest
@@ -292,7 +292,7 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterLogin_whenDataIsValid(Boolean eval) {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
@@ -302,7 +302,7 @@ class IncogniaAPITest {
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .externalId(externalId)
             .accountId(accountId)
             .type("login")
@@ -314,7 +314,7 @@ class IncogniaAPITest {
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
         RegisterLoginRequest.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .evaluateTransaction(eval)
@@ -334,7 +334,7 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String accountId = "account-id";
     String externalId = "external-id";
-    String sessionToken = "session-token";
+    String requestToken = "request-token";
     String policyId = "policy-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
@@ -343,7 +343,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .accountId(accountId)
             .type("login")
-            .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
@@ -355,7 +355,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .externalId(externalId)
             .evaluateTransaction(eval)
-            .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .policyId(policyId)
             .build();
     TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
@@ -367,7 +367,7 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterLogin_whenEvalIsFalse() {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
@@ -375,7 +375,7 @@ class IncogniaAPITest {
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .externalId(externalId)
             .accountId(accountId)
             .type("login")
@@ -387,7 +387,7 @@ class IncogniaAPITest {
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
         RegisterLoginRequest.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .evaluateTransaction(false)
@@ -404,7 +404,7 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterPayment_whenDataIsValid(Boolean eval) {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
@@ -447,7 +447,7 @@ class IncogniaAPITest {
                 "shipping", null, address.getStructuredAddress(), address.getCoordinates()));
     RegisterPaymentRequest paymentRequest =
         RegisterPaymentRequest.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .policyId(policyId)
@@ -458,7 +458,7 @@ class IncogniaAPITest {
             .build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .externalId(externalId)
             .policyId(policyId)
             .accountId(accountId)
@@ -478,7 +478,7 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterPayment_whenEvalIsFalse() {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
@@ -522,7 +522,7 @@ class IncogniaAPITest {
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .externalId(externalId)
             .policyId(policyId)
             .accountId(accountId)
@@ -535,7 +535,7 @@ class IncogniaAPITest {
     mockServer.setDispatcher(dispatcher);
     RegisterPaymentRequest paymentRequest =
         RegisterPaymentRequest.builder()
-            .installationId(installationId)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .policyId(policyId)
@@ -554,8 +554,7 @@ class IncogniaAPITest {
   @SneakyThrows
   void testRegisterFeedback_whenDataIsValid(boolean dryRun) {
     String token = TokenCreationFixture.createToken();
-    String installationId = "installation-id";
-    String sessionToken = "session-token";
+    String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
@@ -564,8 +563,7 @@ class IncogniaAPITest {
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
-            .installationId(installationId)
-            .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .externalId(externalId)
             .signupId(signupId)
             .accountId(accountId)
@@ -577,8 +575,7 @@ class IncogniaAPITest {
         FeedbackEvent.ACCOUNT_TAKEOVER,
         timestamp,
         FeedbackIdentifiers.builder()
-            .installationId(installationId)
-            .sessionToken(sessionToken)
+            .requestToken(requestToken)
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)
@@ -589,49 +586,49 @@ class IncogniaAPITest {
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
-  void testRegisterPayment_whenInstallationIdIsNotValid() {
+  void testRegisterPayment_whenRequestTokenIsNotValid() {
     assertThatThrownBy(
             () ->
                 client.registerPayment(
                     RegisterPaymentRequest.builder()
-                        .installationId("")
+                        .requestToken("")
                         .accountId("account id")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'installation id' cannot be empty");
+        .hasMessage("'request token' cannot be empty");
     assertThatThrownBy(
             () ->
                 client.registerPayment(
                     RegisterPaymentRequest.builder()
-                        .installationId(null)
+                        .requestToken(null)
                         .accountId("account id")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'installation id' cannot be empty");
+        .hasMessage("'request token' cannot be empty");
   }
 
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
-  void testRegisterLogin_whenInstallationIdIsNotValid() {
+  void testRegisterLogin_whenRequestTokenIsNotValid() {
     assertThatThrownBy(
             () ->
                 client.registerLogin(
                     RegisterLoginRequest.builder()
-                        .installationId("")
+                        .requestToken("")
                         .accountId("account id")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'installation id' cannot be empty");
+        .hasMessage("'request token' cannot be empty");
     assertThatThrownBy(
             () ->
                 client.registerLogin(
                     RegisterLoginRequest.builder()
-                        .installationId(null)
+                        .requestToken(null)
                         .accountId("account id")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'installation id' cannot be empty");
+        .hasMessage("'request token' cannot be empty");
   }
 
   @Test
@@ -642,7 +639,7 @@ class IncogniaAPITest {
             () ->
                 client.registerPayment(
                     RegisterPaymentRequest.builder()
-                        .installationId("installation-id")
+                        .requestToken("request-token")
                         .accountId("")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
@@ -651,7 +648,7 @@ class IncogniaAPITest {
             () ->
                 client.registerPayment(
                     RegisterPaymentRequest.builder()
-                        .installationId("installation-id")
+                        .requestToken("request-token")
                         .accountId(null)
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
@@ -666,7 +663,7 @@ class IncogniaAPITest {
             () ->
                 client.registerLogin(
                     RegisterLoginRequest.builder()
-                        .installationId("installation id")
+                        .requestToken("request token")
                         .accountId("")
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
@@ -675,7 +672,7 @@ class IncogniaAPITest {
             () ->
                 client.registerLogin(
                     RegisterLoginRequest.builder()
-                        .installationId("installation id")
+                        .requestToken("request token")
                         .accountId(null)
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)

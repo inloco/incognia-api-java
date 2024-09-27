@@ -14,6 +14,7 @@ import lombok.Data;
 public class PostSignupRequestBody {
   String installationId;
   String sessionToken;
+  String requestToken;
   String addressLine;
   StructuredAddress structuredAddress;
   Coordinates addressCoordinates;

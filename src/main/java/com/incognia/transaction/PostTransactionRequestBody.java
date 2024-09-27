@@ -13,6 +13,7 @@ import lombok.Value;
 @Builder
 public class PostTransactionRequestBody {
   String installationId;
+  String requestToken;
   String accountId;
   String sessionToken;
   String policyId;

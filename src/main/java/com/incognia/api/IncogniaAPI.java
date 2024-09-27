@@ -92,7 +92,7 @@ public class IncogniaAPI {
   }
 
   /**
-   * Registers a new signup for the given installation and address. Check <a
+   * Registers a new signup for the given request token and address. Check <a
    * href="https://dash.incognia.com/api-reference#operation/signup-post">the docs</a><br>
    * Example:
    *
@@ -117,7 +117,7 @@ public class IncogniaAPI {
    *                     .build())
    *             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
    *             .build();
-   *      RegisterSignupRequest signupRequest = RegisterSignupRequest.builder().installationId(installationId).address(address).build();
+   *      RegisterSignupRequest signupRequest = RegisterSignupRequest.builder().requestToken(requestToken).address(address).build();
    *      SignupAssessment assessment = api.registerSignup(signupRequest);
    * } catch (IncogniaAPIException e) {
    *      //Some api error happened (invalid data, invalid credentials)
@@ -134,11 +134,14 @@ public class IncogniaAPI {
    */
   public SignupAssessment registerSignup(RegisterSignupRequest request) throws IncogniaException {
     Asserts.assertNotNull(request, "register signup request");
-    Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
+    Asserts.assertNotEmpty(
+        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
+        "request token");
     Optional<Address> address = Optional.ofNullable(request.getAddress());
     PostSignupRequestBody postSignupRequestBody =
         PostSignupRequestBody.builder()
             .installationId(request.getInstallationId())
+            .requestToken(request.getRequestToken())
             .addressLine(address.map(Address::getAddressLine).orElse(null))
             .structuredAddress(address.map(Address::getStructuredAddress).orElse(null))
             .addressCoordinates(address.map(Address::getCoordinates).orElse(null))
@@ -160,7 +163,7 @@ public class IncogniaAPI {
    * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
    * try {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
-   *         .installationId("installation-id")
+   *         .requestToken("request-token")
    *         .accountId("account-id")
    *         .externalId("external-id")
    *         .policyId("policy-id")
@@ -183,11 +186,14 @@ public class IncogniaAPI {
   public TransactionAssessment registerLogin(RegisterLoginRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register login request");
-    Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
+    Asserts.assertNotEmpty(
+        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
+        "request token");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
             .installationId(request.getInstallationId())
+            .requestToken(request.getRequestToken())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
@@ -217,7 +223,7 @@ public class IncogniaAPI {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
    *         .accountId("account-id")
    *         .externalId("external-id")
-   *         .sessionToken("session-token")
+   *         .requestToken("request-token")
    *         .policyId("policy-id")
    *         .evaluateTransaction(true) // can be omitted as it uses true as the default value
    *         .build();
@@ -239,12 +245,15 @@ public class IncogniaAPI {
       throws IncogniaException {
     Asserts.assertNotNull(request, "register login request");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
-    Asserts.assertNotEmpty(request.getSessionToken(), "session token");
+    Asserts.assertNotEmpty(
+        Optional.ofNullable(request.getRequestToken()).orElse(request.getSessionToken()),
+        "request token");
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .sessionToken(request.getSessionToken())
+            .requestToken(request.getRequestToken())
             .policyId(request.getPolicyId())
             .type("login")
             .build();
@@ -261,14 +270,14 @@ public class IncogniaAPI {
   }
 
   /**
-   * Registers a new signup for the given installation and address. Check <a
+   * Registers a new signup for the given request token and address. Check <a
    * href="https://dash.incognia.com/api-reference#operation/signup-post">the docs</a><br>
    * Example:
    *
    * <pre>{@code
    * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
    * try {
-   *      RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder().sessionToken(sessionToken).address(address).build();
+   *      RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder().requestToken(requestToken).address(address).build();
    *      SignupAssessment assessment = api.registerSignup(webSignupRequest);
    * } catch (IncogniaAPIException e) {
    *      //Some api error happened (invalid data, invalid credentials)
@@ -286,10 +295,13 @@ public class IncogniaAPI {
   public SignupAssessment registerWebSignup(RegisterWebSignupRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register signup request");
-    Asserts.assertNotEmpty(request.getSessionToken(), "session token");
+    Asserts.assertNotEmpty(
+        Optional.ofNullable(request.getRequestToken()).orElse(request.getSessionToken()),
+        "request token");
     PostSignupRequestBody postSignupRequestBody =
         PostSignupRequestBody.builder()
             .sessionToken(request.getSessionToken())
+            .requestToken(request.getRequestToken())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
             .accountId(request.getAccountId())
@@ -343,7 +355,7 @@ public class IncogniaAPI {
    *
    *      RegisterPaymentRequest registerPaymentRequest =
    *          RegisterPaymentRequest.builder()
-   *              .installationId( "installation-id")
+   *              .requestToken("request-token")
    *              .accountId("account-id")
    *              .externalId("external-id")
    *              .policyId("policy-id")
@@ -369,13 +381,16 @@ public class IncogniaAPI {
   public TransactionAssessment registerPayment(RegisterPaymentRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register payment request");
-    Asserts.assertNotEmpty(request.getInstallationId(), "installation id");
+    Asserts.assertNotEmpty(
+        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
+        "request token");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     List<TransactionAddress> transactionAddresses =
         addressMapToTransactionAddresses(request.getAddresses());
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
             .installationId(request.getInstallationId())
+            .requestToken(request.getRequestToken())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
@@ -410,8 +425,7 @@ public class IncogniaAPI {
    *         FeedbackEvent.ACCOUNT_TAKEOVER,
    *         timestamp,
    *         FeedbackIdentifiers.builder()
-   *             .installationId("installation-id")
-   *             .sessionToken("session-token")
+   *             .requestToken("request-token")
    *             .accountId("account-id")
    *             .externalId("external-id")
    *             .signupId("c9ac2803-c868-4b7a-8323-8a6b96298ebe")
@@ -452,6 +466,7 @@ public class IncogniaAPI {
             .paymentId(identifiers.getPaymentId())
             .signupId(identifiers.getSignupId())
             .externalId(identifiers.getExternalId())
+            .requestToken(identifiers.getRequestToken())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();
