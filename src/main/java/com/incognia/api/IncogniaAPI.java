@@ -24,14 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Class providing an implementation of the API endpoints described in <a
- * href="https://dash.incognia.com/api-reference">API reference</a>.
+ * Class providing an implementation of the API endpoints described in
+ * https://dash.incognia.com/api-reference.
  *
  * <p>Automatically handles token generation and renewal.
  */
@@ -42,15 +41,14 @@ public class IncogniaAPI {
 
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
-  private static final AtomicReference<IncogniaAPI> INSTANCE = new AtomicReference<>();
-
   /**
    * Creates a new instance for a given client id/secret.
    *
    * @param clientId the client id
    * @param clientSecret the client secret
+   * @see #IncogniaAPI(String, String)
    */
-  IncogniaAPI(String clientId, String clientSecret) {
+  public IncogniaAPI(String clientId, String clientSecret) {
     this(clientId, clientSecret, API_URL);
   }
 
@@ -65,39 +63,12 @@ public class IncogniaAPI {
   }
 
   /**
-   * Initializes a IncogniaAPI singleton instance and returns it
-   *
-   * @param clientId the client id
-   * @param clientSecret the client secret
-   * @return the singleton instance
-   */
-  public static IncogniaAPI init(String clientId, String clientSecret) {
-    INSTANCE.compareAndSet(null, new IncogniaAPI(clientId, clientSecret));
-    return INSTANCE.get();
-  }
-
-  /**
-   * Returns the singleton instance of IncogniaAPI if it was initialized using {@link #init(String,
-   * String)}
-   *
-   * @return the singleton instance
-   * @throws IllegalStateException if the instance was not initialized
-   */
-  public static IncogniaAPI instance() {
-    if (INSTANCE.get() == null) {
-      throw new IllegalStateException(
-          "IncogniaAPI instance not initialized. Use IncogniaAPI.init(clientId, clientSecret) to set it.");
-    }
-    return INSTANCE.get();
-  }
-
-  /**
    * Registers a new signup for the given request token and address. Check <a
    * href="https://dash.incognia.com/api-reference#operation/signup-post">the docs</a><br>
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *      Address address = Address address =
    *         Address.builder()
@@ -160,7 +131,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
    *         .requestToken("request-token")
@@ -218,7 +189,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *     RegisterLoginRequest loginRequest = RegisterLoginRequest.builder()
    *         .accountId("account-id")
@@ -275,7 +246,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *      RegisterWebSignupRequest webSignupRequest = RegisterWebSignupRequest.builder().requestToken(requestToken).address(address).build();
    *      SignupAssessment assessment = api.registerSignup(webSignupRequest);
@@ -316,7 +287,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *      Address address = Address address =
    *         Address.builder()
@@ -418,7 +389,7 @@ public class IncogniaAPI {
    * Example:
    *
    * <pre>{@code
-   * IncogniaAPI api = IncogniaAPI.init("client-id", "client-secret");
+   * IncogniaAPI api = new IncogniaAPI("client-id", "client-secret", Region.BR);
    * try {
    *      Instant timestamp = Instant.now();
    *      client.registerFeedback(

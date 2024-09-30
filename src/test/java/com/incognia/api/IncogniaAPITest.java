@@ -65,20 +65,6 @@ class IncogniaAPITest {
   }
 
   @Test
-  void testInit_shouldReturnASingleton() {
-    IncogniaAPI instance1 = IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
-    IncogniaAPI instance2 = IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
-    assertThat(instance1).isSameAs(instance2);
-  }
-
-  @Test
-  void testInstance_shouldReturnASingleton() {
-    IncogniaAPI instance1 = IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
-    IncogniaAPI instance2 = IncogniaAPI.instance();
-    assertThat(instance1).isSameAs(instance2);
-  }
-
-  @Test
   @DisplayName("should return the expected signup response")
   @SneakyThrows
   void testRegisterSignup_whenDataIsValid() {
