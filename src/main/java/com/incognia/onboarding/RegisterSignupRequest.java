@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 @Builder
 public class RegisterSignupRequest {
   String installationId;
+  String requestToken;
   @Nullable Address address;
   String externalId;
   String policyId;

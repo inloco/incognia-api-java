@@ -38,6 +38,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
   @Setter private String expectedSessionToken;
+  @Setter private String expectedRequestToken;
   @Setter private UUID expectedSignupId;
   @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
   @Setter private PostFeedbackRequestBody expectedFeedbackRequestBody;
@@ -133,6 +134,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     PostSignupRequestBody postSignupRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostSignupRequestBody.class);
     assertThat(postSignupRequestBody.getInstallationId()).isEqualTo(expectedInstallationId);
+    assertThat(postSignupRequestBody.getRequestToken()).isEqualTo(expectedRequestToken);
     assertThat(postSignupRequestBody.getAccountId()).isEqualTo(expectedAccountId);
     assertThat(postSignupRequestBody.getExternalId()).isEqualTo(expectedExternalId);
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
@@ -140,7 +142,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     String response =
         ResourceUtils.getResourceFileAsString(
             postSignupRequestBody.getAddressLine() != null
-                    || postSignupRequestBody.getSessionToken() != null
+                    || postSignupRequestBody.getRequestToken().equals("request-token-web-signup")
                 ? "post_onboarding_response.json"
                 : "post_onboarding_response_no_address.json");
     return new MockResponse().setResponseCode(200).setBody(response);

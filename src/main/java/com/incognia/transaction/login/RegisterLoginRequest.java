@@ -10,6 +10,7 @@ import lombok.Value;
 @Builder
 public class RegisterLoginRequest {
   String installationId;
+  String requestToken;
   String accountId;
   String externalId;
   String policyId;
