@@ -1,12 +1,11 @@
 # Incognia API Java Client
 ![test workflow](https://github.com/inloco/incognia-api-java/actions/workflows/test.yaml/badge.svg)
-![maven central](https://img.shields.io/maven-central/v/com.incognia/incognia-api-client)
 
 Java lightweight client library for [Incognia APIs](https://dash.incognia.com/api-reference).
 
 ## Installation
 
-Incognia API Java Client is available on Maven Central. We provide 2 artifact ids: `incognia-api-client` and `incognia-api-client-shaded`.
+Incognia API Java Client is available on Incognia's Maven Repository. We provide 2 artifact ids: `incognia-api-client` and `incognia-api-client-shaded`.
 `incognia-api-client-shaded` includes all of our dependencies shaded into a single jar, so you don't need to worry about dependency conflicts.
 
 ### Maven
