@@ -4,7 +4,7 @@ plugins {
     id 'signing'
     id 'com.diffplug.spotless' version '6.11.0'
     id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
-    id 'io.github.goooler.shadow' version '8.1.7'
+    id 'io.github.goooler.shadow' version '8.1.7' apply false
 }
 
 group = "com.incognia"
@@ -74,17 +74,20 @@ spotless {
     }
 }
 
-shadowJar {
-    archiveClassifier.set('')
-    relocate 'okhttp3', 'incognia.shadow.okhttp3'
-    relocate 'com.fasterxml', 'incognia.shadow.com.fasterxml'
-    relocate 'com.auth0', 'incognia.shadow.com.auth0'
+def isShadow = project.findProperty("shadow") == "true"
+if (isShadow) {
+    apply plugin: 'io.github.goooler.shadow'
+    shadowJar {
+        archiveClassifier.set('')
+        relocate 'okhttp3', 'incognia.shadow.okhttp3'
+        relocate 'com.fasterxml', 'incognia.shadow.com.fasterxml'
+        relocate 'com.auth0', 'incognia.shadow.com.auth0'
+    }
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
-def isShadow = project.findProperty("shadow") == "true"
 
 publishing {
     publications {
@@ -93,11 +96,9 @@ publishing {
                 publication.artifactId = 'incognia-api-client-shaded'
                 artifact shadowJar
             } else {
+                from components.java
                 publication.artifactId = 'incognia-api-client'
-                artifact jar
             }
-            artifact sourcesJar
-            artifact javadocJar
             pom {
                 name = 'Incognia API Client'
                 description = "Java client library for Incognia's API"
