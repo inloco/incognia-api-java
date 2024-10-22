@@ -88,6 +88,8 @@ class IncogniaAPITest {
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
     Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
+    Map<String, Object> map = new HashMap<>();
+    map.put("custom-property", "custom-value");
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(address.getAddressLine());
@@ -95,6 +97,7 @@ class IncogniaAPITest {
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
+    dispatcher.setExpectedCustomProperties(map);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
         RegisterSignupRequest.builder()
@@ -103,6 +106,7 @@ class IncogniaAPITest {
             .policyId(policyId)
             .externalId(externalId)
             .address(address)
+            .customProperties(map)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -157,6 +161,7 @@ class IncogniaAPITest {
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
+    dispatcher.setExpectedCustomProperties(null);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
         RegisterSignupRequest.builder()
@@ -164,6 +169,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
+            .customProperties(null)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -268,6 +274,7 @@ class IncogniaAPITest {
                     RegisterSignupRequest.builder()
                         .requestToken("")
                         .address(AddressFixture.ADDRESS_ADDRESS_LINE)
+                        .customProperties(null)
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'request token' cannot be empty");
