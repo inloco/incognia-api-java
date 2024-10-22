@@ -3,6 +3,7 @@ package com.incognia.onboarding;
 import com.incognia.common.AdditionalLocation;
 import com.incognia.common.Address;
 import java.util.List;
+import java.util.Map;
 import lombok.Builder;
 import lombok.Value;
 import org.jetbrains.annotations.Nullable;
@@ -17,4 +18,5 @@ public class RegisterSignupRequest {
   String policyId;
   String accountId;
   List<AdditionalLocation> additionalLocations;
+  Map<String, Object> customProperties;
 }
