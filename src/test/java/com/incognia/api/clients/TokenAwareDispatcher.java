@@ -9,6 +9,7 @@ import com.incognia.onboarding.PostSignupRequestBody;
 import com.incognia.transaction.PostTransactionRequestBody;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Map;
 import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,6 +38,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedAccountId;
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
+  @Setter private Map<String, Object> expectedCustomProperties;
   @Setter private String expectedSessionToken;
   @Setter private String expectedRequestToken;
   @Setter private UUID expectedSignupId;
@@ -139,6 +141,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postSignupRequestBody.getExternalId()).isEqualTo(expectedExternalId);
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
+    assertThat(postSignupRequestBody.getCustomProperties()).isEqualTo(expectedCustomProperties);
     String response =
         ResourceUtils.getResourceFileAsString(
             postSignupRequestBody.getAddressLine() != null

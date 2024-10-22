@@ -1,9 +1,12 @@
 package com.incognia.onboarding;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.incognia.common.AdditionalLocation;
 import com.incognia.common.Coordinates;
 import com.incognia.common.StructuredAddress;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +25,8 @@ public class PostSignupRequestBody {
   String policyId;
   String accountId;
   List<AdditionalLocation> additionalLocations;
+
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  @Builder.Default
+  Map<String, Object> customProperties = Collections.emptyMap();
 }

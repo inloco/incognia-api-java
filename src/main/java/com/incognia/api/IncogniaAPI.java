@@ -149,6 +149,7 @@ public class IncogniaAPI {
             .policyId(request.getPolicyId())
             .accountId(request.getAccountId())
             .additionalLocations(request.getAdditionalLocations())
+            .customProperties(request.getCustomProperties())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
