@@ -17,4 +17,6 @@ public class TransactionAssessment {
   Map<String, Object> evidence;
   String deviceId;
   String installationId;
+  String policyId;
+  Map<String, Object> rawAttributes;
 }
