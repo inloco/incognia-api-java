@@ -3,6 +3,7 @@
   "risk_assessment": "low_risk",
   "device_id": "1df6d999-556d-42c3-8c63-357e5d08d95b",
   "unknown_field": "unknown_value",
+  "policy_id": "3549270d-cd0f-494a-97ee-97af3d5add04",
   "reasons": [
     {
       "code": "trusted_location",
@@ -36,5 +37,8 @@
       }
     ],
     "location_events_quantity": 62
+  },
+  "raw_attributes": {
+    "random_attribute": 0
   }
 }

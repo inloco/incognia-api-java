@@ -71,7 +71,7 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "my-account";
-    String policyId = UUID.randomUUID().toString();
+    String policyId = "3549270d-cd0f-494a-97ee-97af3d5add04";
     String externalId = "external-id";
     Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
     Map<String, Object> map = new HashMap<>();
@@ -96,12 +96,13 @@ class IncogniaAPITest {
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
-        .extracting("id", "requestId", "riskAssessment", "deviceId")
+        .extracting("id", "requestId", "riskAssessment", "deviceId", "policyId")
         .containsExactly(
             UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
             UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
             Assessment.LOW_RISK,
-            "1df6d999-556d-42c3-8c63-357e5d08d95b");
+            "1df6d999-556d-42c3-8c63-357e5d08d95b",
+            "3549270d-cd0f-494a-97ee-97af3d5add04");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
@@ -129,6 +130,12 @@ class IncogniaAPITest {
             .source(ReasonSource.LOCAL.getSource())
             .build();
     assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
+
+    Map<String, Object> expectedRawAttributes = new HashMap<>();
+    expectedRawAttributes.put("random_attribute", 0);
+
+    assertThat(signupAssessment.getRawAttributes())
+        .containsExactlyInAnyOrderEntriesOf(expectedRawAttributes);
   }
 
   @Test
@@ -138,7 +145,7 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "my-account";
-    String policyId = UUID.randomUUID().toString();
+    String policyId = "3549270d-cd0f-494a-97ee-97af3d5add04";
     String externalId = "external-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
@@ -159,12 +166,13 @@ class IncogniaAPITest {
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
-        .extracting("id", "requestId", "riskAssessment", "deviceId")
+        .extracting("id", "requestId", "riskAssessment", "deviceId", "policyId")
         .containsExactly(
             UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
             UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
             Assessment.HIGH_RISK,
-            "1df6d999-556d-42c3-8c63-357e5d08d95b");
+            "1df6d999-556d-42c3-8c63-357e5d08d95b",
+            "3549270d-cd0f-494a-97ee-97af3d5add04");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
@@ -196,7 +204,7 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String requestToken = "request-token-web-signup";
     String accountId = "my-account";
-    String policyId = UUID.randomUUID().toString();
+    String policyId = "3549270d-cd0f-494a-97ee-97af3d5add04";
     String externalId = "external-id";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
@@ -214,12 +222,13 @@ class IncogniaAPITest {
             .build();
     SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
     assertThat(webSignupAssessment)
-        .extracting("id", "requestId", "riskAssessment", "deviceId")
+        .extracting("id", "requestId", "riskAssessment", "deviceId", "policyId")
         .containsExactly(
             UUID.fromString("5e76a7ca-577c-4f47-a752-9e1e0cee9e49"),
             UUID.fromString("8afc84a7-f1d4-488d-bd69-36d9a37168b7"),
             Assessment.LOW_RISK,
-            "1df6d999-556d-42c3-8c63-357e5d08d95b");
+            "1df6d999-556d-42c3-8c63-357e5d08d95b",
+            "3549270d-cd0f-494a-97ee-97af3d5add04");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
@@ -248,6 +257,12 @@ class IncogniaAPITest {
             .source(ReasonSource.LOCAL.getSource())
             .build();
     assertThat(webSignupAssessment.getReasons()).containsExactly(expectedReason);
+
+    Map<String, Object> expectedRawAttributes = new HashMap<>();
+    expectedRawAttributes.put("random_attribute", 0);
+
+    assertThat(webSignupAssessment.getRawAttributes())
+        .containsExactlyInAnyOrderEntriesOf(expectedRawAttributes);
   }
 
   @Test
@@ -674,11 +689,12 @@ class IncogniaAPITest {
 
   private void assertTransactionAssessment(TransactionAssessment transactionAssessment) {
     assertThat(transactionAssessment)
-        .extracting("id", "riskAssessment", "deviceId")
+        .extracting("id", "riskAssessment", "deviceId", "policyId")
         .containsExactly(
             UUID.fromString("dfe1f2ff-8f0d-4ce8-aed1-af8435143044"),
             Assessment.LOW_RISK,
-            "1df6d999-556d-42c3-8c63-357e5d08d95b");
+            "1df6d999-556d-42c3-8c63-357e5d08d95b",
+            "3549270d-cd0f-494a-97ee-97af3d5add04");
     Map<String, Object> locationServices = new HashMap<>();
     locationServices.put("location_permission_enabled", true);
     locationServices.put("location_sensors_enabled", true);
@@ -706,5 +722,11 @@ class IncogniaAPITest {
             .source(ReasonSource.LOCAL.getSource())
             .build();
     assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
+
+    Map<String, Object> expectedRawAttributes = new HashMap<>();
+    expectedRawAttributes.put("random_attribute", 0);
+
+    assertThat(transactionAssessment.getRawAttributes())
+        .containsExactlyInAnyOrderEntriesOf(expectedRawAttributes);
   }
 }
