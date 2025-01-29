@@ -14,6 +14,8 @@ import lombok.Value;
 public class PostTransactionRequestBody {
   String installationId;
   String requestToken;
+  String appVersion;
+  String deviceOs;
   String accountId;
   String sessionToken;
   String policyId;

@@ -13,6 +13,8 @@ import org.jetbrains.annotations.Nullable;
 public class RegisterSignupRequest {
   String installationId;
   String requestToken;
+  String appVersion;
+  String deviceOs;
   @Nullable Address address;
   String externalId;
   String policyId;
