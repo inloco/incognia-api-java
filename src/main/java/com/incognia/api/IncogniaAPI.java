@@ -134,9 +134,6 @@ public class IncogniaAPI {
    */
   public SignupAssessment registerSignup(RegisterSignupRequest request) throws IncogniaException {
     Asserts.assertNotNull(request, "register signup request");
-    Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
-        "request token");
     Optional<Address> address = Optional.ofNullable(request.getAddress());
     PostSignupRequestBody postSignupRequestBody =
         PostSignupRequestBody.builder()
@@ -187,9 +184,6 @@ public class IncogniaAPI {
   public TransactionAssessment registerLogin(RegisterLoginRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register login request");
-    Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
-        "request token");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
@@ -382,9 +376,6 @@ public class IncogniaAPI {
   public TransactionAssessment registerPayment(RegisterPaymentRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register payment request");
-    Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
-        "request token");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     List<TransactionAddress> transactionAddresses =
         addressMapToTransactionAddresses(request.getAddresses());
@@ -489,5 +480,24 @@ public class IncogniaAPI {
                   address.getCoordinates());
             })
         .collect(Collectors.toList());
+  }
+
+  public static void main(String[] args) {
+    IncogniaAPI api = IncogniaAPI.init("QBqiqgZrw8bxg4M_k-jjRImqGvzKs2dQ", "x6sC_JIHwxTDXGu3EP3TkKeSU_hlGEa6iZgj-tmifXU-lwVhpGZaAppwoyIqYfME");
+    try {
+      RegisterLoginRequest registerLoginRequest =
+              RegisterLoginRequest.builder()
+                      .accountId("account-id")
+//                      .requestToken("l8dfTwNiUBsdtmMSBvX5sejOnhBmTPSjQC4njDYNrvsuS7c9bRVeq1_xMvyf4tlyUhfaV5aYDn58rO6GMFtdOuekbcXoDwBA7eoEvQn0rt7zMNcP-FeTAGgPhGmW_zSNq4ZTPGWNLJvRqmdBTwW2uw")
+//                      .requestToken(null)
+                      .evaluateTransaction(true) // can be omitted as it uses true as the default value
+                      .build();
+      TransactionAssessment assessment = api.registerLogin(registerLoginRequest);
+      System.out.println(assessment.getRiskAssessment());
+    } catch (IncogniaAPIException e) {
+      System.out.println(e.getMessage());
+    } catch (IncogniaException e) {
+      //Something unexpected happened
+    }
   }
 }

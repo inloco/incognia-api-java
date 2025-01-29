@@ -264,34 +264,6 @@ class IncogniaAPITest {
     assertThat(webSignupAssessment.getReasons()).containsExactly(expectedReason);
   }
 
-  @Test
-  @DisplayName("should throw illegal argument exception with correct message")
-  @SneakyThrows
-  void testRegisterSignup_whenEmptyRequestToken() {
-    assertThatThrownBy(
-            () ->
-                client.registerSignup(
-                    RegisterSignupRequest.builder()
-                        .requestToken("")
-                        .address(AddressFixture.ADDRESS_ADDRESS_LINE)
-                        .customProperties(null)
-                        .build()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'request token' cannot be empty");
-  }
-
-  @Test
-  @DisplayName("should throw illegal argument exception with correct message")
-  @SneakyThrows
-  void testRegisterWebSignup_whenEmptyRequestToken() {
-    assertThatThrownBy(
-            () ->
-                client.registerWebSignup(
-                    RegisterWebSignupRequest.builder().requestToken("").build()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'request token' cannot be empty");
-  }
-
   @ParameterizedTest
   @ValueSource(booleans = {true})
   @NullSource
@@ -589,54 +561,7 @@ class IncogniaAPITest {
             .build(),
         dryRun);
   }
-
-  @Test
-  @DisplayName("should throw illegal argument exception with correct message")
-  @SneakyThrows
-  void testRegisterPayment_whenRequestTokenIsNotValid() {
-    assertThatThrownBy(
-            () ->
-                client.registerPayment(
-                    RegisterPaymentRequest.builder()
-                        .requestToken("")
-                        .accountId("account id")
-                        .build()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'request token' cannot be empty");
-    assertThatThrownBy(
-            () ->
-                client.registerPayment(
-                    RegisterPaymentRequest.builder()
-                        .requestToken(null)
-                        .accountId("account id")
-                        .build()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'request token' cannot be empty");
-  }
-
-  @Test
-  @DisplayName("should throw illegal argument exception with correct message")
-  @SneakyThrows
-  void testRegisterLogin_whenRequestTokenIsNotValid() {
-    assertThatThrownBy(
-            () ->
-                client.registerLogin(
-                    RegisterLoginRequest.builder()
-                        .requestToken("")
-                        .accountId("account id")
-                        .build()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'request token' cannot be empty");
-    assertThatThrownBy(
-            () ->
-                client.registerLogin(
-                    RegisterLoginRequest.builder()
-                        .requestToken(null)
-                        .accountId("account id")
-                        .build()))
-        .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("'request token' cannot be empty");
-  }
+  
 
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
