@@ -481,23 +481,4 @@ public class IncogniaAPI {
             })
         .collect(Collectors.toList());
   }
-
-  public static void main(String[] args) {
-    IncogniaAPI api = IncogniaAPI.init("QBqiqgZrw8bxg4M_k-jjRImqGvzKs2dQ", "x6sC_JIHwxTDXGu3EP3TkKeSU_hlGEa6iZgj-tmifXU-lwVhpGZaAppwoyIqYfME");
-    try {
-      RegisterLoginRequest registerLoginRequest =
-              RegisterLoginRequest.builder()
-                      .accountId("account-id")
-//                      .requestToken("l8dfTwNiUBsdtmMSBvX5sejOnhBmTPSjQC4njDYNrvsuS7c9bRVeq1_xMvyf4tlyUhfaV5aYDn58rO6GMFtdOuekbcXoDwBA7eoEvQn0rt7zMNcP-FeTAGgPhGmW_zSNq4ZTPGWNLJvRqmdBTwW2uw")
-//                      .requestToken(null)
-                      .evaluateTransaction(true) // can be omitted as it uses true as the default value
-                      .build();
-      TransactionAssessment assessment = api.registerLogin(registerLoginRequest);
-      System.out.println(assessment.getRiskAssessment());
-    } catch (IncogniaAPIException e) {
-      System.out.println(e.getMessage());
-    } catch (IncogniaException e) {
-      //Something unexpected happened
-    }
-  }
 }

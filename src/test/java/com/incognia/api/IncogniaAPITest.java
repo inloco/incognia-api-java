@@ -561,7 +561,6 @@ class IncogniaAPITest {
             .build(),
         dryRun);
   }
-  
 
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
