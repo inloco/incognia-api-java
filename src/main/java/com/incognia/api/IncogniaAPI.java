@@ -134,9 +134,6 @@ public class IncogniaAPI {
    */
   public SignupAssessment registerSignup(RegisterSignupRequest request) throws IncogniaException {
     Asserts.assertNotNull(request, "register signup request");
-    Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
-        "request token");
     Optional<Address> address = Optional.ofNullable(request.getAddress());
     PostSignupRequestBody postSignupRequestBody =
         PostSignupRequestBody.builder()
@@ -190,9 +187,6 @@ public class IncogniaAPI {
   public TransactionAssessment registerLogin(RegisterLoginRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register login request");
-    Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
-        "request token");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
@@ -388,9 +382,6 @@ public class IncogniaAPI {
   public TransactionAssessment registerPayment(RegisterPaymentRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register payment request");
-    Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getInstallationId()),
-        "request token");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     List<TransactionAddress> transactionAddresses =
         addressMapToTransactionAddresses(request.getAddresses());
