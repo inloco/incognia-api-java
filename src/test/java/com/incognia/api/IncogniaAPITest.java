@@ -154,6 +154,8 @@ class IncogniaAPITest {
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
+    String appVersion = "1.4.3";
+    String deviceOs = "iOS";
 
     TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(null);
@@ -161,6 +163,8 @@ class IncogniaAPITest {
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
+    dispatcher.setExpectedAppVersion(appVersion);
+    dispatcher.setExpectedDeviceOs(deviceOs.toLowerCase());
     dispatcher.setExpectedCustomProperties(null);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
@@ -169,6 +173,8 @@ class IncogniaAPITest {
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
+            .appVersion(appVersion)
+            .deviceOs(deviceOs)
             .customProperties(null)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
@@ -301,6 +307,8 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
+    String appVersion = "1.4.3";
+    String deviceOs = "Android";
     String externalId = "external-id";
     String policyId = "policy-id";
     Map<String, Object> map = new HashMap<>();
@@ -311,6 +319,8 @@ class IncogniaAPITest {
         PostTransactionRequestBody.builder()
             .requestToken(requestToken)
             .externalId(externalId)
+            .appVersion(appVersion)
+            .deviceOs(deviceOs.toLowerCase())
             .accountId(accountId)
             .type("login")
             .addresses(null)
@@ -323,6 +333,8 @@ class IncogniaAPITest {
         RegisterLoginRequest.builder()
             .requestToken(requestToken)
             .accountId(accountId)
+            .appVersion(appVersion)
+            .deviceOs(deviceOs)
             .externalId(externalId)
             .evaluateTransaction(eval)
             .policyId(policyId)
@@ -413,6 +425,8 @@ class IncogniaAPITest {
     String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
+    String appVersion = "appVersion";
+    String deviceOs = "iOS";
     String externalId = "external-id";
     String policyId = "policy-id";
     Address address =
@@ -456,6 +470,8 @@ class IncogniaAPITest {
         RegisterPaymentRequest.builder()
             .requestToken(requestToken)
             .accountId(accountId)
+            .appVersion(appVersion)
+            .deviceOs(deviceOs)
             .externalId(externalId)
             .policyId(policyId)
             .addresses(Collections.singletonMap(AddressType.SHIPPING, address))
@@ -469,6 +485,8 @@ class IncogniaAPITest {
             .externalId(externalId)
             .policyId(policyId)
             .accountId(accountId)
+            .appVersion(appVersion)
+            .deviceOs(deviceOs.toLowerCase())
             .type("payment")
             .addresses(transactionAddresses)
             .paymentValue(paymentValue)

@@ -19,6 +19,8 @@ public class PostSignupRequestBody {
   String sessionToken;
   String requestToken;
   String addressLine;
+  String appVersion;
+  String deviceOs;
   StructuredAddress structuredAddress;
   Coordinates addressCoordinates;
   String externalId;

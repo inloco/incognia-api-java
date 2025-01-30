@@ -142,6 +142,9 @@ public class IncogniaAPI {
         PostSignupRequestBody.builder()
             .installationId(request.getInstallationId())
             .requestToken(request.getRequestToken())
+            .appVersion(request.getAppVersion())
+            .deviceOs(
+                Optional.ofNullable(request.getDeviceOs()).map(String::toLowerCase).orElse(null))
             .addressLine(address.map(Address::getAddressLine).orElse(null))
             .structuredAddress(address.map(Address::getStructuredAddress).orElse(null))
             .addressCoordinates(address.map(Address::getCoordinates).orElse(null))
@@ -195,6 +198,9 @@ public class IncogniaAPI {
         PostTransactionRequestBody.builder()
             .installationId(request.getInstallationId())
             .requestToken(request.getRequestToken())
+            .appVersion(request.getAppVersion())
+            .deviceOs(
+                Optional.ofNullable(request.getDeviceOs()).map(String::toLowerCase).orElse(null))
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
@@ -392,6 +398,9 @@ public class IncogniaAPI {
         PostTransactionRequestBody.builder()
             .installationId(request.getInstallationId())
             .requestToken(request.getRequestToken())
+            .appVersion(request.getAppVersion())
+            .deviceOs(
+                Optional.ofNullable(request.getDeviceOs()).map(String::toLowerCase).orElse(null))
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
