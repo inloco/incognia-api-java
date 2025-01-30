@@ -14,6 +14,8 @@ public class RegisterLoginRequest {
   String accountId;
   String externalId;
   String policyId;
+  String appVersion;
+  String deviceOs;
   Map<String, Object> customProperties;
 
   @Getter(AccessLevel.NONE)

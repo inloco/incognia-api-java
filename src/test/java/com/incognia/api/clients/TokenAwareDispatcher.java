@@ -36,6 +36,8 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedInstallationId;
   @Setter private String expectedExternalId;
   @Setter private String expectedAccountId;
+  @Setter private String expectedAppVersion;
+  @Setter private String expectedDeviceOs;
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
   @Setter private Map<String, Object> expectedCustomProperties;
@@ -138,6 +140,8 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postSignupRequestBody.getInstallationId()).isEqualTo(expectedInstallationId);
     assertThat(postSignupRequestBody.getRequestToken()).isEqualTo(expectedRequestToken);
     assertThat(postSignupRequestBody.getAccountId()).isEqualTo(expectedAccountId);
+    assertThat(postSignupRequestBody.getAppVersion()).isEqualTo(expectedAppVersion);
+    assertThat(postSignupRequestBody.getDeviceOs()).isEqualTo(expectedDeviceOs);
     assertThat(postSignupRequestBody.getExternalId()).isEqualTo(expectedExternalId);
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
