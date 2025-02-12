@@ -10,6 +10,8 @@ import com.incognia.common.Reason;
 import com.incognia.common.ReasonCode;
 import com.incognia.common.ReasonSource;
 import com.incognia.common.StructuredAddress;
+import com.incognia.common.exceptions.IncogniaException;
+import com.incognia.common.utils.CustomOptions;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
 import com.incognia.feedback.PostFeedbackRequestBody;
@@ -52,11 +54,23 @@ class IncogniaAPITest {
   private static final String CLIENT_SECRET = "client-secret";
   private MockWebServer mockServer;
   private IncogniaAPI client;
+  private IncogniaAPI clientWithLowTimeout;
 
   @BeforeEach
   void setUp() {
     mockServer = new MockWebServer();
-    client = new IncogniaAPI(CLIENT_ID, CLIENT_SECRET, mockServer.url("").toString());
+    client =
+        new IncogniaAPI(
+            CLIENT_ID,
+            CLIENT_SECRET,
+            CustomOptions.builder().build(),
+            mockServer.url("").toString());
+    clientWithLowTimeout =
+        new IncogniaAPI(
+            CLIENT_ID,
+            CLIENT_SECRET,
+            CustomOptions.builder().timeoutMillis(1L).build(),
+            mockServer.url("").toString());
   }
 
   @AfterEach
@@ -66,14 +80,20 @@ class IncogniaAPITest {
 
   @Test
   void testInit_shouldReturnASingleton() {
-    IncogniaAPI instance1 = IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
-    IncogniaAPI instance2 = IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
+    IncogniaAPI instance1 =
+        IncogniaAPI.init(
+            CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
+    IncogniaAPI instance2 =
+        IncogniaAPI.init(
+            CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     assertThat(instance1).isSameAs(instance2);
   }
 
   @Test
   void testInstance_shouldReturnASingleton() {
-    IncogniaAPI instance1 = IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
+    IncogniaAPI instance1 =
+        IncogniaAPI.init(
+            CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance2 = IncogniaAPI.instance();
     assertThat(instance1).isSameAs(instance2);
   }
@@ -268,6 +288,40 @@ class IncogniaAPITest {
             .source(ReasonSource.LOCAL.getSource())
             .build();
     assertThat(webSignupAssessment.getReasons()).containsExactly(expectedReason);
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true})
+  @NullSource
+  @DisplayName("should return IncogniaException if exceeds timeout")
+  @SneakyThrows
+  void testRegisterLogin_whenReachesTheTimeout(Boolean eval) {
+    String token = TokenCreationFixture.createToken();
+    String requestToken = "request-token";
+    String accountId = "account-id";
+    String policyId = "policy-id";
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedTransactionRequestBody(
+        PostTransactionRequestBody.builder()
+            .requestToken(requestToken)
+            .accountId(accountId)
+            .type("login")
+            .addresses(null)
+            .paymentMethods(null)
+            .policyId(policyId)
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    RegisterLoginRequest loginRequest =
+        RegisterLoginRequest.builder()
+            .requestToken(requestToken)
+            .accountId(accountId)
+            .evaluateTransaction(eval)
+            .policyId(policyId)
+            .build();
+    assertThatThrownBy(() -> clientWithLowTimeout.registerLogin(loginRequest))
+        .isInstanceOf(IncogniaException.class)
+        .hasMessage("network call timeout");
   }
 
   @ParameterizedTest

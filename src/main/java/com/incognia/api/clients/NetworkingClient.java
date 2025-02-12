@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.type.MapType;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,8 +57,9 @@ public class NetworkingClient {
     Request request = buildPostRequest(path, body, headers, queryParameters);
     try (Response response = httpClient.newCall(request).execute()) {
       return parseResponse(response, responseType);
+    } catch (InterruptedIOException e) {
+      throw new IncogniaException("network call timeout", e);
     } catch (IOException e) {
-      // TODO(rato): handle timeout
       throw new IncogniaException("network call failed", e);
     }
   }
@@ -74,8 +76,9 @@ public class NetworkingClient {
             .build();
     try (Response response = httpClient.newCall(request).execute()) {
       return parseResponse(response, responseType);
+    } catch (InterruptedIOException e) {
+      throw new IncogniaException("network call timeout", e);
     } catch (IOException e) {
-      // TODO(rato): handle timeout
       throw new IncogniaException("network call failed", e);
     }
   }
@@ -86,8 +89,9 @@ public class NetworkingClient {
     Request request = buildPostRequest(path, body, headers, queryParameters);
     try {
       httpClient.newCall(request).execute().close();
+    } catch (InterruptedIOException e) {
+      throw new IncogniaException("network call timeout", e);
     } catch (IOException e) {
-      // TODO(rato): handle timeout
       throw new IncogniaException("network call failed", e);
     }
   }

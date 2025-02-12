@@ -23,14 +23,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>3.3.0</version>
+  <version>3.4.0</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>3.3.0</version>
+  <version>3.4.0</version>
 </dependency>
 ```
 
@@ -47,13 +47,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:3.3.0'
+     implementation 'com.incognia:incognia-api-client:3.4.0'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:3.3.0'
+     implementation 'com.incognia:incognia-api-client-shaded:3.4.0'
 }
 ```
 
@@ -70,6 +70,19 @@ IncogniaAPI api = IncogniaAPI.init("your-client-id", "your-client-secret");
 ```
 
 This will create a singleton instance of the IncogniaAPI class, which will handle token renewal automatically. You should reuse this instance throughout your application.
+
+The library also allow the users to configure the call timeout themselves. This will give them more control over the expected time response. This can be done by calling the init passing the CustomOptions object as a parameter.
+
+
+```java
+IncogniaAPI api = IncogniaAPI.init(
+    "your-client-id",
+    "your-client-secret",
+    CustomOptions.builder().timeoutMillis(2000).build()
+);
+```
+
+If no parameter is passed the library will use the default timeout of 10 seconds.
 
 After calling `init`, you can get the singleton instance simply calling `IncogniaAPI.instance()`.
 
