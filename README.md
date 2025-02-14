@@ -78,7 +78,7 @@ The library also allow the users to configure the call timeout themselves. This 
 IncogniaAPI api = IncogniaAPI.init(
     "your-client-id",
     "your-client-secret",
-    CustomOptions.builder().timeoutMillis(2000).build()
+    CustomOptions.builder().timeoutMillis(2000L).build()
 );
 ```
 
