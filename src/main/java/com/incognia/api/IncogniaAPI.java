@@ -5,6 +5,7 @@ import com.incognia.common.Address;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.common.utils.Asserts;
+import com.incognia.common.utils.CustomOptions;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
 import com.incognia.feedback.PostFeedbackRequestBody;
@@ -24,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import okhttp3.OkHttpClient;
@@ -50,18 +52,37 @@ public class IncogniaAPI {
    * @param clientId the client id
    * @param clientSecret the client secret
    */
-  IncogniaAPI(String clientId, String clientSecret) {
-    this(clientId, clientSecret, API_URL);
+  IncogniaAPI(String clientId, String clientSecret, CustomOptions options) {
+    this(clientId, clientSecret, options, API_URL);
   }
 
-  IncogniaAPI(String clientId, String clientSecret, String apiUrl) {
+  IncogniaAPI(String clientId, String clientSecret, CustomOptions options, String apiUrl) {
     Asserts.assertNotEmpty(clientId, "client id");
     Asserts.assertNotEmpty(clientSecret, "client secret");
     Asserts.assertNotEmpty(apiUrl, "api url");
-    // TODO (rato): set client timeout
     tokenAwareNetworkingClient =
         new TokenAwareNetworkingClient(
-            new OkHttpClient.Builder().build(), apiUrl, clientId, clientSecret);
+            new OkHttpClient.Builder()
+                .callTimeout(
+                    Optional.ofNullable(options.getTimeoutMillis()).orElse(10000L),
+                    TimeUnit.MILLISECONDS)
+                .build(),
+            apiUrl,
+            clientId,
+            clientSecret);
+  }
+
+  /**
+   * Initializes a IncogniaAPI singleton instance and returns it
+   *
+   * @param clientId the client id
+   * @param clientSecret the client secret
+   * @param options custom options that can be passed to the library
+   * @return the singleton instance
+   */
+  public static IncogniaAPI init(String clientId, String clientSecret, CustomOptions options) {
+    INSTANCE.compareAndSet(null, new IncogniaAPI(clientId, clientSecret, options));
+    return INSTANCE.get();
   }
 
   /**
@@ -72,8 +93,7 @@ public class IncogniaAPI {
    * @return the singleton instance
    */
   public static IncogniaAPI init(String clientId, String clientSecret) {
-    INSTANCE.compareAndSet(null, new IncogniaAPI(clientId, clientSecret));
-    return INSTANCE.get();
+    return init(clientId, clientSecret, CustomOptions.builder().build());
   }
 
   /**
