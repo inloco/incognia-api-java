@@ -1,5 +1,6 @@
 package com.incognia.transaction.login;
 
+import com.incognia.common.Location;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -17,6 +18,7 @@ public class RegisterLoginRequest {
   String appVersion;
   String deviceOs;
   Map<String, Object> customProperties;
+  Location location;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;

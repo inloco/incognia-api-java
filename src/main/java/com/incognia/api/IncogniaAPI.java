@@ -213,6 +213,7 @@ public class IncogniaAPI {
             .installationId(request.getInstallationId())
             .requestToken(request.getRequestToken())
             .appVersion(request.getAppVersion())
+            .location(request.getLocation())
             .deviceOs(
                 Optional.ofNullable(request.getDeviceOs()).map(String::toLowerCase).orElse(null))
             .accountId(request.getAccountId())
