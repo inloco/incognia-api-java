@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
+import com.incognia.common.Location;
 import com.incognia.common.Reason;
 import com.incognia.common.ReasonCode;
 import com.incognia.common.ReasonSource;
@@ -334,6 +335,12 @@ class IncogniaAPITest {
     String requestToken = "request-token";
     String accountId = "account-id";
     String appVersion = "1.4.3";
+    Location location =
+        Location.builder()
+            .latitude("40.74836007062138")
+            .longitude("-73.98509720487937")
+            .collectedAt(Instant.now().toString())
+            .build();
     String deviceOs = "Android";
     String externalId = "external-id";
     String policyId = "policy-id";
@@ -346,6 +353,7 @@ class IncogniaAPITest {
             .requestToken(requestToken)
             .externalId(externalId)
             .appVersion(appVersion)
+            .location(location)
             .deviceOs(deviceOs.toLowerCase())
             .accountId(accountId)
             .type("login")
@@ -360,6 +368,7 @@ class IncogniaAPITest {
             .requestToken(requestToken)
             .accountId(accountId)
             .appVersion(appVersion)
+            .location(location)
             .deviceOs(deviceOs)
             .externalId(externalId)
             .evaluateTransaction(eval)
