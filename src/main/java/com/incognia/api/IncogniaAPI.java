@@ -166,6 +166,7 @@ public class IncogniaAPI {
         PostTransactionRequestBody.builder()
             .installationId(request.getInstallationId())
             .requestToken(request.getRequestToken())
+            .location(request.getLocation())
             .accountId(request.getAccountId())
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
