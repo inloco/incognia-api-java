@@ -1,6 +1,7 @@
 package com.incognia.api.clients;
 
 import com.incognia.common.exceptions.IncogniaException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
@@ -100,7 +101,9 @@ public class TokenAwareNetworkingClient {
     Map<String, String> headers =
         Collections.singletonMap(
             AUTHORIZATION_HEADER,
-            "Basic " + Base64.getUrlEncoder().encodeToString(clientIdSecret.getBytes()));
+            "Basic "
+                + Base64.getUrlEncoder()
+                    .encodeToString(clientIdSecret.getBytes(StandardCharsets.UTF_8)));
     return networkingClient.doPostFormUrlEncoded(
         TOKEN_PATH, TOKEN_REQUEST_BODY, TokenResponse.class, headers);
   }

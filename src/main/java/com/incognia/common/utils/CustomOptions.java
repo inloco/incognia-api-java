@@ -6,5 +6,7 @@ import lombok.Value;
 @Value
 @Builder
 public class CustomOptions {
-  Long timeoutMillis;
+  @Builder.Default long timeoutMillis = 10000L;
+  @Builder.Default int maxConnections = 5;
+  @Builder.Default long keepAliveSeconds = 300;
 }

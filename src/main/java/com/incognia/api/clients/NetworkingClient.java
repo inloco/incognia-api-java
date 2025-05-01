@@ -87,8 +87,8 @@ public class NetworkingClient {
       String path, T body, Map<String, String> headers, Map<String, String> queryParameters)
       throws IncogniaException {
     Request request = buildPostRequest(path, body, headers, queryParameters);
-    try {
-      httpClient.newCall(request).execute().close();
+    try (Response ignored = httpClient.newCall(request).execute()) {
+      // No operations performed on response
     } catch (InterruptedIOException e) {
       throw new IncogniaException("network call timeout", e);
     } catch (IOException e) {
@@ -101,8 +101,8 @@ public class NetworkingClient {
       String path, T body, Map<String, String> headers, Map<String, String> queryParameters)
       throws IncogniaException {
     HttpUrl.Builder urlBuilder = baseUrl.newBuilder().addPathSegments(path);
-    for (String parameter : queryParameters.keySet()) {
-      urlBuilder.addQueryParameter(parameter, queryParameters.get(parameter));
+    for (Map.Entry<String, String> entry : queryParameters.entrySet()) {
+      urlBuilder.addQueryParameter(entry.getKey(), entry.getValue());
     }
     Builder requestBuilder = new Builder().url(urlBuilder.build());
     RequestBody requestBody;
