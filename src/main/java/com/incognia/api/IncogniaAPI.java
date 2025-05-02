@@ -28,6 +28,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,9 +64,12 @@ public class IncogniaAPI {
     tokenAwareNetworkingClient =
         new TokenAwareNetworkingClient(
             new OkHttpClient.Builder()
-                .callTimeout(
-                    Optional.ofNullable(options.getTimeoutMillis()).orElse(10000L),
-                    TimeUnit.MILLISECONDS)
+                .callTimeout(options.getTimeoutMillis(), TimeUnit.MILLISECONDS)
+                .connectionPool(
+                    new ConnectionPool(
+                        options.getMaxConnections(),
+                        options.getKeepAliveSeconds(),
+                        TimeUnit.SECONDS))
                 .build(),
             apiUrl,
             clientId,
@@ -268,7 +272,7 @@ public class IncogniaAPI {
     Asserts.assertNotNull(request, "register login request");
     Asserts.assertNotEmpty(request.getAccountId(), "account id");
     Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getSessionToken()),
+        Optional.ofNullable(request.getRequestToken()).orElseGet(request::getSessionToken),
         "request token");
     PostTransactionRequestBody requestBody =
         PostTransactionRequestBody.builder()
@@ -318,7 +322,7 @@ public class IncogniaAPI {
       throws IncogniaException {
     Asserts.assertNotNull(request, "register signup request");
     Asserts.assertNotEmpty(
-        Optional.ofNullable(request.getRequestToken()).orElse(request.getSessionToken()),
+        Optional.ofNullable(request.getRequestToken()).orElseGet(request::getSessionToken),
         "request token");
     PostSignupRequestBody postSignupRequestBody =
         PostSignupRequestBody.builder()

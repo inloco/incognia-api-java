@@ -23,14 +23,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>3.4.0</version>
+  <version>3.6.0</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>3.4.0</version>
+  <version>3.6.0</version>
 </dependency>
 ```
 
@@ -47,13 +47,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:3.4.0'
+     implementation 'com.incognia:incognia-api-client:3.6.0'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:3.4.0'
+     implementation 'com.incognia:incognia-api-client-shaded:3.6.0'
 }
 ```
 
@@ -78,11 +78,15 @@ The library also allow the users to configure the call timeout themselves. This 
 IncogniaAPI api = IncogniaAPI.init(
     "your-client-id",
     "your-client-secret",
-    CustomOptions.builder().timeoutMillis(2000L).build()
+    CustomOptions.builder()
+    .timeoutMillis(2000L)
+    .keepAliveSeconds(3000)
+    .maxConnections(5)
+    .build()
 );
 ```
 
-If no parameter is passed the library will use the default timeout of 10 seconds.
+If no parameter is passed the library will use the default timeout of 10 seconds, 5 minutes of keep alive and 5 max connections.
 
 After calling `init`, you can get the singleton instance simply calling `IncogniaAPI.instance()`.
 
