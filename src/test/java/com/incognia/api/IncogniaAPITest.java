@@ -2,6 +2,12 @@ package com.incognia.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockConstruction;
+import static org.mockito.Mockito.verify;
 
 import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
@@ -39,8 +45,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.SneakyThrows;
+import okhttp3.ConnectionPool;
+import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,6 +60,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedConstruction;
 
 class IncogniaAPITest {
   private static final String CLIENT_ID = "client-id";
@@ -97,6 +109,72 @@ class IncogniaAPITest {
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance2 = IncogniaAPI.instance();
     assertThat(instance1).isSameAs(instance2);
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void testInit_shouldCreateOkHttpWithRightParameters() {
+    AtomicReference<List<Object>> poolArgs = new AtomicReference<>();
+
+    try (MockedConstruction<OkHttpClient.Builder> builderConstr =
+            mockConstruction(
+                OkHttpClient.Builder.class,
+                (mock, context) -> {
+                  doReturn(mock).when(mock).callTimeout(anyLong(), any());
+                  doReturn(mock).when(mock).connectionPool(any());
+                  doReturn(mock(OkHttpClient.class)).when(mock).build();
+                });
+        MockedConstruction<ConnectionPool> ignored =
+            mockConstruction(
+                ConnectionPool.class,
+                (mock, context) -> {
+                  poolArgs.set((List<Object>) context.arguments());
+                })) {
+      long timeoutMillis = generateRandomLong();
+      long keepAliveSeconds = generateRandomLong();
+      int maxConnections = generateRandomInteger();
+
+      IncogniaAPI.init(
+          CLIENT_ID,
+          CLIENT_SECRET,
+          CustomOptions.builder()
+              .timeoutMillis(timeoutMillis)
+              .keepAliveSeconds(keepAliveSeconds)
+              .maxConnections(maxConnections)
+              .build());
+
+      verify(builderConstr.constructed().get(0)).callTimeout(timeoutMillis, TimeUnit.MILLISECONDS);
+
+      assertThat(poolArgs.get())
+          .containsExactly(maxConnections, keepAliveSeconds, TimeUnit.SECONDS);
+    }
+  }
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void testInit_whenNoCustomOptions_shouldCreateOkHttpWithDefaultParameters() {
+    AtomicReference<List<Object>> poolArgs = new AtomicReference<>();
+
+    try (MockedConstruction<OkHttpClient.Builder> builderConstr =
+            mockConstruction(
+                OkHttpClient.Builder.class,
+                (mock, context) -> {
+                  doReturn(mock).when(mock).callTimeout(anyLong(), any());
+                  doReturn(mock).when(mock).connectionPool(any());
+                  doReturn(mock(OkHttpClient.class)).when(mock).build();
+                });
+        MockedConstruction<ConnectionPool> ignored =
+            mockConstruction(
+                ConnectionPool.class,
+                (mock, context) -> {
+                  poolArgs.set((List<Object>) context.arguments());
+                })) {
+      IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET);
+
+      verify(builderConstr.constructed().get(0)).callTimeout(10000L, TimeUnit.MILLISECONDS);
+
+      assertThat(poolArgs.get()).containsExactly(5, 300L, TimeUnit.SECONDS);
+    }
   }
 
   @Test
@@ -725,5 +803,13 @@ class IncogniaAPITest {
             .source(ReasonSource.LOCAL.getSource())
             .build();
     assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
+  }
+
+  private static long generateRandomLong() {
+    return new Random().nextLong() & Long.MAX_VALUE;
+  }
+
+  private static int generateRandomInteger() {
+    return new Random().nextInt() & Integer.MAX_VALUE;
   }
 }
