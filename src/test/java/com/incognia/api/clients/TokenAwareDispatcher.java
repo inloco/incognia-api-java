@@ -5,12 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.incognia.feedback.PostFeedbackRequestBody;
 import com.incognia.fixtures.ResourceUtils;
+import com.incognia.fixtures.TokenCreationFixture;
 import com.incognia.onboarding.PostSignupRequestBody;
 import com.incognia.transaction.PostTransactionRequestBody;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -29,10 +29,12 @@ public class TokenAwareDispatcher extends Dispatcher {
           System.getProperty("os.version"),
           System.getProperty("os.arch"),
           System.getProperty("java.version"));
-  private final String token;
+  @Setter private static String token = TokenCreationFixture.createToken();
+
   private final String clientId;
   private final String clientSecret;
   private final ObjectMapper objectMapper;
+
   @Setter private String expectedInstallationId;
   @Setter private String expectedExternalId;
   @Setter private String expectedAccountId;
@@ -41,15 +43,12 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
   @Setter private Map<String, Object> expectedCustomProperties;
-  @Setter private String expectedSessionToken;
   @Setter private String expectedRequestToken;
-  @Setter private UUID expectedSignupId;
   @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
   @Setter private PostFeedbackRequestBody expectedFeedbackRequestBody;
   @Getter private int tokenRequestCount;
 
-  public TokenAwareDispatcher(String token, String clientId, String clientSecret) {
-    this.token = token;
+  public TokenAwareDispatcher(String clientId, String clientSecret) {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.tokenRequestCount = 0;
@@ -176,7 +175,7 @@ public class TokenAwareDispatcher extends Dispatcher {
           .setBody(
               "{\"access_token\": \""
                   + token
-                  + "\",\"expires_in\": 100,\"token_type\": \"Bearer\"}");
+                  + "\",\"expires_in\": 12,\"token_type\": \"Bearer\"}");
     }
     return new MockResponse().setResponseCode(401);
   }

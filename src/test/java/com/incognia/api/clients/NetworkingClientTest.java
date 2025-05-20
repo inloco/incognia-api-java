@@ -9,6 +9,7 @@ import com.incognia.fixtures.TestRequestBody;
 import com.incognia.fixtures.TestResponseBody;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import lombok.SneakyThrows;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.Dispatcher;
@@ -58,7 +59,12 @@ class NetworkingClientTest {
           }
         });
     TestResponseBody response =
-        client.doPost("v2/testurl", new TestRequestBody("id", 123), TestResponseBody.class);
+        client.doPost(
+            "v2/testurl",
+            new TestRequestBody("id", 123),
+            TestResponseBody.class,
+            Collections.emptyMap(),
+            Collections.emptyMap());
     assertThat(response.getName()).isEqualTo("my awesome name");
   }
 
@@ -82,7 +88,12 @@ class NetworkingClientTest {
         });
     assertThatThrownBy(
             () ->
-                client.doPost("v2/testurl", new TestRequestBody("id", 123), TestResponseBody.class))
+                client.doPost(
+                    "v2/testurl",
+                    new TestRequestBody("id", 123),
+                    TestResponseBody.class,
+                    Collections.emptyMap(),
+                    Collections.emptyMap()))
         .satisfies(
             e -> {
               assertThat(e).isInstanceOf(IncogniaAPIException.class);
