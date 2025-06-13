@@ -16,4 +16,5 @@ public class PostFeedbackRequestBody {
   String paymentId;
   String loginId;
   String signupId;
+  String expiresAt;
 }
