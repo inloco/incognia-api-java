@@ -493,6 +493,8 @@ public class IncogniaAPI {
             .signupId(identifiers.getSignupId())
             .externalId(identifiers.getExternalId())
             .requestToken(identifiers.getRequestToken())
+            .expiresAt(
+                Optional.ofNullable(identifiers.getExpiresAt()).map(Instant::toString).orElse(null))
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();

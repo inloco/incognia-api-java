@@ -721,6 +721,44 @@ class IncogniaAPITest {
         dryRun);
   }
 
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  @DisplayName("should be successful with expiresAt")
+  @SneakyThrows
+  void testRegisterFeedback_withExpiresAt(boolean dryRun) {
+    String token = TokenCreationFixture.createToken();
+    String requestToken = "request-token";
+    String accountId = "account-id";
+    String externalId = "external-id";
+    String signupId = UUID.randomUUID().toString();
+    Instant timestamp = Instant.now();
+    Instant expiresAt = timestamp.plusSeconds(3600);
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedFeedbackRequestBody(
+        PostFeedbackRequestBody.builder()
+            .requestToken(requestToken)
+            .externalId(externalId)
+            .signupId(signupId)
+            .accountId(accountId)
+            .event(FeedbackEvent.ACCOUNT_TAKEOVER)
+            .timestamp(timestamp.toEpochMilli())
+            .expiresAt(expiresAt.toString())
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    client.registerFeedback(
+        FeedbackEvent.ACCOUNT_TAKEOVER,
+        timestamp,
+        FeedbackIdentifiers.builder()
+            .requestToken(requestToken)
+            .accountId(accountId)
+            .externalId(externalId)
+            .signupId(signupId)
+            .expiresAt(expiresAt)
+            .build(),
+        dryRun);
+  }
+
   @Test
   @DisplayName("should throw illegal argument exception with correct message")
   @SneakyThrows
