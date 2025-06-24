@@ -23,7 +23,6 @@ import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
 import com.incognia.feedback.PostFeedbackRequestBody;
 import com.incognia.fixtures.AddressFixture;
-import com.incognia.fixtures.TokenCreationFixture;
 import com.incognia.onboarding.RegisterSignupRequest;
 import com.incognia.onboarding.RegisterWebSignupRequest;
 import com.incognia.onboarding.SignupAssessment;
@@ -63,8 +62,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedConstruction;
 
 class IncogniaAPITest {
-  private static final String CLIENT_ID = "client-id";
-  private static final String CLIENT_SECRET = "client-secret";
+  private final String CLIENT_ID = "client-id";
+  private final String CLIENT_SECRET = "client-secret";
+  private final TokenAwareDispatcher dispatcher =
+      new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
   private MockWebServer mockServer;
   private IncogniaAPI client;
   private IncogniaAPI clientWithLowTimeout;
@@ -181,7 +182,6 @@ class IncogniaAPITest {
   @DisplayName("should return the expected signup response")
   @SneakyThrows
   void testRegisterSignup_whenDataIsValid() {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
@@ -190,7 +190,6 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
@@ -248,7 +247,6 @@ class IncogniaAPITest {
   @DisplayName("should return the expected signup response when the address is empty")
   @SneakyThrows
   void testRegisterSignup_withEmptyAddress() {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
@@ -256,7 +254,6 @@ class IncogniaAPITest {
     String appVersion = "1.4.3";
     String deviceOs = "iOS";
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(null);
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
@@ -312,13 +309,11 @@ class IncogniaAPITest {
   @DisplayName("should return the expected web signup response")
   @SneakyThrows
   void testRegisterWebSignup_whenDataIsValid() {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token-web-signup";
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
@@ -375,12 +370,10 @@ class IncogniaAPITest {
   @DisplayName("should return IncogniaException if exceeds timeout")
   @SneakyThrows
   void testRegisterLogin_whenReachesTheTimeout(Boolean eval) {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String policyId = "policy-id";
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
             .requestToken(requestToken)
@@ -409,7 +402,6 @@ class IncogniaAPITest {
   @DisplayName("should return the expected login transaction response")
   @SneakyThrows
   void testRegisterLogin_whenDataIsValid(Boolean eval) {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String appVersion = "1.4.3";
@@ -425,7 +417,6 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
             .requestToken(requestToken)
@@ -463,13 +454,11 @@ class IncogniaAPITest {
   @DisplayName("should return the expected web login transaction response")
   @SneakyThrows
   void testRegisterWebLogin_whenDataIsValid(Boolean eval) {
-    String token = TokenCreationFixture.createToken();
     String accountId = "account-id";
     String externalId = "external-id";
     String requestToken = "request-token";
     String policyId = "policy-id";
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
             .externalId(externalId)
@@ -498,13 +487,11 @@ class IncogniaAPITest {
   @DisplayName("should return an empty response")
   @SneakyThrows
   void testRegisterLogin_whenEvalIsFalse() {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
             .requestToken(requestToken)
@@ -535,7 +522,6 @@ class IncogniaAPITest {
   @DisplayName("should return the expected payment transaction response")
   @SneakyThrows
   void testRegisterPayment_whenDataIsValid(Boolean eval) {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String appVersion = "appVersion";
@@ -574,7 +560,6 @@ class IncogniaAPITest {
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
             new TransactionAddress(
@@ -615,7 +600,6 @@ class IncogniaAPITest {
   @DisplayName("should return an empty response")
   @SneakyThrows
   void testRegisterPayment_whenEvalIsFalse() {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
@@ -638,8 +622,6 @@ class IncogniaAPITest {
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
             .build();
-
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
 
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
@@ -691,14 +673,12 @@ class IncogniaAPITest {
   @DisplayName("should be successful")
   @SneakyThrows
   void testRegisterFeedback_whenDataIsValid(boolean dryRun) {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
     Instant timestamp = Instant.now();
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
             .requestToken(requestToken)
