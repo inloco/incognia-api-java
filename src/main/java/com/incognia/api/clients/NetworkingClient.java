@@ -38,10 +38,6 @@ public class NetworkingClient {
         objectMapper.getTypeFactory().constructMapType(HashMap.class, String.class, Object.class);
   }
 
-  public <T, U> U doPost(String path, T body, Class<U> responseType) throws IncogniaException {
-    return doPost(path, body, responseType, Collections.emptyMap(), Collections.emptyMap());
-  }
-
   public <T, U> U doPost(String path, T body, Class<U> responseType, Map<String, String> headers)
       throws IncogniaException {
     return doPost(path, body, responseType, headers, Collections.emptyMap());
@@ -88,7 +84,6 @@ public class NetworkingClient {
       throws IncogniaException {
     Request request = buildPostRequest(path, body, headers, queryParameters);
     try (Response ignored = httpClient.newCall(request).execute()) {
-      // No operations performed on response
     } catch (InterruptedIOException e) {
       throw new IncogniaException("network call timeout", e);
     } catch (IOException e) {
