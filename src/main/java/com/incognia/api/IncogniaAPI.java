@@ -5,6 +5,7 @@ import com.incognia.common.Address;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.common.utils.Asserts;
+import com.incognia.common.utils.ClientCredentials;
 import com.incognia.common.utils.CustomOptions;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
@@ -25,8 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -45,7 +46,8 @@ public class IncogniaAPI {
 
   private final TokenAwareNetworkingClient tokenAwareNetworkingClient;
 
-  private static final AtomicReference<IncogniaAPI> INSTANCE = new AtomicReference<>();
+  private static final ConcurrentHashMap<ClientCredentials, IncogniaAPI> INSTANCES =
+      new ConcurrentHashMap<>();
 
   /**
    * Creates a new instance for a given client id/secret.
@@ -77,42 +79,68 @@ public class IncogniaAPI {
   }
 
   /**
-   * Initializes a IncogniaAPI singleton instance and returns it
+   * Initializes a IncogniaAPI instance for a given client id/secret and returns it
    *
    * @param clientId the client id
    * @param clientSecret the client secret
    * @param options custom options that can be passed to the library
-   * @return the singleton instance
+   * @return the IncogniaAPI instance
    */
   public static IncogniaAPI init(String clientId, String clientSecret, CustomOptions options) {
-    INSTANCE.compareAndSet(null, new IncogniaAPI(clientId, clientSecret, options));
-    return INSTANCE.get();
+    ClientCredentials credentials =
+        ClientCredentials.builder().clientId(clientId).clientSecret(clientSecret).build();
+
+    INSTANCES.computeIfAbsent(credentials, c -> new IncogniaAPI(clientId, clientSecret, options));
+    return INSTANCES.get(credentials);
   }
 
   /**
-   * Initializes a IncogniaAPI singleton instance and returns it
+   * Initializes a IncogniaAPI instance for a given client id/secret and returns it
    *
    * @param clientId the client id
    * @param clientSecret the client secret
-   * @return the singleton instance
+   * @return the IncogniaAPI instance
    */
   public static IncogniaAPI init(String clientId, String clientSecret) {
     return init(clientId, clientSecret, CustomOptions.builder().build());
   }
 
   /**
-   * Returns the singleton instance of IncogniaAPI if it was initialized using {@link #init(String,
-   * String)}
+   * If there is only one IncogniaAPI instance in the multiton, return that instance
    *
-   * @return the singleton instance
-   * @throws IllegalStateException if the instance was not initialized
+   * @return the single IncogniaAPI instance
+   * @throws IllegalStateException if more than one instance exists or if no instance exists
    */
   public static IncogniaAPI instance() {
-    if (INSTANCE.get() == null) {
+    if (INSTANCES.isEmpty()) {
+      throw new IllegalStateException(
+          "No API instance has been created. Use IncogniaAPI.init(clientId, clientSecret) to create one");
+    } else if (INSTANCES.size() > 1) {
+      throw new IllegalStateException(
+          "Multiple IncogniaAPI instances have been created. Use IncogniaAPI.instance(clientId, clientSecret) to retrieve the desired one.");
+    }
+
+    Map.Entry<ClientCredentials, IncogniaAPI> onlyEntry = INSTANCES.entrySet().iterator().next();
+    return onlyEntry.getValue();
+  }
+
+  /**
+   * Returns the instance of IncogniaAPI for a given client id/secret if it was initialized using
+   * {@link #init(String, String)}
+   *
+   * @return the IncogniaAPI instance
+   * @throws IllegalStateException if no instance has been initialized for the given client
+   *     id/secret
+   */
+  public static IncogniaAPI instance(String clientId, String clientSecret) {
+    ClientCredentials credentials =
+        ClientCredentials.builder().clientId(clientId).clientSecret(clientSecret).build();
+
+    if (!INSTANCES.containsKey(credentials)) {
       throw new IllegalStateException(
           "IncogniaAPI instance not initialized. Use IncogniaAPI.init(clientId, clientSecret) to set it.");
     }
-    return INSTANCE.get();
+    return INSTANCES.get(credentials);
   }
 
   /**
