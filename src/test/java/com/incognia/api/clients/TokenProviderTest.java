@@ -4,6 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.incognia.common.exceptions.IncogniaException;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import okhttp3.OkHttpClient;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -93,5 +96,25 @@ class TokenProviderTest {
     TokenResponse anotherToken = differentTokenProvider.getToken();
     assertThat(token).isNotNull();
     assertThat(anotherToken).isNotSameAs(token);
+  }
+
+  @Test
+  public void testGetToken_whenCalledConcurrent_shouldCallDispatcherOnlyOnce()
+      throws InterruptedException {
+    synchronized (this) {
+      wait(15000); // Wait for token to expire (15 seconds)
+    }
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
+    mockServer.setDispatcher(dispatcher);
+
+    int numThreads = 10;
+    ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+    for (int i = 0; i < numThreads; i++) {
+      executor.submit(() -> tokenProvider.getToken());
+    }
+
+    executor.shutdown();
+    executor.awaitTermination(10, TimeUnit.SECONDS);
+    assertThat(dispatcher.getTokenRequestCount()).isEqualTo(1);
   }
 }

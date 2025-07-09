@@ -120,8 +120,7 @@ public class IncogniaAPI {
           "Multiple IncogniaAPI instances have been created. Use IncogniaAPI.instance(clientId, clientSecret) to retrieve the desired one.");
     }
 
-    Map.Entry<ClientCredentials, IncogniaAPI> onlyEntry = INSTANCES.entrySet().iterator().next();
-    return onlyEntry.getValue();
+    return INSTANCES.entrySet().iterator().next().getValue();
   }
 
   /**
