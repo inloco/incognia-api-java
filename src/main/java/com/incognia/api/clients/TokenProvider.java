@@ -1,12 +1,14 @@
 package com.incognia.api.clients;
 
 import com.incognia.common.exceptions.IncogniaException;
+import com.incognia.common.utils.ClientCredentials;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
 class TokenProvider {
@@ -14,7 +16,8 @@ class TokenProvider {
   private static final String TOKEN_REQUEST_BODY = "grant_type=client_credentials";
   private static final String TOKEN_PATH = "api/v2/token";
 
-  private static final ReentrantLock lock = new ReentrantLock();
+  private static final ConcurrentHashMap<ClientCredentials, ReentrantLock> lockMap =
+      new ConcurrentHashMap<>();
   private volatile TokenResponse token;
 
   private final String clientId;
@@ -48,14 +51,18 @@ class TokenProvider {
 
   private void refreshTokenIfNeeded() throws IncogniaException {
     if (needsRefresh()) {
-      lock.lock();
+      ClientCredentials credentials =
+          ClientCredentials.builder().clientId(clientId).clientSecret(clientSecret).build();
+      lockMap.computeIfAbsent(credentials, c -> new ReentrantLock());
+      lockMap.get(credentials).lock();
+
       try {
         if (needsRefresh()) {
           token = getNewToken();
           token.computeExpiresAt();
         }
       } finally {
-        lock.unlock();
+        lockMap.get(credentials).unlock();
       }
     }
   }

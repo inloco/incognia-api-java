@@ -70,8 +70,8 @@ import org.mockito.MockedConstruction;
 class IncogniaAPITest {
   private final String CLIENT_ID = "client-id";
   private final String CLIENT_SECRET = "client-secret";
-  private final String CLIENT_ID_2 = "client-id-2";
-  private final String CLIENT_SECRET_2 = "client-secret-2";
+  private final String DIFFERENT_CLIENT_ID = "different-client-id";
+  private final String DIFFERENT_CLIENT_SECRET = "different-client-secret";
   private final TokenAwareDispatcher dispatcher =
       new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
   private MockWebServer mockServer;
@@ -108,7 +108,9 @@ class IncogniaAPITest {
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance2 =
         IncogniaAPI.init(
-            CLIENT_ID_2, CLIENT_SECRET_2, CustomOptions.builder().timeoutMillis(10000L).build());
+            DIFFERENT_CLIENT_ID,
+            DIFFERENT_CLIENT_SECRET,
+            CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance3 =
         IncogniaAPI.init(
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
@@ -134,7 +136,9 @@ class IncogniaAPITest {
     IncogniaAPI.init(
         CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI.init(
-        CLIENT_ID_2, CLIENT_SECRET_2, CustomOptions.builder().timeoutMillis(10000L).build());
+        DIFFERENT_CLIENT_ID,
+        DIFFERENT_CLIENT_SECRET,
+        CustomOptions.builder().timeoutMillis(10000L).build());
 
     assertThrows(
         IllegalStateException.class,
@@ -148,9 +152,11 @@ class IncogniaAPITest {
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance2 =
         IncogniaAPI.init(
-            CLIENT_ID_2, CLIENT_SECRET_2, CustomOptions.builder().timeoutMillis(10000L).build());
+            DIFFERENT_CLIENT_ID,
+            DIFFERENT_CLIENT_SECRET,
+            CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance3 = IncogniaAPI.instance(CLIENT_ID, CLIENT_SECRET);
-    IncogniaAPI instance4 = IncogniaAPI.instance(CLIENT_ID_2, CLIENT_SECRET_2);
+    IncogniaAPI instance4 = IncogniaAPI.instance(DIFFERENT_CLIENT_ID, DIFFERENT_CLIENT_SECRET);
 
     assertThat(instance1).isSameAs(instance3);
     assertThat(instance2).isSameAs(instance4);

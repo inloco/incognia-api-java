@@ -93,6 +93,9 @@ If no parameter is passed the library will use the default timeout of 10 seconds
 After calling `init`, you can get the created instance by simply calling `IncogniaAPI.instance()` if only one instance has been created, 
 or by calling `IncogniaAPI.instance("your-client-id", "your-client-secret")` to specify which instance should be returned.
 
+If you need to use more than one `clientId`/`clientSecret`, it is recommended to use **only** the 
+`IncogniaAPI.instance("your-client-id", "your-client-secret")` to get already created instances.
+
 #### Dependency Injection integration examples
 
 If you use a dependency injection framework, you can create a singleton bean for the `IncogniaAPI` class. Below are some examples using common java frameworks:

@@ -13,8 +13,11 @@ import org.junit.jupiter.api.Test;
 class TokenProviderTest {
   private final String CLIENT_ID = "client-id";
   private final String CLIENT_SECRET = "client-secret";
+  private final String DIFFERENT_CLIENT_ID = "different-client-id";
+  private final String DIFFERENT_CLIENT_SECRET = "different-client-secret";
   private MockWebServer mockServer;
   private TokenProvider tokenProvider;
+  private TokenProvider differentTokenProvider;
 
   @BeforeEach
   void setUp() {
@@ -23,6 +26,11 @@ class TokenProviderTest {
         new TokenProvider(
             CLIENT_ID,
             CLIENT_SECRET,
+            new NetworkingClient(new OkHttpClient(), mockServer.url("").toString()));
+    differentTokenProvider =
+        new TokenProvider(
+            DIFFERENT_CLIENT_ID,
+            DIFFERENT_CLIENT_SECRET,
             new NetworkingClient(new OkHttpClient(), mockServer.url("").toString()));
   }
 
@@ -64,5 +72,26 @@ class TokenProviderTest {
     tokenProvider.getToken();
 
     assertThat(dispatcher.getTokenRequestCount()).isEqualTo(1);
+  }
+
+  @Test
+  public void testGetToken_whenMultipleCredentialsExists_shouldReturnDifferentTokens()
+      throws IncogniaException, InterruptedException {
+    synchronized (this) {
+      wait(15000); // Wait for token to expire (15 seconds)
+    }
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
+    mockServer.setDispatcher(dispatcher);
+
+    TokenResponse token = tokenProvider.getToken();
+    assertThat(token).isNotNull();
+
+    TokenAwareDispatcher dispatcher2 =
+        new TokenAwareDispatcher(DIFFERENT_CLIENT_ID, DIFFERENT_CLIENT_SECRET);
+    mockServer.setDispatcher(dispatcher2);
+
+    TokenResponse anotherToken = differentTokenProvider.getToken();
+    assertThat(token).isNotNull();
+    assertThat(anotherToken).isNotSameAs(token);
   }
 }
