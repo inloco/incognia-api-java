@@ -14,7 +14,11 @@ class TokenProvider {
   private static final String TOKEN_REQUEST_BODY = "grant_type=client_credentials";
   private static final String TOKEN_PATH = "api/v2/token";
 
-  private static final ReentrantLock lock = new ReentrantLock();
+  // This implementation assumes that only one instance of this class
+  // is created per IncogniaAPI instance.
+  // Therefore, for each (clientId, clientSecret) pair, there is exactly
+  // one instance of this class.
+  private final ReentrantLock lock = new ReentrantLock();
   private volatile TokenResponse token;
 
   private final String clientId;

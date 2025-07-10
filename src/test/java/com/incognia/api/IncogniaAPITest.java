@@ -2,6 +2,7 @@ package com.incognia.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.doReturn;
@@ -18,6 +19,7 @@ import com.incognia.common.ReasonCode;
 import com.incognia.common.ReasonSource;
 import com.incognia.common.StructuredAddress;
 import com.incognia.common.exceptions.IncogniaException;
+import com.incognia.common.utils.ClientCredentials;
 import com.incognia.common.utils.CustomOptions;
 import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
@@ -38,6 +40,7 @@ import com.incognia.transaction.payment.PaymentType;
 import com.incognia.transaction.payment.PaymentValue;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import lombok.SneakyThrows;
@@ -56,14 +60,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.MockedConstruction;
 
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 class IncogniaAPITest {
   private final String CLIENT_ID = "client-id";
   private final String CLIENT_SECRET = "client-secret";
+  private final String DIFFERENT_CLIENT_ID = "different-client-id";
+  private final String DIFFERENT_CLIENT_SECRET = "different-client-secret";
   private final TokenAwareDispatcher dispatcher =
       new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
   private MockWebServer mockServer;
@@ -88,28 +96,76 @@ class IncogniaAPITest {
   }
 
   @AfterEach
-  void tearDown() throws IOException {
+  void tearDown() throws NoSuchFieldException, IOException, IllegalAccessException {
+    resetIncogniaApiInstances();
     mockServer.shutdown();
   }
 
   @Test
-  void testInit_shouldReturnASingleton() {
+  void testInit_shouldReturnAnInstance() {
     IncogniaAPI instance1 =
         IncogniaAPI.init(
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance2 =
         IncogniaAPI.init(
+            DIFFERENT_CLIENT_ID,
+            DIFFERENT_CLIENT_SECRET,
+            CustomOptions.builder().timeoutMillis(10000L).build());
+    IncogniaAPI instance3 =
+        IncogniaAPI.init(
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
-    assertThat(instance1).isSameAs(instance2);
+    assertThat(instance1).isSameAs(instance3);
+    assertThat(instance2).isNotSameAs(instance1);
   }
 
   @Test
-  void testInstance_shouldReturnASingleton() {
+  void testInstanceWithoutCredentials_shouldReturnAnInstance() {
     IncogniaAPI instance1 =
         IncogniaAPI.init(
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     IncogniaAPI instance2 = IncogniaAPI.instance();
     assertThat(instance1).isSameAs(instance2);
+  }
+
+  @Test
+  void
+      testInstanceWithoutCredentials_whenTheNumberOfInstancesIsNotOne_shouldThrowIllegalStateException() {
+    assertThrows(
+        IllegalStateException.class, IncogniaAPI::instance); // No API instance has been created
+
+    IncogniaAPI.init(
+        CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
+    IncogniaAPI.init(
+        DIFFERENT_CLIENT_ID,
+        DIFFERENT_CLIENT_SECRET,
+        CustomOptions.builder().timeoutMillis(10000L).build());
+
+    assertThrows(
+        IllegalStateException.class,
+        IncogniaAPI::instance); // Multiple IncogniaAPI instances have been created.
+  }
+
+  @Test
+  void testInstanceWithCredentials_shouldReturnAnInstance() {
+    IncogniaAPI instance1 =
+        IncogniaAPI.init(
+            CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
+    IncogniaAPI instance2 =
+        IncogniaAPI.init(
+            DIFFERENT_CLIENT_ID,
+            DIFFERENT_CLIENT_SECRET,
+            CustomOptions.builder().timeoutMillis(10000L).build());
+    IncogniaAPI instance3 = IncogniaAPI.instance(CLIENT_ID, CLIENT_SECRET);
+    IncogniaAPI instance4 = IncogniaAPI.instance(DIFFERENT_CLIENT_ID, DIFFERENT_CLIENT_SECRET);
+
+    assertThat(instance1).isSameAs(instance3);
+    assertThat(instance2).isSameAs(instance4);
+    assertThat(instance1).isNotSameAs(instance2);
+  }
+
+  @Test
+  void testInstanceWithCredentials_whenNoInstanceWasCreated_shouldThrowIllegalStateException() {
+    assertThrows(IllegalStateException.class, () -> IncogniaAPI.instance(CLIENT_ID, CLIENT_SECRET));
   }
 
   @Test
@@ -791,5 +847,16 @@ class IncogniaAPITest {
 
   private static int generateRandomInteger() {
     return new Random().nextInt() & Integer.MAX_VALUE;
+  }
+
+  private static void resetIncogniaApiInstances()
+      throws NoSuchFieldException, IllegalAccessException {
+    Field field = IncogniaAPI.class.getDeclaredField("INSTANCES");
+    field.setAccessible(true);
+
+    @SuppressWarnings("unchecked")
+    ConcurrentHashMap<ClientCredentials, IncogniaAPI> map =
+        (ConcurrentHashMap<ClientCredentials, IncogniaAPI>) field.get(null);
+    map.clear();
   }
 }
