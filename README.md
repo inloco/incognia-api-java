@@ -23,14 +23,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>3.6.0</version>
+  <version>3.8.0</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>3.6.0</version>
+  <version>3.8.0</version>
 </dependency>
 ```
 
@@ -47,13 +47,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:3.6.0'
+     implementation 'com.incognia:incognia-api-client:3.8.0'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:3.6.0'
+     implementation 'com.incognia:incognia-api-client-shaded:3.8.0'
 }
 ```
 
@@ -69,7 +69,9 @@ Before calling the API methods, you need to create an instance of the `IncogniaA
 IncogniaAPI api = IncogniaAPI.init("your-client-id", "your-client-secret");
 ```
 
-This will create a singleton instance of the IncogniaAPI class, which will handle token renewal automatically. You should reuse this instance throughout your application.
+This will create a instance of the IncogniaAPI class, which will handle token renewal automatically. You should reuse this instance throughout your application.
+
+The IncogniaAPI class implements the Multiton design pattern by maintaining a single instance per unique (client id, client secret) pair.
 
 The library also allow the users to configure the call timeout themselves. This will give them more control over the expected time response. This can be done by calling the init passing the CustomOptions object as a parameter.
 
@@ -88,7 +90,11 @@ IncogniaAPI api = IncogniaAPI.init(
 
 If no parameter is passed the library will use the default timeout of 10 seconds, 5 minutes of keep alive and 5 max connections.
 
-After calling `init`, you can get the singleton instance simply calling `IncogniaAPI.instance()`.
+After calling `init`, you can get the created instance by simply calling `IncogniaAPI.instance()` if only one instance has been created, 
+or by calling `IncogniaAPI.instance("your-client-id", "your-client-secret")` to specify which instance should be returned.
+
+If you need to use more than one `clientId`/`clientSecret`, it is recommended to use **only** the 
+`IncogniaAPI.instance("your-client-id", "your-client-secret")` to get already created instances.
 
 #### Dependency Injection integration examples
 
