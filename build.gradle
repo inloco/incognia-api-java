@@ -56,13 +56,6 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
-// test {
-//     testLogging {
-//         events "passed", "skipped", "failed", "standardOut", "standardError"
-//         showStandardStreams = true
-//     }
-// }
-
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(8)
