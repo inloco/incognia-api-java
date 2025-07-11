@@ -358,6 +358,7 @@ public class IncogniaAPI {
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
             .accountId(request.getAccountId())
+            .customProperties(request.getCustomProperties())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);

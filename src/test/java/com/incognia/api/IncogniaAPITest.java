@@ -369,11 +369,14 @@ class IncogniaAPITest {
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
+    Map<String, Object> map = new HashMap<>();
+    map.put("custom-property", "custom-value");
 
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
+    dispatcher.setExpectedCustomProperties(map);
     mockServer.setDispatcher(dispatcher);
     RegisterWebSignupRequest registerSignupRequest =
         RegisterWebSignupRequest.builder()
@@ -381,6 +384,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
+            .customProperties(map)
             .build();
     SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
     assertThat(webSignupAssessment)
