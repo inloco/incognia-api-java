@@ -386,7 +386,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .customProperties(map)
             .build();
-    SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest); 
+    SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
     assertThat(webSignupAssessment)
         .extracting("id", "requestId", "riskAssessment", "deviceId")
         .containsExactly(
