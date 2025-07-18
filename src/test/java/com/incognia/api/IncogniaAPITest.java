@@ -35,6 +35,7 @@ import com.incognia.transaction.TransactionAssessment;
 import com.incognia.transaction.login.RegisterLoginRequest;
 import com.incognia.transaction.login.RegisterWebLoginRequest;
 import com.incognia.transaction.payment.CardInfo;
+import com.incognia.transaction.payment.Coupon;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentType;
 import com.incognia.transaction.payment.PaymentValue;
@@ -588,6 +589,24 @@ class IncogniaAPITest {
     String deviceOs = "iOS";
     String externalId = "external-id";
     String policyId = "policy-id";
+    String storeId = "store-id";
+    Location location =
+        Location.builder()
+            .latitude("40.74836007062138")
+            .longitude("-73.98509720487937")
+            .collectedAt(Instant.now().toString())
+            .build();
+    Coupon coupon =
+        Coupon.builder()
+            .type("percent_off")
+            .value(10.0)
+            .maxDiscount(5.0)
+            .id("coupon-id")
+            .name("coupon-name")
+            .build();
+    Map<String, Object> customProperties = new HashMap<>();
+    customProperties.put("custom-property", "custom-value");
+    customProperties.put("float-property", 12.345);
     Address address =
         Address.builder()
             .structuredAddress(
@@ -636,6 +655,10 @@ class IncogniaAPITest {
             .evaluateTransaction(eval)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
+            .storeId(storeId)
+            .coupon(coupon)
+            .customProperties(customProperties)
+            .location(location)
             .build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -649,7 +672,10 @@ class IncogniaAPITest {
             .addresses(transactionAddresses)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
-            .customProperties(null)
+            .storeId(storeId)
+            .coupon(coupon)
+            .customProperties(customProperties)
+            .location(location)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
