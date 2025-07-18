@@ -14,7 +14,7 @@ import lombok.Value;
 
 @Value
 @Builder
-@AllArgsConstructor // ------------------------------- entender o que isso faz
+@AllArgsConstructor
 public class RegisterPaymentRequest {
   String installationId;
   String requestToken;
