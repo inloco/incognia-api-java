@@ -452,6 +452,10 @@ public class IncogniaAPI {
             .addresses(transactionAddresses)
             .paymentValue(request.getPaymentValue())
             .paymentMethods(request.getPaymentMethods())
+            .location(request.getLocation())
+            .storeId(request.getStoreId())
+            .customProperties(request.getCustomProperties())
+            .coupon(request.getCoupon())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();
