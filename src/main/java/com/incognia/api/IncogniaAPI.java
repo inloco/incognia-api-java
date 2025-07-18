@@ -432,10 +432,6 @@ public class IncogniaAPI {
    * @throws IncogniaAPIException in case of api errors
    * @throws IncogniaException in case of unexpected errors
    */
-  // custom properties
-  // location
-  // coupon
-  // related account id
   public TransactionAssessment registerPayment(RegisterPaymentRequest request)
       throws IncogniaException {
     Asserts.assertNotNull(request, "register payment request");
