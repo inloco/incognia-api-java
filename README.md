@@ -24,14 +24,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>2.13.0</version>
+  <version>2.14.0</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>2.13.0</version>
+  <version>2.14.0</version>
 </dependency>
 ```
 
@@ -48,13 +48,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:2.13.0'
+     implementation 'com.incognia:incognia-api-client:2.14.0'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:2.13.0'
+     implementation 'com.incognia:incognia-api-client-shaded:2.14.0'
 }
 ```
 
