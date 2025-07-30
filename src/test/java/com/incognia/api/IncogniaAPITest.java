@@ -519,6 +519,9 @@ class IncogniaAPITest {
     String externalId = "external-id";
     String requestToken = "request-token";
     String policyId = "policy-id";
+    Map<String, Object> customProperties = new HashMap<>();
+    customProperties.put("string-property", "string-value");
+    customProperties.put("float-property", 12.345);
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -529,7 +532,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
-            .customProperties(null)
+            .customProperties(customProperties)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -539,6 +542,7 @@ class IncogniaAPITest {
             .evaluateTransaction(eval)
             .requestToken(requestToken)
             .policyId(policyId)
+            .customProperties(customProperties)
             .build();
     TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
