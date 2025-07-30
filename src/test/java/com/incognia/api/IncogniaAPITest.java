@@ -796,7 +796,6 @@ class IncogniaAPITest {
   @DisplayName("should be successful with expiresAt")
   @SneakyThrows
   void testRegisterFeedback_withExpiresAt(boolean dryRun) {
-    String token = TokenCreationFixture.createToken();
     String requestToken = "request-token";
     String accountId = "account-id";
     String externalId = "external-id";
@@ -804,7 +803,7 @@ class IncogniaAPITest {
     Instant timestamp = Instant.now();
     Instant expiresAt = timestamp.plusSeconds(3600);
 
-    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
             .requestToken(requestToken)
