@@ -60,5 +60,23 @@ public enum FeedbackEvent {
   @JsonProperty("custom_cargo_fraud")
   CUSTOM_CARGO_FRAUD,
   @JsonProperty("custom_debt_churn_20d")
-  CUSTOM_DEBT_CHURN_20D;
+  CUSTOM_DEBT_CHURN_20D,
+  @JsonProperty("custom_cancellation")
+  CUSTOM_CANCELLATION,
+  @JsonProperty("account_allowed")
+  ACCOUNT_ALLOWED,
+  @JsonProperty("device_allowed")
+  DEVICE_ALLOWED,
+  @JsonProperty("login_accepted_by_device_verification")
+  LOGIN_ACCEPTED_BY_DEVICE_VERIFICATION,
+  @JsonProperty("login_accepted_by_facial_biometrics")
+  LOGIN_ACCEPTED_BY_FACIAL_BIOMETRICS,
+  @JsonProperty("login_accepted_by_manual_review")
+  LOGIN_ACCEPTED_BY_MANUAL_REVIEW,
+  @JsonProperty("login_declined_by_facial_biometrics")
+  LOGIN_DECLINED_BY_FACIAL_BIOMETRICS,
+  @JsonProperty("login_declined_by_manual_review")
+  LOGIN_DECLINED_BY_MANUAL_REVIEW,
+  @JsonProperty("reset")
+  RESET;
 }

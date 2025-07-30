@@ -35,6 +35,7 @@ import com.incognia.transaction.TransactionAssessment;
 import com.incognia.transaction.login.RegisterLoginRequest;
 import com.incognia.transaction.login.RegisterWebLoginRequest;
 import com.incognia.transaction.payment.CardInfo;
+import com.incognia.transaction.payment.Coupon;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentType;
 import com.incognia.transaction.payment.PaymentValue;
@@ -369,11 +370,14 @@ class IncogniaAPITest {
     String accountId = "my-account";
     String policyId = UUID.randomUUID().toString();
     String externalId = "external-id";
+    Map<String, Object> map = new HashMap<>();
+    map.put("custom-property", "custom-value");
 
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
+    dispatcher.setExpectedCustomProperties(map);
     mockServer.setDispatcher(dispatcher);
     RegisterWebSignupRequest registerSignupRequest =
         RegisterWebSignupRequest.builder()
@@ -381,6 +385,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .policyId(policyId)
             .externalId(externalId)
+            .customProperties(map)
             .build();
     SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
     assertThat(webSignupAssessment)
@@ -514,6 +519,9 @@ class IncogniaAPITest {
     String externalId = "external-id";
     String requestToken = "request-token";
     String policyId = "policy-id";
+    Map<String, Object> customProperties = new HashMap<>();
+    customProperties.put("string-property", "string-value");
+    customProperties.put("float-property", 12.345);
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -524,7 +532,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
-            .customProperties(null)
+            .customProperties(customProperties)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -534,6 +542,7 @@ class IncogniaAPITest {
             .evaluateTransaction(eval)
             .requestToken(requestToken)
             .policyId(policyId)
+            .customProperties(customProperties)
             .build();
     TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -584,6 +593,24 @@ class IncogniaAPITest {
     String deviceOs = "iOS";
     String externalId = "external-id";
     String policyId = "policy-id";
+    String storeId = "store-id";
+    Location location =
+        Location.builder()
+            .latitude("40.74836007062138")
+            .longitude("-73.98509720487937")
+            .collectedAt(Instant.now().toString())
+            .build();
+    Coupon coupon =
+        Coupon.builder()
+            .type("percent_off")
+            .value(10.0)
+            .maxDiscount(5.0)
+            .id("coupon-id")
+            .name("coupon-name")
+            .build();
+    Map<String, Object> customProperties = new HashMap<>();
+    customProperties.put("custom-property", "custom-value");
+    customProperties.put("float-property", 12.345);
     Address address =
         Address.builder()
             .structuredAddress(
@@ -632,6 +659,10 @@ class IncogniaAPITest {
             .evaluateTransaction(eval)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
+            .storeId(storeId)
+            .coupon(coupon)
+            .customProperties(customProperties)
+            .location(location)
             .build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -645,7 +676,10 @@ class IncogniaAPITest {
             .addresses(transactionAddresses)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
-            .customProperties(null)
+            .storeId(storeId)
+            .coupon(coupon)
+            .customProperties(customProperties)
+            .location(location)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
@@ -753,6 +787,43 @@ class IncogniaAPITest {
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)
+            .build(),
+        dryRun);
+  }
+
+  @ParameterizedTest
+  @ValueSource(booleans = {true, false})
+  @DisplayName("should be successful with expiresAt")
+  @SneakyThrows
+  void testRegisterFeedback_withExpiresAt(boolean dryRun) {
+    String requestToken = "request-token";
+    String accountId = "account-id";
+    String externalId = "external-id";
+    String signupId = UUID.randomUUID().toString();
+    Instant timestamp = Instant.now();
+    Instant expiresAt = timestamp.plusSeconds(3600);
+
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(CLIENT_ID, CLIENT_SECRET);
+    dispatcher.setExpectedFeedbackRequestBody(
+        PostFeedbackRequestBody.builder()
+            .requestToken(requestToken)
+            .externalId(externalId)
+            .signupId(signupId)
+            .accountId(accountId)
+            .event(FeedbackEvent.ACCOUNT_TAKEOVER)
+            .timestamp(timestamp.toEpochMilli())
+            .expiresAt(expiresAt.toString())
+            .build());
+    mockServer.setDispatcher(dispatcher);
+    client.registerFeedback(
+        FeedbackEvent.ACCOUNT_TAKEOVER,
+        timestamp,
+        FeedbackIdentifiers.builder()
+            .requestToken(requestToken)
+            .accountId(accountId)
+            .externalId(externalId)
+            .signupId(signupId)
+            .expiresAt(expiresAt)
             .build(),
         dryRun);
   }

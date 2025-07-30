@@ -308,6 +308,7 @@ public class IncogniaAPI {
             .sessionToken(request.getSessionToken())
             .requestToken(request.getRequestToken())
             .policyId(request.getPolicyId())
+            .customProperties(request.getCustomProperties())
             .type("login")
             .build();
 
@@ -358,6 +359,7 @@ public class IncogniaAPI {
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
             .accountId(request.getAccountId())
+            .customProperties(request.getCustomProperties())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
@@ -451,6 +453,10 @@ public class IncogniaAPI {
             .addresses(transactionAddresses)
             .paymentValue(request.getPaymentValue())
             .paymentMethods(request.getPaymentMethods())
+            .location(request.getLocation())
+            .storeId(request.getStoreId())
+            .customProperties(request.getCustomProperties())
+            .coupon(request.getCoupon())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();
@@ -520,6 +526,8 @@ public class IncogniaAPI {
             .signupId(identifiers.getSignupId())
             .externalId(identifiers.getExternalId())
             .requestToken(identifiers.getRequestToken())
+            .expiresAt(
+                Optional.ofNullable(identifiers.getExpiresAt()).map(Instant::toString).orElse(null))
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();

@@ -7,18 +7,18 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum PaymentType {
+  ACCOUNT_BALANCE("account_balance"),
+  APPLE_PAY("apple_pay"),
+  BANCOLOMBIA("bancolombia"),
+  BOLETO_BANCARIO("boleto_bancario"),
+  CASH("cash"),
   CREDIT_CARD("credit_card"),
   DEBIT_CARD("debit_card"),
-  APPLE_PAY("apple_pay"),
   GOOGLE_PAY("google_pay"),
-  NU_PAY("nu_pay"),
-  PIX("pix"),
-  ACCOUNT_BALANCE("account_balance"),
   MEAL_VOUCHER("meal_voucher"),
-  CASH("cash"),
+  NU_PAY("nu_pay"),
   PAYPAL("paypal"),
-  BANCOLOMBIA("bancolombia");
-
+  PIX("pix");
   private final String message;
 
   @JsonValue
