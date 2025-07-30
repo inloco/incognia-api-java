@@ -308,6 +308,7 @@ public class IncogniaAPI {
             .sessionToken(request.getSessionToken())
             .requestToken(request.getRequestToken())
             .policyId(request.getPolicyId())
+            .customProperties(request.getCustomProperties())
             .type("login")
             .build();
 
