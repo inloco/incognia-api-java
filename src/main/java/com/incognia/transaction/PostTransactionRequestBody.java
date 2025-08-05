@@ -2,6 +2,7 @@ package com.incognia.transaction;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.incognia.common.Location;
+import com.incognia.common.PersonID;
 import com.incognia.transaction.payment.Coupon;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentValue;
@@ -26,6 +27,7 @@ public class PostTransactionRequestBody {
   String externalId;
   Location location;
   Coupon coupon;
+  PersonID personId;
 
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @Builder.Default
