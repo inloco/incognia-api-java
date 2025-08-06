@@ -24,6 +24,7 @@ public class PostTransactionRequestBody {
   String type;
   String storeId;
   String externalId;
+  String relatedAccountId;
   Location location;
   Coupon coupon;
 
