@@ -14,6 +14,7 @@ import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
 import com.incognia.common.Location;
+import com.incognia.common.PersonID;
 import com.incognia.common.Reason;
 import com.incognia.common.ReasonCode;
 import com.incognia.common.ReasonSource;
@@ -246,6 +247,7 @@ class IncogniaAPITest {
     Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
+    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
 
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedRequestToken(requestToken);
@@ -253,6 +255,7 @@ class IncogniaAPITest {
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
     dispatcher.setExpectedCustomProperties(map);
+    dispatcher.setExpectedPersonId(personId);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
         RegisterSignupRequest.builder()
@@ -262,6 +265,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .address(address)
             .customProperties(map)
+            .personId(personId)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -372,12 +376,14 @@ class IncogniaAPITest {
     String externalId = "external-id";
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
+    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
 
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
     dispatcher.setExpectedCustomProperties(map);
+    dispatcher.setExpectedPersonId(personId);
     mockServer.setDispatcher(dispatcher);
     RegisterWebSignupRequest registerSignupRequest =
         RegisterWebSignupRequest.builder()
@@ -386,6 +392,7 @@ class IncogniaAPITest {
             .policyId(policyId)
             .externalId(externalId)
             .customProperties(map)
+            .personId(personId)
             .build();
     SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
     assertThat(webSignupAssessment)
@@ -477,6 +484,7 @@ class IncogniaAPITest {
     String policyId = "policy-id";
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
+    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -491,6 +499,7 @@ class IncogniaAPITest {
             .paymentMethods(null)
             .policyId(policyId)
             .customProperties(map)
+            .personId(personId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -504,6 +513,7 @@ class IncogniaAPITest {
             .evaluateTransaction(eval)
             .policyId(policyId)
             .customProperties(map)
+            .personId(personId)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -522,6 +532,7 @@ class IncogniaAPITest {
     Map<String, Object> customProperties = new HashMap<>();
     customProperties.put("string-property", "string-value");
     customProperties.put("float-property", 12.345);
+    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -533,6 +544,7 @@ class IncogniaAPITest {
             .paymentMethods(null)
             .policyId(policyId)
             .customProperties(customProperties)
+            .personId(personId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -543,6 +555,7 @@ class IncogniaAPITest {
             .requestToken(requestToken)
             .policyId(policyId)
             .customProperties(customProperties)
+            .personId(personId)
             .build();
     TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -642,6 +655,7 @@ class IncogniaAPITest {
             .type(PaymentType.CREDIT_CARD)
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
+    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
 
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
@@ -663,6 +677,7 @@ class IncogniaAPITest {
             .coupon(coupon)
             .customProperties(customProperties)
             .location(location)
+            .personId(personId)
             .build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -680,6 +695,7 @@ class IncogniaAPITest {
             .coupon(coupon)
             .customProperties(customProperties)
             .location(location)
+            .personId(personId)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
@@ -768,6 +784,7 @@ class IncogniaAPITest {
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
     Instant timestamp = Instant.now();
+    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
 
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
@@ -777,6 +794,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .event(FeedbackEvent.ACCOUNT_TAKEOVER)
             .timestamp(timestamp.toEpochMilli())
+            .personId(personId)
             .build());
     mockServer.setDispatcher(dispatcher);
     client.registerFeedback(
@@ -787,6 +805,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .externalId(externalId)
             .signupId(signupId)
+            .personId(personId)
             .build(),
         dryRun);
   }

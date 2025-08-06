@@ -2,6 +2,7 @@ package com.incognia.onboarding;
 
 import com.incognia.common.AdditionalLocation;
 import com.incognia.common.Address;
+import com.incognia.common.PersonID;
 import java.util.List;
 import java.util.Map;
 import lombok.Builder;
@@ -21,4 +22,5 @@ public class RegisterSignupRequest {
   String accountId;
   List<AdditionalLocation> additionalLocations;
   Map<String, Object> customProperties;
+  PersonID personId;
 }

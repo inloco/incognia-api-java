@@ -2,6 +2,7 @@ package com.incognia.transaction.payment;
 
 import com.incognia.common.Address;
 import com.incognia.common.Location;
+import com.incognia.common.PersonID;
 import com.incognia.transaction.AddressType;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,7 @@ public class RegisterPaymentRequest {
   PaymentValue paymentValue;
   Location location;
   Coupon coupon;
+  PersonID personId;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;

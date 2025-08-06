@@ -3,6 +3,7 @@ package com.incognia.onboarding;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.incognia.common.AdditionalLocation;
 import com.incognia.common.Coordinates;
+import com.incognia.common.PersonID;
 import com.incognia.common.StructuredAddress;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +28,7 @@ public class PostSignupRequestBody {
   String policyId;
   String accountId;
   List<AdditionalLocation> additionalLocations;
+  PersonID personId;
 
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @Builder.Default

@@ -201,6 +201,7 @@ public class IncogniaAPI {
             .accountId(request.getAccountId())
             .additionalLocations(request.getAdditionalLocations())
             .customProperties(request.getCustomProperties())
+            .personId(request.getPersonId())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
@@ -251,6 +252,7 @@ public class IncogniaAPI {
             .externalId(request.getExternalId())
             .policyId(request.getPolicyId())
             .customProperties(request.getCustomProperties())
+            .personId(request.getPersonId())
             .type("login")
             .build();
 
@@ -309,6 +311,7 @@ public class IncogniaAPI {
             .requestToken(request.getRequestToken())
             .policyId(request.getPolicyId())
             .customProperties(request.getCustomProperties())
+            .personId(request.getPersonId())
             .type("login")
             .build();
 
@@ -360,6 +363,7 @@ public class IncogniaAPI {
             .policyId(request.getPolicyId())
             .accountId(request.getAccountId())
             .customProperties(request.getCustomProperties())
+            .personId(request.getPersonId())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
@@ -457,6 +461,7 @@ public class IncogniaAPI {
             .storeId(request.getStoreId())
             .customProperties(request.getCustomProperties())
             .coupon(request.getCoupon())
+            .personId(request.getPersonId())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();
@@ -526,6 +531,7 @@ public class IncogniaAPI {
             .signupId(identifiers.getSignupId())
             .externalId(identifiers.getExternalId())
             .requestToken(identifiers.getRequestToken())
+            .personId(identifiers.getPersonId())
             .expiresAt(
                 Optional.ofNullable(identifiers.getExpiresAt()).map(Instant::toString).orElse(null))
             .build();
