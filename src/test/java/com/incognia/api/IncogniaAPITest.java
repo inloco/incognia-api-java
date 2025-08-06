@@ -247,7 +247,7 @@ class IncogniaAPITest {
     Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
-    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
+    PersonID personId = PersonID.ofCPF("12345678901");
 
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedRequestToken(requestToken);
@@ -376,7 +376,7 @@ class IncogniaAPITest {
     String externalId = "external-id";
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
-    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
+    PersonID personId = PersonID.ofCPF("12345678901");
 
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
@@ -482,9 +482,10 @@ class IncogniaAPITest {
     String deviceOs = "Android";
     String externalId = "external-id";
     String policyId = "policy-id";
+    String relatedAccountId = "related-account-id";
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
-    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
+    PersonID personId = PersonID.ofCPF("12345678901");
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -498,6 +499,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .personId(personId)
             .build());
@@ -512,6 +514,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .evaluateTransaction(eval)
             .policyId(policyId)
+            .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .personId(personId)
             .build();
@@ -532,7 +535,7 @@ class IncogniaAPITest {
     Map<String, Object> customProperties = new HashMap<>();
     customProperties.put("string-property", "string-value");
     customProperties.put("float-property", 12.345);
-    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
+    PersonID personId = PersonID.ofCPF("12345678901");
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -655,7 +658,7 @@ class IncogniaAPITest {
             .type(PaymentType.CREDIT_CARD)
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
-    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
+    PersonID personId = PersonID.ofCPF("12345678901");
 
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
@@ -784,7 +787,7 @@ class IncogniaAPITest {
     String externalId = "external-id";
     String signupId = UUID.randomUUID().toString();
     Instant timestamp = Instant.now();
-    PersonID personId = PersonID.builder().type("cpf").value("12345678901").build();
+    PersonID personId = PersonID.ofCPF("12345678901");
 
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()

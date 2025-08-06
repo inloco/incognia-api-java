@@ -18,6 +18,7 @@ public class RegisterLoginRequest {
   String policyId;
   String appVersion;
   String deviceOs;
+  String relatedAccountId;
   Map<String, Object> customProperties;
   Location location;
   PersonID personId;
