@@ -475,6 +475,7 @@ class IncogniaAPITest {
     String deviceOs = "Android";
     String externalId = "external-id";
     String policyId = "policy-id";
+    String relatedAccountId = "related-account-id";
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
 
@@ -490,6 +491,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .build());
     mockServer.setDispatcher(dispatcher);
@@ -503,6 +505,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .evaluateTransaction(eval)
             .policyId(policyId)
+            .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
