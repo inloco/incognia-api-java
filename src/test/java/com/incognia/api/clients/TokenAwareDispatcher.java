@@ -3,6 +3,7 @@ package com.incognia.api.clients;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.incognia.common.PersonID;
 import com.incognia.feedback.PostFeedbackRequestBody;
 import com.incognia.fixtures.ResourceUtils;
 import com.incognia.fixtures.TokenCreationFixture;
@@ -44,6 +45,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedAddressLine;
   @Setter private Map<String, Object> expectedCustomProperties;
   @Setter private String expectedRequestToken;
+  @Setter private PersonID expectedPersonId;
   @Setter private PostTransactionRequestBody expectedTransactionRequestBody;
   @Setter private PostFeedbackRequestBody expectedFeedbackRequestBody;
   @Getter private int tokenRequestCount;
@@ -145,6 +147,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
     assertThat(postSignupRequestBody.getCustomProperties()).isEqualTo(expectedCustomProperties);
+    assertThat(postSignupRequestBody.getPersonId()).isEqualTo(expectedPersonId);
     String response =
         ResourceUtils.getResourceFileAsString(
             postSignupRequestBody.getAddressLine() != null
