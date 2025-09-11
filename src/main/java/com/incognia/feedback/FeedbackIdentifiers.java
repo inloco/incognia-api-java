@@ -1,5 +1,6 @@
 package com.incognia.feedback;
 
+import com.incognia.common.PersonID;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Value;
@@ -16,4 +17,5 @@ public class FeedbackIdentifiers {
   String accountId;
   String externalId;
   Instant expiresAt;
+  PersonID personId;
 }

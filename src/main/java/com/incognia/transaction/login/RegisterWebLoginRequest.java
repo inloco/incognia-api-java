@@ -1,5 +1,6 @@
 package com.incognia.transaction.login;
 
+import com.incognia.common.PersonID;
 import java.util.Map;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -15,6 +16,7 @@ public class RegisterWebLoginRequest {
   String requestToken;
   String policyId;
   Map<String, Object> customProperties;
+  PersonID personId;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;
