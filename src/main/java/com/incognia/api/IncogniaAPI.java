@@ -471,6 +471,8 @@ public class IncogniaAPI {
             .personId(request.getPersonId())
             .tenantId(request.getTenantId())
             .relatedWebRequestToken(request.getRelatedWebRequestToken())
+            .debtorAccount(request.getDebtorAccount())
+            .creditorAccount(request.getCreditorAccount())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();

@@ -34,6 +34,8 @@ public class RegisterPaymentRequest {
   PersonID personId;
   String relatedWebRequestToken;
   String tenantId;
+  BankAccountInfo debtorAccount;
+  BankAccountInfo creditorAccount;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;
