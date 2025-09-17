@@ -35,11 +35,13 @@ import com.incognia.transaction.TransactionAddress;
 import com.incognia.transaction.TransactionAssessment;
 import com.incognia.transaction.login.RegisterLoginRequest;
 import com.incognia.transaction.login.RegisterWebLoginRequest;
+import com.incognia.transaction.payment.BankAccountInfo;
 import com.incognia.transaction.payment.CardInfo;
 import com.incognia.transaction.payment.Coupon;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentType;
 import com.incognia.transaction.payment.PaymentValue;
+import com.incognia.transaction.payment.PixKey;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -664,6 +666,24 @@ class IncogniaAPITest {
         Collections.singletonList(
             new TransactionAddress(
                 "shipping", null, address.getStructuredAddress(), address.getCoordinates()));
+
+    List<PixKey> pixKeys = new ArrayList<>();
+    pixKeys.add(PixKey.builder().type("cpf").value("12345678901").build());
+
+    BankAccountInfo bankAccount =
+        BankAccountInfo.builder()
+            .accountType("checking")
+            .accountPurpose("general")
+            .holderType("individual")
+            .holderTaxId(PersonID.builder().type("cpf").value("12345678901").build())
+            .country("BR")
+            .ispbCode("12345678")
+            .branchCode("0000")
+            .accountNumber("123456")
+            .accountCheckDigit("0")
+            .pixKeys(pixKeys)
+            .build();
+
     RegisterPaymentRequest paymentRequest =
         RegisterPaymentRequest.builder()
             .requestToken(requestToken)
@@ -681,6 +701,8 @@ class IncogniaAPITest {
             .customProperties(customProperties)
             .location(location)
             .personId(personId)
+            .debtorAccount(bankAccount)
+            .creditorAccount(bankAccount)
             .build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -699,6 +721,8 @@ class IncogniaAPITest {
             .customProperties(customProperties)
             .location(location)
             .personId(personId)
+            .debtorAccount(bankAccount)
+            .creditorAccount(bankAccount)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);

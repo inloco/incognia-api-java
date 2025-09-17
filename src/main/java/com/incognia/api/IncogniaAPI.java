@@ -463,6 +463,8 @@ public class IncogniaAPI {
             .customProperties(request.getCustomProperties())
             .coupon(request.getCoupon())
             .personId(request.getPersonId())
+            .debtorAccount(request.getDebtorAccount())
+            .creditorAccount(request.getCreditorAccount())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();

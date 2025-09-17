@@ -32,6 +32,8 @@ public class RegisterPaymentRequest {
   Location location;
   Coupon coupon;
   PersonID personId;
+  BankAccountInfo debtorAccount;
+  BankAccountInfo creditorAccount;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;
