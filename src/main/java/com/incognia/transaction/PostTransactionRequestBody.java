@@ -1,6 +1,7 @@
 package com.incognia.transaction;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.incognia.common.Location;
 import com.incognia.transaction.payment.PaymentMethod;
 import com.incognia.transaction.payment.PaymentValue;
 import java.util.Collections;
@@ -19,6 +20,7 @@ public class PostTransactionRequestBody {
   String policyId;
   String type;
   String externalId;
+  Location location;
 
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @Builder.Default
