@@ -13,6 +13,7 @@ public enum PaymentType {
   BOLETO_BANCARIO("boleto_bancario"),
   CASH("cash"),
   CREDIT_CARD("credit_card"),
+  CREDIT_CARD_POS("credit_card_pos"),
   DEBIT_CARD("debit_card"),
   GOOGLE_PAY("google_pay"),
   MEAL_VOUCHER("meal_voucher"),
