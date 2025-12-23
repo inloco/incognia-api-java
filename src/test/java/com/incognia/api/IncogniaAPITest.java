@@ -958,12 +958,14 @@ class IncogniaAPITest {
     assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
   }
 
+  private static final Random RANDOM = new Random();
+
   private static long generateRandomLong() {
-    return new Random().nextLong() & Long.MAX_VALUE;
+    return RANDOM.nextLong() & Long.MAX_VALUE;
   }
 
   private static int generateRandomInteger() {
-    return new Random().nextInt() & Integer.MAX_VALUE;
+    return RANDOM.nextInt() & Integer.MAX_VALUE;
   }
 
   private static void resetIncogniaApiInstances()
