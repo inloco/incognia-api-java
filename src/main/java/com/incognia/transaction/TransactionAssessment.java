@@ -15,6 +15,7 @@ public class TransactionAssessment {
   Assessment riskAssessment;
   List<Reason> reasons;
   Map<String, Object> evidence;
+  Map<String, Object> signals;
   String deviceId;
   String installationId;
   String policyId;
