@@ -31,7 +31,6 @@ import com.incognia.transaction.payment.PaymentType;
 import com.incognia.transaction.payment.PaymentValue;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,8 +38,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.SneakyThrows;
 import okhttp3.mockwebserver.MockWebServer;
 import org.junit.jupiter.api.AfterEach;
@@ -153,15 +150,15 @@ class IncogniaAPITest {
     Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
-    PersonID personId = PersonID.ofCPF("12345678901");
 
+    String token = TokenCreationFixture.createToken();
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
     dispatcher.setExpectedAccountId(accountId);
     dispatcher.setExpectedCustomProperties(map);
-    dispatcher.setExpectedPersonId(personId);
     dispatcher.setIsSignalConfigured(true);
     mockServer.setDispatcher(dispatcher);
     RegisterSignupRequest registerSignupRequest =
@@ -172,7 +169,6 @@ class IncogniaAPITest {
             .externalId(externalId)
             .address(address)
             .customProperties(map)
-            .personId(personId)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -418,23 +414,20 @@ class IncogniaAPITest {
     String relatedAccountId = "related-account-id";
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
-    PersonID personId = PersonID.ofCPF("12345678901");
+    String token = TokenCreationFixture.createToken();
+    TokenAwareDispatcher dispatcher = new TokenAwareDispatcher(token, CLIENT_ID, CLIENT_SECRET);
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
             .requestToken(requestToken)
             .externalId(externalId)
-            .appVersion(appVersion)
             .location(location)
-            .deviceOs(deviceOs.toLowerCase())
             .accountId(accountId)
             .type("login")
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
-            .relatedAccountId(relatedAccountId)
             .customProperties(map)
-            .personId(personId)
             .build());
     dispatcher.setIsSignalConfigured(true);
     mockServer.setDispatcher(dispatcher);
@@ -442,14 +435,10 @@ class IncogniaAPITest {
         RegisterLoginRequest.builder()
             .requestToken(requestToken)
             .accountId(accountId)
-            .appVersion(appVersion)
             .location(location)
-            .deviceOs(deviceOs)
             .externalId(externalId)
             .policyId(policyId)
-            .relatedAccountId(relatedAccountId)
             .customProperties(map)
-            .personId(personId)
             .build();
 
     Map<String, Object> expectedSignalsMap = createSignalsMapping();
@@ -862,10 +851,6 @@ class IncogniaAPITest {
         .containsExactlyInAnyOrderEntriesOf(expectedRawAttributes);
   }
 
-  private static int generateRandomInteger() {
-    return RANDOM.nextInt() & Integer.MAX_VALUE;
-  }
-
   private static Map<String, Object> createSignalsMapping() {
     Map<String, Object> signalsMap = new HashMap<>();
     Map<String, Object> installationMap = new HashMap<>();
@@ -896,16 +881,5 @@ class IncogniaAPITest {
     signalsMap.put("installation", installationMap);
     signalsMap.put("device", deviceMap);
     return signalsMap;
-  }
-
-  private static void resetIncogniaApiInstances()
-      throws NoSuchFieldException, IllegalAccessException {
-    Field field = IncogniaAPI.class.getDeclaredField("INSTANCES");
-    field.setAccessible(true);
-
-    @SuppressWarnings("unchecked")
-    ConcurrentHashMap<ClientCredentials, IncogniaAPI> map =
-        (ConcurrentHashMap<ClientCredentials, IncogniaAPI>) field.get(null);
-    map.clear();
   }
 }
