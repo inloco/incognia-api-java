@@ -38,6 +38,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedAccountId;
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
+  @Setter private Boolean isSignalConfigured;
   @Setter private Map<String, Object> expectedCustomProperties;
   @Setter private String expectedSessionToken;
   @Setter private String expectedRequestToken;
@@ -51,6 +52,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     this.clientId = clientId;
     this.clientSecret = clientSecret;
     this.tokenRequestCount = 0;
+    this.isSignalConfigured = false;
     this.objectMapper = ObjectMapperFactory.OBJECT_MAPPER;
   }
 
@@ -110,7 +112,10 @@ public class TokenAwareDispatcher extends Dispatcher {
     PostTransactionRequestBody postTransactionRequestBody =
         objectMapper.readValue(request.getBody().inputStream(), PostTransactionRequestBody.class);
     assertThat(postTransactionRequestBody).isEqualTo(expectedTransactionRequestBody);
-    String response = ResourceUtils.getResourceFileAsString("post_transaction_response.json");
+    String response =
+        isSignalConfigured
+            ? ResourceUtils.getResourceFileAsString("post_transaction_response_with_signals.json")
+            : ResourceUtils.getResourceFileAsString("post_transaction_response.json");
     return new MockResponse().setResponseCode(200).setBody(response);
   }
 
@@ -142,12 +147,22 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
     assertThat(postSignupRequestBody.getCustomProperties()).isEqualTo(expectedCustomProperties);
-    String response =
-        ResourceUtils.getResourceFileAsString(
-            postSignupRequestBody.getAddressLine() != null
-                    || postSignupRequestBody.getRequestToken().equals("request-token-web-signup")
-                ? "post_onboarding_response.json"
-                : "post_onboarding_response_no_address.json");
+    final String fileName;
+
+    if (isSignalConfigured) {
+      fileName = "post_onboarding_response_with_signals.json";
+    } else {
+      boolean hasAddress = postSignupRequestBody.getAddressLine() != null;
+      boolean isWebSignup =
+          "request-token-web-signup".equals(postSignupRequestBody.getRequestToken());
+
+      fileName =
+          (hasAddress || isWebSignup)
+              ? "post_onboarding_response.json"
+              : "post_onboarding_response_no_address.json";
+    }
+
+    String response = ResourceUtils.getResourceFileAsString(fileName);
     return new MockResponse().setResponseCode(200).setBody(response);
   }
 

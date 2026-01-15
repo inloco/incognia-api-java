@@ -1,0 +1,39 @@
+{
+  "id": "2eb03686-81a9-425c-a6c1-c2fa6213c6e4",
+  "policy_id": "de588ffd-e546-4e0f-9d91-7254b55bc31e",
+  "request_id": "2eb03686-81a9-425c-a6c1-c2fa6213c6e4",
+  "device_id": "OOksYXIGguAmBg6gNGSwXFEeteIKomGeN_xl3YyVgWXaAJeEi16sI6SRvf6hVXE2Cv4Frb48RwViTakhQV0dyQ",
+  "installation_id": "ZHcpPGnUwpin5Jq-PaHuQboUH7_yBWFUwlke0AmuK5ggh-OP831jqC9JLLtU4ADJmDNT-uEJApjDGLnkjvq4Tx8n72P0Acs53cSVWjBMaB5pNGmwAPHegdOQIAbGUgd4EiAIu-DwKUNyoceUpWiGWw",
+  "risk_assessment": "high_risk",
+  "reasons": [
+    {
+      "code": "multiple_accounts",
+      "source": "local"
+    }
+  ],
+  "signals": {
+    "request": {
+      "has_request_token_org_mismatch": false
+    },
+    "installation": {
+      "first_assessment_request": {
+        "duration_since": "PT113H56M4.965326666S",
+        "timestamp": "2026-01-09T20:05:22.372Z"
+      },
+      "signature_mismatch": "not_detected",
+      "app_debugging": "detected",
+      "on_device_container": "not_supported",
+      "has_device_id": true,
+      "code_injection": "not_supported",
+      "properties_mismatch": "not_supported",
+      "has_integrity_data": true,
+      "source": "other"
+    },
+    "device": {
+      "emulator": "detected",
+      "root": "not_detected",
+      "accessed_accounts_3d": 0,
+      "accessed_accounts_30d": 0
+    }
+  }
+}

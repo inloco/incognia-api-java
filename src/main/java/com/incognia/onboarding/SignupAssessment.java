@@ -14,6 +14,7 @@ public class SignupAssessment {
   Assessment riskAssessment;
   Set<Reason> reasons;
   Map<String, Object> evidence;
+  Map<String, Object> signals;
   String deviceId;
   String installationId;
   String policyId;
