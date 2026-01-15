@@ -305,6 +305,60 @@ class IncogniaAPITest {
   }
 
   @Test
+  @DisplayName("should return the expected signup response using signals")
+  @SneakyThrows
+  void testRegisterSignup_whenDataIsValidAndExpectSignals() {
+    String requestToken = "request-token";
+    String accountId = "my-account";
+    String policyId = UUID.randomUUID().toString();
+    String externalId = "external-id";
+    Address address = AddressFixture.ADDRESS_ADDRESS_LINE;
+    Map<String, Object> map = new HashMap<>();
+    map.put("custom-property", "custom-value");
+    PersonID personId = PersonID.ofCPF("12345678901");
+
+    dispatcher.setExpectedAddressLine(address.getAddressLine());
+    dispatcher.setExpectedRequestToken(requestToken);
+    dispatcher.setExpectedExternalId(externalId);
+    dispatcher.setExpectedPolicyId(policyId);
+    dispatcher.setExpectedAccountId(accountId);
+    dispatcher.setExpectedCustomProperties(map);
+    dispatcher.setExpectedPersonId(personId);
+    dispatcher.setIsSignalConfigured(true);
+    mockServer.setDispatcher(dispatcher);
+    RegisterSignupRequest registerSignupRequest =
+        RegisterSignupRequest.builder()
+            .requestToken(requestToken)
+            .accountId(accountId)
+            .policyId(policyId)
+            .externalId(externalId)
+            .address(address)
+            .customProperties(map)
+            .personId(personId)
+            .build();
+    SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
+    assertThat(signupAssessment)
+        .extracting("id", "requestId", "riskAssessment", "deviceId")
+        .containsExactly(
+            UUID.fromString("2eb03686-81a9-425c-a6c1-c2fa6213c6e4"),
+            UUID.fromString("2eb03686-81a9-425c-a6c1-c2fa6213c6e4"),
+            Assessment.HIGH_RISK,
+            "OOksYXIGguAmBg6gNGSwXFEeteIKomGeN_xl3YyVgWXaAJeEi16sI6SRvf6hVXE2Cv4Frb48RwViTakhQV0dyQ");
+
+    Map<String, Object> signalsMap = createSignalsMapping();
+
+    assertThat(signupAssessment.getSignals()).containsExactlyInAnyOrderEntriesOf(signalsMap);
+
+    Reason expectedReason =
+        Reason.builder()
+            .code(ReasonCode.MULTIPLE_ACCOUNTS.getCode())
+            .source(ReasonSource.LOCAL.getSource())
+            .build();
+
+    assertThat(signupAssessment.getReasons()).containsExactly(expectedReason);
+  }
+
+  @Test
   @DisplayName("should return the expected signup response when the address is empty")
   @SneakyThrows
   void testRegisterSignup_withEmptyAddress() {
@@ -520,6 +574,72 @@ class IncogniaAPITest {
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
+  }
+
+  @Test
+  @DisplayName("should return the expected login transaction response with signals")
+  @SneakyThrows
+  void testRegisterLogin_whenDataIsValidForSignalsResponse() {
+    String requestToken = "request-token";
+    String accountId = "account-id";
+    String appVersion = "1.4.3";
+    Location location =
+        Location.builder()
+            .latitude("40.74836007062138")
+            .longitude("-73.98509720487937")
+            .collectedAt(Instant.now().toString())
+            .build();
+    String deviceOs = "Android";
+    String externalId = "external-id";
+    String policyId = "policy-id";
+    String relatedAccountId = "related-account-id";
+    Map<String, Object> map = new HashMap<>();
+    map.put("custom-property", "custom-value");
+    PersonID personId = PersonID.ofCPF("12345678901");
+
+    dispatcher.setExpectedTransactionRequestBody(
+        PostTransactionRequestBody.builder()
+            .requestToken(requestToken)
+            .externalId(externalId)
+            .appVersion(appVersion)
+            .location(location)
+            .deviceOs(deviceOs.toLowerCase())
+            .accountId(accountId)
+            .type("login")
+            .addresses(null)
+            .paymentMethods(null)
+            .policyId(policyId)
+            .relatedAccountId(relatedAccountId)
+            .customProperties(map)
+            .personId(personId)
+            .build());
+    dispatcher.setIsSignalConfigured(true);
+    mockServer.setDispatcher(dispatcher);
+    RegisterLoginRequest loginRequest =
+        RegisterLoginRequest.builder()
+            .requestToken(requestToken)
+            .accountId(accountId)
+            .appVersion(appVersion)
+            .location(location)
+            .deviceOs(deviceOs)
+            .externalId(externalId)
+            .policyId(policyId)
+            .relatedAccountId(relatedAccountId)
+            .customProperties(map)
+            .personId(personId)
+            .build();
+
+    Map<String, Object> expectedSignalsMap = createSignalsMapping();
+
+    TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
+
+    assertThat(transactionAssessment.getSignals()).containsAllEntriesOf(expectedSignalsMap);
+    Reason expectedReason =
+        Reason.builder()
+            .code(ReasonCode.MULTIPLE_ACCOUNTS.getCode())
+            .source(ReasonSource.LOCAL.getSource())
+            .build();
+    assertThat(transactionAssessment.getReasons()).containsExactly(expectedReason);
   }
 
   @ParameterizedTest
@@ -940,6 +1060,38 @@ class IncogniaAPITest {
 
   private static int generateRandomInteger() {
     return new Random().nextInt() & Integer.MAX_VALUE;
+  }
+
+  private static Map<String, Object> createSignalsMapping() {
+    Map<String, Object> signalsMap = new HashMap<>();
+    Map<String, Object> installationMap = new HashMap<>();
+    Map<String, Object> requestMap = new HashMap<>();
+    Map<String, Object> deviceMap = new HashMap<>();
+
+    requestMap.put("has_request_token_org_mismatch", false);
+
+    Map<String, Object> firstAssessmentRequestMap = new HashMap<>();
+    firstAssessmentRequestMap.put("duration_since", "PT113H56M4.965326666S");
+    firstAssessmentRequestMap.put("timestamp", "2026-01-09T20:05:22.372Z");
+    installationMap.put("first_assessment_request", firstAssessmentRequestMap);
+    installationMap.put("signature_mismatch", "not_detected");
+    installationMap.put("app_debugging", "detected");
+    installationMap.put("on_device_container", "not_supported");
+    installationMap.put("has_device_id", true);
+    installationMap.put("code_injection", "not_supported");
+    installationMap.put("properties_mismatch", "not_supported");
+    installationMap.put("has_integrity_data", true);
+    installationMap.put("source", "other");
+
+    deviceMap.put("emulator", "detected");
+    deviceMap.put("root", "not_detected");
+    deviceMap.put("accessed_accounts_3d", 0);
+    deviceMap.put("accessed_accounts_30d", 0);
+
+    signalsMap.put("request", requestMap);
+    signalsMap.put("installation", installationMap);
+    signalsMap.put("device", deviceMap);
+    return signalsMap;
   }
 
   private static void resetIncogniaApiInstances()
