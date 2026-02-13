@@ -33,4 +33,10 @@ public class PostSignupRequestBody {
   @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @Builder.Default
   Map<String, Object> customProperties = Collections.emptyMap();
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  String relatedWebRequestToken;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  String tenantId;
 }
