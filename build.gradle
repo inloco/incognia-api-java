@@ -4,7 +4,7 @@ plugins {
     id 'signing'
     id 'com.diffplug.spotless' version '6.11.0'
     id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
-    id 'io.github.goooler.shadow' version '8.1.7' apply false
+    id 'io.github.goooler.shadow' version '8.1.8' apply false
 }
 
 group = "com.incognia"
