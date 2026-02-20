@@ -22,6 +22,8 @@ public class RegisterLoginRequest {
   Map<String, Object> customProperties;
   Location location;
   PersonID personId;
+  String relatedWebRequestToken;
+  String tenantId;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;

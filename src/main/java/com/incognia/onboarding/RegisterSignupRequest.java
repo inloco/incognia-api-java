@@ -23,4 +23,6 @@ public class RegisterSignupRequest {
   List<AdditionalLocation> additionalLocations;
   Map<String, Object> customProperties;
   PersonID personId;
+  String relatedWebRequestToken;
+  String tenantId;
 }

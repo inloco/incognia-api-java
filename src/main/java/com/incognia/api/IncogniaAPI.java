@@ -202,6 +202,8 @@ public class IncogniaAPI {
             .additionalLocations(request.getAdditionalLocations())
             .customProperties(request.getCustomProperties())
             .personId(request.getPersonId())
+            .tenantId(request.getTenantId())
+            .relatedWebRequestToken(request.getRelatedWebRequestToken())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
@@ -254,6 +256,8 @@ public class IncogniaAPI {
             .relatedAccountId(request.getRelatedAccountId())
             .customProperties(request.getCustomProperties())
             .personId(request.getPersonId())
+            .tenantId(request.getTenantId())
+            .relatedWebRequestToken(request.getRelatedWebRequestToken())
             .type("login")
             .build();
 
@@ -313,6 +317,7 @@ public class IncogniaAPI {
             .policyId(request.getPolicyId())
             .customProperties(request.getCustomProperties())
             .personId(request.getPersonId())
+            .tenantId(request.getTenantId())
             .type("login")
             .build();
 
@@ -365,6 +370,7 @@ public class IncogniaAPI {
             .accountId(request.getAccountId())
             .customProperties(request.getCustomProperties())
             .personId(request.getPersonId())
+            .tenantId(request.getTenantId())
             .build();
     return tokenAwareNetworkingClient.doPost(
         "api/v2/onboarding/signups", postSignupRequestBody, SignupAssessment.class);
@@ -463,6 +469,8 @@ public class IncogniaAPI {
             .customProperties(request.getCustomProperties())
             .coupon(request.getCoupon())
             .personId(request.getPersonId())
+            .tenantId(request.getTenantId())
+            .relatedWebRequestToken(request.getRelatedWebRequestToken())
             .build();
 
     Map<String, String> queryParameters = new HashMap<>();

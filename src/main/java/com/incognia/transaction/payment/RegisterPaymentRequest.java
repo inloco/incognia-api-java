@@ -32,6 +32,8 @@ public class RegisterPaymentRequest {
   Location location;
   Coupon coupon;
   PersonID personId;
+  String relatedWebRequestToken;
+  String tenantId;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;
