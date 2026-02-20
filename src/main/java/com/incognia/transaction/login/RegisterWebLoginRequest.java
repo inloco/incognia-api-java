@@ -17,6 +17,7 @@ public class RegisterWebLoginRequest {
   String policyId;
   Map<String, Object> customProperties;
   PersonID personId;
+  String tenantId;
 
   @Getter(AccessLevel.NONE)
   Boolean evaluateTransaction;

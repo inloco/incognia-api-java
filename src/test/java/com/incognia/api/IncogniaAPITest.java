@@ -250,6 +250,8 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedRequestToken(requestToken);
@@ -268,6 +270,8 @@ class IncogniaAPITest {
             .address(address)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -318,6 +322,8 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedAddressLine(address.getAddressLine());
     dispatcher.setExpectedRequestToken(requestToken);
@@ -337,6 +343,8 @@ class IncogniaAPITest {
             .address(address)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -370,6 +378,8 @@ class IncogniaAPITest {
     String externalId = "external-id";
     String appVersion = "1.4.3";
     String deviceOs = "iOS";
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedAddressLine(null);
     dispatcher.setExpectedRequestToken(requestToken);
@@ -389,6 +399,8 @@ class IncogniaAPITest {
             .appVersion(appVersion)
             .deviceOs(deviceOs)
             .customProperties(null)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     SignupAssessment signupAssessment = client.registerSignup(registerSignupRequest);
     assertThat(signupAssessment)
@@ -433,6 +445,7 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
 
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
@@ -449,6 +462,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
             .build();
     SignupAssessment webSignupAssessment = client.registerWebSignup(registerSignupRequest);
     assertThat(webSignupAssessment)
@@ -497,6 +511,7 @@ class IncogniaAPITest {
     String requestToken = "request-token";
     String accountId = "account-id";
     String policyId = "policy-id";
+    String tenantId = "tenant_id";
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -506,6 +521,7 @@ class IncogniaAPITest {
             .addresses(null)
             .paymentMethods(null)
             .policyId(policyId)
+            .tenantId(tenantId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -514,6 +530,7 @@ class IncogniaAPITest {
             .accountId(accountId)
             .evaluateTransaction(eval)
             .policyId(policyId)
+            .tenantId(tenantId)
             .build();
     assertThatThrownBy(() -> clientWithLowTimeout.registerLogin(loginRequest))
         .isInstanceOf(IncogniaException.class)
@@ -542,6 +559,8 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -558,6 +577,8 @@ class IncogniaAPITest {
             .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -573,6 +594,8 @@ class IncogniaAPITest {
             .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -598,6 +621,8 @@ class IncogniaAPITest {
     Map<String, Object> map = new HashMap<>();
     map.put("custom-property", "custom-value");
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -614,6 +639,8 @@ class IncogniaAPITest {
             .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build());
     dispatcher.setIsSignalConfigured(true);
     mockServer.setDispatcher(dispatcher);
@@ -629,6 +656,8 @@ class IncogniaAPITest {
             .relatedAccountId(relatedAccountId)
             .customProperties(map)
             .personId(personId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
 
     Map<String, Object> expectedSignalsMap = createSignalsMapping();
@@ -658,6 +687,7 @@ class IncogniaAPITest {
     customProperties.put("string-property", "string-value");
     customProperties.put("float-property", 12.345);
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -670,6 +700,7 @@ class IncogniaAPITest {
             .policyId(policyId)
             .customProperties(customProperties)
             .personId(personId)
+            .tenantId(tenantId)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterWebLoginRequest loginRequest =
@@ -681,6 +712,7 @@ class IncogniaAPITest {
             .policyId(policyId)
             .customProperties(customProperties)
             .personId(personId)
+            .tenantId(tenantId)
             .build();
     TransactionAssessment transactionAssessment = client.registerWebLogin(loginRequest);
     assertTransactionAssessment(transactionAssessment);
@@ -694,6 +726,8 @@ class IncogniaAPITest {
     String accountId = "account-id";
     String externalId = "external-id";
     String policyId = "policy-id";
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -705,6 +739,8 @@ class IncogniaAPITest {
             .paymentMethods(null)
             .policyId(policyId)
             .customProperties(null)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterLoginRequest loginRequest =
@@ -714,6 +750,8 @@ class IncogniaAPITest {
             .externalId(externalId)
             .evaluateTransaction(false)
             .policyId(policyId)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
     assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());
@@ -781,6 +819,8 @@ class IncogniaAPITest {
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
     PersonID personId = PersonID.ofCPF("12345678901");
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
 
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
@@ -823,6 +863,8 @@ class IncogniaAPITest {
             .personId(personId)
             .debtorAccount(bankAccount)
             .creditorAccount(bankAccount)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
@@ -843,6 +885,8 @@ class IncogniaAPITest {
             .personId(personId)
             .debtorAccount(bankAccount)
             .creditorAccount(bankAccount)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build());
     mockServer.setDispatcher(dispatcher);
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
@@ -893,6 +937,9 @@ class IncogniaAPITest {
             .type(PaymentType.CREDIT_CARD)
             .build());
     PaymentValue paymentValue = PaymentValue.builder().amount(13.0).currency("BRL").build();
+    String tenantId = "tenant_id";
+    String relatedWebRequestToken = "related_web_request_token";
+
     dispatcher.setExpectedTransactionRequestBody(
         PostTransactionRequestBody.builder()
             .requestToken(requestToken)
@@ -904,6 +951,8 @@ class IncogniaAPITest {
             .paymentMethods(paymentMethods)
             .paymentValue(paymentValue)
             .customProperties(null)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build());
     mockServer.setDispatcher(dispatcher);
     RegisterPaymentRequest paymentRequest =
@@ -916,6 +965,8 @@ class IncogniaAPITest {
             .evaluateTransaction(false)
             .paymentValue(paymentValue)
             .paymentMethods(paymentMethods)
+            .tenantId(tenantId)
+            .relatedWebRequestToken(relatedWebRequestToken)
             .build();
     TransactionAssessment transactionAssessment = client.registerPayment(paymentRequest);
     assertThat(transactionAssessment).isEqualTo(TransactionAssessment.builder().build());

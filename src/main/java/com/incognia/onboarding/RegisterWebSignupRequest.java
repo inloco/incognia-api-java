@@ -15,4 +15,5 @@ public class RegisterWebSignupRequest {
   String accountId;
   Map<String, Object> customProperties;
   PersonID personId;
+  String tenantId;
 }
