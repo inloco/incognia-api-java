@@ -2,8 +2,6 @@ package com.incognia.api;
 
 import com.incognia.api.clients.TokenAwareNetworkingClient;
 import com.incognia.common.Address;
-import com.incognia.common.FinancialAccount;
-import com.incognia.common.PersonID;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.common.utils.Asserts;

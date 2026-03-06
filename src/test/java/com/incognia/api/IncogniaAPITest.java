@@ -984,7 +984,13 @@ class IncogniaAPITest {
     String signupId = UUID.randomUUID().toString();
     Instant timestamp = Instant.now();
     PersonID personId = PersonID.ofCPF("12345678901");
-    FinancialAccount financialAccount = FinancialAccount.builder().accountNumber("123456").branchCode("1234").holderTaxId(personId).holderType("individual").build();
+    FinancialAccount financialAccount =
+        FinancialAccount.builder()
+            .accountNumber("123456")
+            .branchCode("1234")
+            .holderTaxId(personId)
+            .holderType("individual")
+            .build();
 
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
