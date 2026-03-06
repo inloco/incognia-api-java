@@ -1,0 +1,25 @@
+{
+  "id": "5e76a7ca-577c-4f47-a752-9e1e0cee9e49",
+  "request_id": "8afc84a7-f1d4-488d-bd69-36d9a37168b7",
+  "risk_assessment": "high_risk",
+  "device_id": "1df6d999-556d-42c3-8c63-357e5d08d95b",
+  "reasons": [
+    {
+      "code": "device_integrity",
+      "source": "local"
+    }
+  ],
+  "evidence": {
+    "device_model": "Moto Z2 Play",
+    "location_services": {
+      "location_permission_enabled": true,
+      "location_sensors_enabled": true
+    },
+    "device_integrity": {
+      "probable_root": true,
+      "emulator": false,
+      "gps_spoofing": false,
+      "from_official_store": true
+    }
+  }
+}

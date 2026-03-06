@@ -1,0 +1,40 @@
+{
+  "id": "dfe1f2ff-8f0d-4ce8-aed1-af8435143044",
+  "risk_assessment": "low_risk",
+  "device_id": "1df6d999-556d-42c3-8c63-357e5d08d95b",
+  "unknown_field": "unknown_value",
+  "reasons": [
+    {
+      "code": "trusted_location",
+      "source": "local"
+    }
+  ],
+  "evidence": {
+    "device_model": "Moto Z2 Play",
+    "known_account": true,
+    "location_services": {
+      "location_permission_enabled": true,
+      "location_sensors_enabled": true
+    },
+    "device_integrity": {
+      "probable_root": false,
+      "emulator": false,
+      "gps_spoofing": false,
+      "from_official_store": true
+    },
+    "device_fraud_reputation": "unknown",
+    "distance_to_trusted_location": 21.06295635345013,
+    "last_location_ts": "2022-11-01T22:45:53.299Z",
+    "sensor_match_type": "gps",
+    "addresses": [
+      {
+        "type": "shipping",
+        "location_events_near_address": 43,
+        "address_quality": "good",
+        "geocode_quality": "good",
+        "address_match": "street"
+      }
+    ],
+    "location_events_quantity": 62
+  }
+}

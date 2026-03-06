@@ -2,6 +2,8 @@ package com.incognia.api;
 
 import com.incognia.api.clients.TokenAwareNetworkingClient;
 import com.incognia.common.Address;
+import com.incognia.common.FinancialAccount;
+import com.incognia.common.PersonID;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.common.utils.Asserts;
@@ -543,6 +545,7 @@ public class IncogniaAPI {
             .externalId(identifiers.getExternalId())
             .requestToken(identifiers.getRequestToken())
             .personId(identifiers.getPersonId())
+            .financialAccount(identifiers.getFinancialAccount())
             .expiresAt(
                 Optional.ofNullable(identifiers.getExpiresAt()).map(Instant::toString).orElse(null))
             .build();
