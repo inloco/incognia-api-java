@@ -14,6 +14,7 @@ import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
 import com.incognia.common.FinancialAccount;
+import com.incognia.common.HolderTaxID;
 import com.incognia.common.Location;
 import com.incognia.common.PersonID;
 import com.incognia.common.Reason;
@@ -984,11 +985,12 @@ class IncogniaAPITest {
     String signupId = UUID.randomUUID().toString();
     Instant timestamp = Instant.now();
     PersonID personId = PersonID.ofCPF("12345678901");
+    HolderTaxID holderTaxID = HolderTaxID.ofCPF("12345678901");
     FinancialAccount financialAccount =
         FinancialAccount.builder()
             .accountNumber("123456")
             .branchCode("1234")
-            .holderTaxId(personId)
+            .holderTaxId(holderTaxID)
             .holderType("individual")
             .build();
 

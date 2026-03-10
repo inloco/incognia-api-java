@@ -5,7 +5,7 @@ import lombok.Value;
 
 @Value
 @Builder
-public class PersonID {
+public class PersonID implements TypedValue {
   String type;
   String value;
 
