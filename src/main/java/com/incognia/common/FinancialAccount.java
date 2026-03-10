@@ -15,7 +15,7 @@ public class FinancialAccount {
   String accountCheckDigit;
   String accountPurpose;
   String accountType;
-  String country;
+  String country; // ISO 3166-1 alpha-2
   String ispbCode;
   List<PixKey> pixKeys;
 }
