@@ -1,7 +1,7 @@
 package com.incognia.feedback;
 
-import com.incognia.common.FinancialAccount;
 import com.incognia.common.PersonID;
+import com.incognia.transaction.payment.BankAccountInfo;
 import java.time.Instant;
 import lombok.Builder;
 import lombok.Value;
@@ -19,5 +19,5 @@ public class FeedbackIdentifiers {
   String externalId;
   Instant expiresAt;
   PersonID personId;
-  FinancialAccount financialAccount;
+  BankAccountInfo financialAccount;
 }

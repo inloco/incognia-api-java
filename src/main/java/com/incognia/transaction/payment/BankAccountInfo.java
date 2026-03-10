@@ -1,6 +1,6 @@
 package com.incognia.transaction.payment;
 
-import com.incognia.common.PersonID;
+import com.incognia.common.HolderTaxID;
 import java.util.Collections;
 import java.util.List;
 import lombok.Builder;
@@ -12,7 +12,7 @@ public class BankAccountInfo {
   String accountType;
   String accountPurpose;
   String holderType;
-  PersonID holderTaxId;
+  HolderTaxID holderTaxId;
   String country;
   String ispbCode;
   String branchCode;

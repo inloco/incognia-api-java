@@ -13,7 +13,6 @@ import static org.mockito.Mockito.verify;
 import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
-import com.incognia.common.FinancialAccount;
 import com.incognia.common.HolderTaxID;
 import com.incognia.common.Location;
 import com.incognia.common.PersonID;
@@ -837,7 +836,7 @@ class IncogniaAPITest {
             .accountType("checking")
             .accountPurpose("general")
             .holderType("individual")
-            .holderTaxId(PersonID.builder().type("cpf").value("12345678901").build())
+            .holderTaxId(HolderTaxID.builder().type("cpf").value("12345678901").build())
             .country("BR")
             .ispbCode("12345678")
             .branchCode("0000")
@@ -986,8 +985,8 @@ class IncogniaAPITest {
     Instant timestamp = Instant.now();
     PersonID personId = PersonID.ofCPF("12345678901");
     HolderTaxID holderTaxID = HolderTaxID.ofCPF("12345678901");
-    FinancialAccount financialAccount =
-        FinancialAccount.builder()
+    BankAccountInfo financialAccount =
+        BankAccountInfo.builder()
             .accountNumber("123456")
             .branchCode("1234")
             .holderTaxId(holderTaxID)
