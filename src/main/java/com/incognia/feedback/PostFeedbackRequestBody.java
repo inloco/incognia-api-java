@@ -1,5 +1,6 @@
 package com.incognia.feedback;
 
+import com.incognia.common.FinancialAccount;
 import com.incognia.common.PersonID;
 import lombok.Builder;
 import lombok.Value;
@@ -19,4 +20,5 @@ public class PostFeedbackRequestBody {
   String signupId;
   String expiresAt;
   PersonID personId;
+  FinancialAccount financialAccount;
 }
