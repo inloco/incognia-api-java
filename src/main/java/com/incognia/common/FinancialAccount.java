@@ -9,7 +9,7 @@ import lombok.Value;
 public class FinancialAccount {
   String accountNumber;
   String branchCode;
-  PersonID holderTaxId;
+  HolderTaxID holderTaxId;
   String holderType;
   String accountCheckDigit;
   String accountPurpose;
