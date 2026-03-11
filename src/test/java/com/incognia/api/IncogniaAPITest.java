@@ -13,6 +13,8 @@ import static org.mockito.Mockito.verify;
 import com.incognia.api.clients.TokenAwareDispatcher;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
+import com.incognia.common.FinancialAccount;
+import com.incognia.common.HolderTaxID;
 import com.incognia.common.Location;
 import com.incognia.common.PersonID;
 import com.incognia.common.Reason;
@@ -959,6 +961,15 @@ class IncogniaAPITest {
     String signupId = UUID.randomUUID().toString();
     Instant timestamp = Instant.now();
     PersonID personId = PersonID.ofCPF("12345678901");
+    HolderTaxID holderTaxId = HolderTaxID.ofCNPJ("50100638000172");
+
+    FinancialAccount financialAccount =
+        FinancialAccount.builder()
+            .accountNumber("123456")
+            .branchCode("1234")
+            .holderTaxID(holderTaxId)
+            .holderType("individual")
+            .build();
 
     dispatcher.setExpectedFeedbackRequestBody(
         PostFeedbackRequestBody.builder()
@@ -969,6 +980,7 @@ class IncogniaAPITest {
             .event(FeedbackEvent.ACCOUNT_TAKEOVER)
             .timestamp(timestamp.toEpochMilli())
             .personId(personId)
+            .financialAccount(financialAccount)
             .build());
     mockServer.setDispatcher(dispatcher);
     client.registerFeedback(
@@ -980,6 +992,7 @@ class IncogniaAPITest {
             .externalId(externalId)
             .signupId(signupId)
             .personId(personId)
+            .financialAccount(financialAccount)
             .build(),
         dryRun);
   }
