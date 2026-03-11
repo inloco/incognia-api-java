@@ -543,6 +543,7 @@ public class IncogniaAPI {
             .externalId(identifiers.getExternalId())
             .requestToken(identifiers.getRequestToken())
             .personId(identifiers.getPersonId())
+            .financialAccount(identifiers.getFinancialAccount())
             .expiresAt(
                 Optional.ofNullable(identifiers.getExpiresAt()).map(Instant::toString).orElse(null))
             .build();
