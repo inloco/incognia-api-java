@@ -1,12 +1,14 @@
 package com.incognia.common.utils;
 
+import com.incognia.api.clients.TokenProvider;
 import lombok.Builder;
 import lombok.Value;
 
 @Value
-@Builder
+@Builder(toBuilder = true)
 public class CustomOptions {
   @Builder.Default long timeoutMillis = 10000L;
   @Builder.Default int maxConnections = 5;
   @Builder.Default long keepAliveSeconds = 300;
+  TokenProvider tokenProvider;
 }

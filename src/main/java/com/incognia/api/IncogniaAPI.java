@@ -1,6 +1,9 @@
 package com.incognia.api;
 
+import com.incognia.api.clients.AutoRefreshTokenProvider;
+import com.incognia.api.clients.NetworkingClient;
 import com.incognia.api.clients.TokenAwareNetworkingClient;
+import com.incognia.api.clients.TokenProvider;
 import com.incognia.common.Address;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
@@ -62,20 +65,22 @@ public class IncogniaAPI {
   IncogniaAPI(String clientId, String clientSecret, CustomOptions options, String apiUrl) {
     Asserts.assertNotEmpty(clientId, "client id");
     Asserts.assertNotEmpty(clientSecret, "client secret");
+    Asserts.assertNotNull(options, "custom options");
     Asserts.assertNotEmpty(apiUrl, "api url");
-    tokenAwareNetworkingClient =
-        new TokenAwareNetworkingClient(
-            new OkHttpClient.Builder()
-                .callTimeout(options.getTimeoutMillis(), TimeUnit.MILLISECONDS)
-                .connectionPool(
-                    new ConnectionPool(
-                        options.getMaxConnections(),
-                        options.getKeepAliveSeconds(),
-                        TimeUnit.SECONDS))
-                .build(),
-            apiUrl,
-            clientId,
-            clientSecret);
+    OkHttpClient httpClient =
+        new OkHttpClient.Builder()
+            .callTimeout(options.getTimeoutMillis(), TimeUnit.MILLISECONDS)
+            .connectionPool(
+                new ConnectionPool(
+                    options.getMaxConnections(), options.getKeepAliveSeconds(), TimeUnit.SECONDS))
+            .build();
+    TokenProvider tokenProvider = options.getTokenProvider();
+    if (tokenProvider == null) {
+      tokenProvider =
+          new AutoRefreshTokenProvider(
+              clientId, clientSecret, new NetworkingClient(httpClient, apiUrl));
+    }
+    tokenAwareNetworkingClient = new TokenAwareNetworkingClient(httpClient, apiUrl, tokenProvider);
   }
 
   /**

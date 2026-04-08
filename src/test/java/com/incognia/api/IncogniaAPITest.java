@@ -11,6 +11,7 @@ import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.verify;
 
 import com.incognia.api.clients.TokenAwareDispatcher;
+import com.incognia.api.clients.TokenProvider;
 import com.incognia.common.Address;
 import com.incognia.common.Coordinates;
 import com.incognia.common.FinancialAccount;
@@ -21,6 +22,7 @@ import com.incognia.common.Reason;
 import com.incognia.common.ReasonCode;
 import com.incognia.common.ReasonSource;
 import com.incognia.common.StructuredAddress;
+import com.incognia.common.Token;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.common.utils.ClientCredentials;
 import com.incognia.common.utils.CustomOptions;
@@ -28,6 +30,7 @@ import com.incognia.feedback.FeedbackEvent;
 import com.incognia.feedback.FeedbackIdentifiers;
 import com.incognia.feedback.PostFeedbackRequestBody;
 import com.incognia.fixtures.AddressFixture;
+import com.incognia.fixtures.TokenCreationFixture;
 import com.incognia.onboarding.RegisterSignupRequest;
 import com.incognia.onboarding.RegisterWebSignupRequest;
 import com.incognia.onboarding.SignupAssessment;
@@ -45,7 +48,6 @@ import com.incognia.transaction.payment.PaymentType;
 import com.incognia.transaction.payment.PaymentValue;
 import com.incognia.transaction.payment.PixKey;
 import com.incognia.transaction.payment.RegisterPaymentRequest;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -87,7 +89,9 @@ class IncogniaAPITest {
   private IncogniaAPI clientWithLowTimeout;
 
   @BeforeEach
-  void setUp() {
+  void setUp() throws Exception {
+    resetIncogniaApiInstances();
+    TokenAwareDispatcher.setToken(TokenCreationFixture.createToken());
     mockServer = new MockWebServer();
     client =
         new IncogniaAPI(
@@ -104,9 +108,9 @@ class IncogniaAPITest {
   }
 
   @AfterEach
-  void tearDown() throws NoSuchFieldException, IOException, IllegalAccessException {
-    resetIncogniaApiInstances();
+  void tearDown() throws Exception {
     mockServer.shutdown();
+    resetIncogniaApiInstances();
   }
 
   @Test
@@ -124,6 +128,13 @@ class IncogniaAPITest {
             CLIENT_ID, CLIENT_SECRET, CustomOptions.builder().timeoutMillis(10000L).build());
     assertThat(instance1).isSameAs(instance3);
     assertThat(instance2).isNotSameAs(instance1);
+  }
+
+  @Test
+  void testInit_whenCustomOptionsIsNull_shouldThrowIllegalArgumentException() {
+    assertThatThrownBy(() -> IncogniaAPI.init(CLIENT_ID, CLIENT_SECRET, null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("'custom options' cannot be null");
   }
 
   @Test
@@ -240,6 +251,48 @@ class IncogniaAPITest {
 
       assertThat(poolArgs.get()).containsExactly(5, 300L, TimeUnit.SECONDS);
     }
+  }
+
+  @Test
+  void testConstructor_whenCustomTokenProviderIsProvided_shouldUseIt() throws Exception {
+    TokenProvider customTokenProvider = mock(TokenProvider.class);
+    TokenAwareDispatcher.setToken("custom-token");
+    doReturn(new Token("custom-token", "Bearer", Instant.now().plusSeconds(100)))
+        .when(customTokenProvider)
+        .getToken();
+    dispatcher.setExpectedRequestToken("request-token-web-signup");
+    mockServer.setDispatcher(dispatcher);
+
+    IncogniaAPI api =
+        new IncogniaAPI(
+            CLIENT_ID,
+            CLIENT_SECRET,
+            CustomOptions.builder().tokenProvider(customTokenProvider).build(),
+            mockServer.url("").toString());
+
+    api.registerWebSignup(
+        RegisterWebSignupRequest.builder().requestToken("request-token-web-signup").build());
+
+    verify(customTokenProvider).getToken();
+    assertThat(dispatcher.getTokenRequestCount()).isZero();
+  }
+
+  @Test
+  void testConstructor_whenCustomTokenProviderIsNotProvided_shouldUseDefaultTokenProvider()
+      throws Exception {
+    dispatcher.setExpectedRequestToken("request-token-web-signup");
+    mockServer.setDispatcher(dispatcher);
+    IncogniaAPI api =
+        new IncogniaAPI(
+            CLIENT_ID,
+            CLIENT_SECRET,
+            CustomOptions.builder().build(),
+            mockServer.url("").toString());
+
+    api.registerWebSignup(
+        RegisterWebSignupRequest.builder().requestToken("request-token-web-signup").build());
+
+    assertThat(dispatcher.getTokenRequestCount()).isEqualTo(1);
   }
 
   @Test

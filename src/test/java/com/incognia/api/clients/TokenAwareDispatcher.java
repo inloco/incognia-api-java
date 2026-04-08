@@ -182,7 +182,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(body).isEqualTo("grant_type=client_credentials");
     String[] idAndSecret =
         new String(
-                Base64.getUrlDecoder().decode(authorizationHeader.split(" ")[1]),
+                Base64.getDecoder().decode(authorizationHeader.split(" ")[1]),
                 StandardCharsets.UTF_8)
             .split(":", 2);
     String requestClientId = idAndSecret[0];
