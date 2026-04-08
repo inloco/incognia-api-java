@@ -1,0 +1,13 @@
+{
+  "event": "security_override",
+  "timestamp": "2026-04-08T20:30:20.478051",
+  "user": "thiago.figueredo@incognia.com",
+  "branch": "feat/manual-token-provider",
+  "files": [
+    "src/test/java/com/incognia/api/IncogniaAPITest.java"
+  ],
+  "detectors": [
+    "Gitleaks"
+  ],
+  "secrets_found": 1
+}
