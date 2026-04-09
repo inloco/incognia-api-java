@@ -61,7 +61,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import lombok.SneakyThrows;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -1104,6 +1106,99 @@ class IncogniaAPITest {
                         .build()))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("'account id' cannot be empty");
+  }
+
+  private static final String TOKEN_RESPONSE =
+      "{\"access_token\": \"test-token\", \"expires_in\": 300, \"token_type\": \"Bearer\"}";
+  private static final String SIGNUP_RESPONSE =
+      "{\"id\": \"5e76a7ca-577c-4f47-a752-9e1e0cee9e49\","
+          + "\"request_id\": \"8afc84a7-f1d4-488d-bd69-36d9a37168b7\","
+          + "\"risk_assessment\": \"low_risk\"}";
+  private static final String TRANSACTION_RESPONSE =
+      "{\"id\": \"dfe1f2ff-8f0d-4ce8-aed1-af8435143044\"," + "\"risk_assessment\": \"low_risk\"}";
+
+  @Test
+  @SneakyThrows
+  void testLbmt_absentOnFirstCall() {
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(TOKEN_RESPONSE));
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(SIGNUP_RESPONSE));
+
+    client.registerSignup(RegisterSignupRequest.builder().installationId("test").build());
+
+    mockServer.takeRequest(); // token request
+    RecordedRequest signupRequest = mockServer.takeRequest();
+    assertThat(signupRequest.getHeader("X-Incognia-Latency")).isNull();
+  }
+
+  @Test
+  @SneakyThrows
+  void testLbmt_sentOnSecondSignupCall() {
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(TOKEN_RESPONSE));
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(SIGNUP_RESPONSE));
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(SIGNUP_RESPONSE));
+
+    RegisterSignupRequest request = RegisterSignupRequest.builder().installationId("test").build();
+    client.registerSignup(request);
+    client.registerSignup(request);
+
+    mockServer.takeRequest(); // token request
+    RecordedRequest firstRequest = mockServer.takeRequest();
+    RecordedRequest secondRequest = mockServer.takeRequest();
+
+    assertThat(firstRequest.getHeader("X-Incognia-Latency")).isNull();
+    String latencyHeader = secondRequest.getHeader("X-Incognia-Latency");
+    assertThat(latencyHeader).isNotNull();
+    assertThat(Long.parseLong(latencyHeader)).isGreaterThanOrEqualTo(0L);
+  }
+
+  @Test
+  @SneakyThrows
+  void testLbmt_sentOnFeedbackAfterTransaction() {
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(TOKEN_RESPONSE));
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(TRANSACTION_RESPONSE));
+    mockServer.enqueue(new MockResponse().setResponseCode(200));
+
+    client.registerPayment(
+        RegisterPaymentRequest.builder()
+            .accountId("account-id")
+            .addresses(Collections.emptyMap())
+            .build());
+    client.registerFeedback(
+        FeedbackEvent.ACCOUNT_TAKEOVER,
+        Instant.now(),
+        FeedbackIdentifiers.builder().accountId("account-id").build());
+
+    mockServer.takeRequest(); // token request
+    RecordedRequest transactionRequest = mockServer.takeRequest();
+    RecordedRequest feedbackRequest = mockServer.takeRequest();
+
+    assertThat(transactionRequest.getHeader("X-Incognia-Latency")).isNull();
+    String latencyHeader = feedbackRequest.getHeader("X-Incognia-Latency");
+    assertThat(latencyHeader).isNotNull();
+    assertThat(Long.parseLong(latencyHeader)).isGreaterThanOrEqualTo(0L);
+  }
+
+  @Test
+  @SneakyThrows
+  void testLbmt_sentOnSignupAfterFeedback() {
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(TOKEN_RESPONSE));
+    mockServer.enqueue(new MockResponse().setResponseCode(200));
+    mockServer.enqueue(new MockResponse().setResponseCode(200).setBody(SIGNUP_RESPONSE));
+
+    client.registerFeedback(
+        FeedbackEvent.ACCOUNT_TAKEOVER,
+        Instant.now(),
+        FeedbackIdentifiers.builder().accountId("account-id").build());
+    client.registerSignup(RegisterSignupRequest.builder().installationId("test").build());
+
+    mockServer.takeRequest(); // token request
+    RecordedRequest feedbackRequest = mockServer.takeRequest();
+    RecordedRequest signupRequest = mockServer.takeRequest();
+
+    assertThat(feedbackRequest.getHeader("X-Incognia-Latency")).isNull();
+    String latencyHeader = signupRequest.getHeader("X-Incognia-Latency");
+    assertThat(latencyHeader).isNotNull();
+    assertThat(Long.parseLong(latencyHeader)).isGreaterThanOrEqualTo(0L);
   }
 
   private void assertTransactionAssessment(TransactionAssessment transactionAssessment) {
