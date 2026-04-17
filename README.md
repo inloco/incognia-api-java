@@ -23,14 +23,14 @@ And then add the artifact `incognia-api-client` **or** `incognia-api-client-shad
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client</artifactId>
-  <version>3.16.0</version>
+  <version>3.17.0</version>
 </dependency>
 ```
 ```xml
 <dependency>
   <groupId>com.incognia</groupId>
   <artifactId>incognia-api-client-shaded</artifactId>
-  <version>3.16.0</version>
+  <version>3.17.0</version>
 </dependency>
 ```
 
@@ -47,13 +47,13 @@ repositories {
 And then add the dependency
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client:3.16.0'
+     implementation 'com.incognia:incognia-api-client:3.17.0'
 }
 ```
 OR
 ```gradle
 dependencies {
-     implementation 'com.incognia:incognia-api-client-shaded:3.16.0'
+     implementation 'com.incognia:incognia-api-client-shaded:3.17.0'
 }
 ```
 
@@ -137,9 +137,45 @@ The implementation is based on the [Incognia API Reference](https://dash.incogni
 
 #### Authentication
 
-Authentication is done transparently, so you don't need to worry about it.
+Authentication is handled automatically by default, including refreshing expired tokens during API calls.
 
-If you are curious about how we handle it, you can check the `TokenAwareNetworkingClient` class
+For latency-sensitive services, you can take control of when refresh happens by creating a `ManualRefreshTokenProvider` and passing it through `CustomOptions`. The library does not create background threads for token refresh, so your application stays in full control of scheduling.
+
+```java
+CustomOptions sharedOptions =
+    CustomOptions.builder()
+        .timeoutMillis(5_000L)
+        .maxConnections(10)
+        .keepAliveSeconds(60L)
+        .build();
+
+ManualRefreshTokenProvider tokenProvider =
+    new ManualRefreshTokenProvider("client-id", "client-secret", sharedOptions);
+
+IncogniaAPI api =
+    IncogniaAPI.init(
+        "client-id",
+        "client-secret",
+        sharedOptions.toBuilder()
+            .tokenProvider(tokenProvider)
+            .build());
+
+ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
+executor.scheduleAtFixedRate(
+    () -> {
+      try {
+        Token token = tokenProvider.refresh();
+        System.out.println("token refreshed until " + token.getExpiresAt());
+      } catch (IncogniaException e) {
+        System.out.println("could not refresh token");
+      }
+    },
+    0,
+    1,
+    TimeUnit.MINUTES);
+```
+
+If you are curious about how we handle it, you can check the `TokenAwareNetworkingClient` class.
 
 #### Registering Signup
 
