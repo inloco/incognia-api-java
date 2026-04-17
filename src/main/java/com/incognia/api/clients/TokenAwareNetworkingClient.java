@@ -13,7 +13,7 @@ public class TokenAwareNetworkingClient {
   private static final String LATENCY_HEADER = "X-Incognia-Latency";
   private static final String USER_AGENT_HEADER_CONTENT =
       String.format(
-          "incognia-api-java/%s (%s %s %s) Java/%s",
+          "incognia-java/%s (%s %s %s) Java/%s",
           com.incognia.api.ProjectVersion.PROJECT_VERSION,
           System.getProperty("os.name"),
           System.getProperty("os.version"),

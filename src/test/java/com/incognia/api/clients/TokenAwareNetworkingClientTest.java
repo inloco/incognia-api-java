@@ -3,13 +3,16 @@ package com.incognia.api.clients;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.incognia.api.ProjectVersion;
 import com.incognia.common.exceptions.IncogniaAPIException;
 import com.incognia.common.exceptions.IncogniaException;
 import com.incognia.fixtures.TestRequestBody;
 import com.incognia.fixtures.TestResponseBody;
 import java.io.IOException;
 import okhttp3.OkHttpClient;
+import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,6 +57,29 @@ class TokenAwareNetworkingClientTest {
     }
 
     assertThat(dispatcher.getTokenRequestCount()).isEqualTo(1);
+  }
+
+  @Test
+  @DisplayName("should use incognia-java user agent without version prefix")
+  void testDoPost_whenSendingRequest_shouldUseUpdatedUserAgent()
+      throws IncogniaException, InterruptedException {
+    mockServer.enqueue(
+        new MockResponse()
+            .setResponseCode(200)
+            .setBody(
+                "{\"access_token\": \"token\",\"expires_in\": 12,\"token_type\": \"Bearer\"}"));
+    mockServer.enqueue(
+        new MockResponse().setResponseCode(200).setBody("{\"name\": \"my awesome name\"}"));
+
+    client.doPost("api/v2/onboarding", new TestRequestBody("my-id", 1234), TestResponseBody.class);
+
+    mockServer.takeRequest();
+    RecordedRequest apiRequest = mockServer.takeRequest();
+    String userAgent = apiRequest.getHeader("User-Agent");
+
+    assertThat(userAgent).startsWith("incognia-java/" + ProjectVersion.PROJECT_VERSION);
+    assertThat(userAgent).doesNotContain("incognia-api-java");
+    assertThat(userAgent).doesNotContain("/v" + ProjectVersion.PROJECT_VERSION);
   }
 
   @Test
