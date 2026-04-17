@@ -5,6 +5,7 @@
   "device_id": "OOksYXIGguAmBg6gNGSwXFEeteIKomGeN_xl3YyVgWXaAJeEi16sI6SRvf6hVXE2Cv4Frb48RwViTakhQV0dyQ",
   "installation_id": "ZHcpPGnUwpin5Jq-PaHuQboUH7_yBWFUwlke0AmuK5ggh-OP831jqC9JLLtU4ADJmDNT-uEJApjDGLnkjvq4Tx8n72P0Acs53cSVWjBMaB5pNGmwAPHegdOQIAbGUgd4EiAIu-DwKUNyoceUpWiGWw",
   "risk_assessment": "high_risk",
+  "actions": ["block"],
   "reasons": [
     {
       "code": "multiple_accounts",

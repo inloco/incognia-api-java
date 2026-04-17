@@ -14,6 +14,7 @@ public class TransactionAssessment {
   UUID id;
   Assessment riskAssessment;
   List<Reason> reasons;
+  List<String> actions;
   Map<String, Object> evidence;
   Map<String, Object> signals;
   String deviceId;

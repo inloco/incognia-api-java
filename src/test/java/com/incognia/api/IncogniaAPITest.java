@@ -305,6 +305,7 @@ class IncogniaAPITest {
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+    assertThat(signupAssessment.getActions()).containsExactly("allow");
 
     Reason expectedReason =
         Reason.builder()
@@ -362,6 +363,7 @@ class IncogniaAPITest {
     Map<String, Object> signalsMap = createSignalsMapping();
 
     assertThat(signupAssessment.getSignals()).containsExactlyInAnyOrderEntriesOf(signalsMap);
+    assertThat(signupAssessment.getActions()).containsExactly("block");
 
     Reason expectedReason =
         Reason.builder()
@@ -429,6 +431,7 @@ class IncogniaAPITest {
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
     assertThat(signupAssessment.getEvidence()).containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+    assertThat(signupAssessment.getActions()).containsExactly("block");
 
     Reason expectedReason =
         Reason.builder()
@@ -497,6 +500,7 @@ class IncogniaAPITest {
 
     assertThat(webSignupAssessment.getEvidence())
         .containsExactlyInAnyOrderEntriesOf(expectedEvidence);
+    assertThat(webSignupAssessment.getActions()).containsExactly("allow");
 
     Reason expectedReason =
         Reason.builder()
@@ -669,6 +673,7 @@ class IncogniaAPITest {
     TransactionAssessment transactionAssessment = client.registerLogin(loginRequest);
 
     assertThat(transactionAssessment.getSignals()).containsAllEntriesOf(expectedSignalsMap);
+    assertThat(transactionAssessment.getActions()).containsExactly("block");
     Reason expectedReason =
         Reason.builder()
             .code(ReasonCode.MULTIPLE_ACCOUNTS.getCode())
@@ -1228,6 +1233,7 @@ class IncogniaAPITest {
     expectedEvidence.put("device_integrity", deviceIntegrity);
 
     assertThat(transactionAssessment.getEvidence()).containsAllEntriesOf(expectedEvidence);
+    assertThat(transactionAssessment.getActions()).containsExactly("allow");
 
     Reason expectedReason =
         Reason.builder()
