@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class TokenAwareDispatcher extends Dispatcher {
   private static final String USER_AGENT_HEADER =
       String.format(
-          "incognia-api-java/%s (%s %s %s) Java/%s",
+          "incognia-java/%s (%s %s %s) Java/%s",
           com.incognia.api.ProjectVersion.PROJECT_VERSION,
           System.getProperty("os.name"),
           System.getProperty("os.version"),
