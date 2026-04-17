@@ -2,6 +2,7 @@ package com.incognia.onboarding;
 
 import com.incognia.api.Assessment;
 import com.incognia.common.Reason;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -13,6 +14,7 @@ public class SignupAssessment {
   UUID requestId;
   Assessment riskAssessment;
   Set<Reason> reasons;
+  List<String> actions;
   Map<String, Object> evidence;
   Map<String, Object> signals;
   String deviceId;
