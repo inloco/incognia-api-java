@@ -42,6 +42,24 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Set up JDK 17 for Gradle
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    - name: Capture Gradle JDK
+      run: echo "GRADLE_JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+
+    - name: Set up JDK 8 for compilation toolchain
+      uses: actions/setup-java@v4
+      with:
+        java-version: '8'
+        distribution: 'temurin'
+
+    - name: Capture toolchain JDKs
+      run: echo "ORG_GRADLE_JAVA_INSTALLATIONS_PATHS=$GRADLE_JAVA_HOME,$JAVA_HOME" >> "$GITHUB_ENV"
+
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
@@ -54,11 +72,10 @@ jobs:
         # Details on CodeQL's query packs refer to : https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
         queries: security-extended,security-and-quality
 
-
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, Go, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
-    - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
+    - name: Build for CodeQL
+      run: ./gradlew --no-daemon clean classes testClasses -PtestJavaVersion=8
+      env:
+        JAVA_HOME: ${{ env.GRADLE_JAVA_HOME }}
 
     # ℹ️ Command-line programs to run using the OS shell.
     # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun

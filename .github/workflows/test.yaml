@@ -5,16 +5,27 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11' ]
-    name: Test Java ${{ matrix.java }}
+        test-java: [ '8', '11' ]
+    name: Test Java ${{ matrix.test-java }} compatibility
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK
-        uses: actions/setup-java@v2
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17 for Gradle
+        uses: actions/setup-java@v4
         with:
-          java-version: ${{ matrix.java }}
-          distribution: 'adopt'
+          java-version: '17'
+          distribution: 'temurin'
+      - name: Capture Gradle JDK
+        run: echo "GRADLE_JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+      - name: Set up JDK for test toolchain
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ matrix.test-java }}
+          distribution: 'temurin'
+      - name: Capture test JDK
+        run: |
+          echo "TEST_JAVA_HOME=$JAVA_HOME" >> "$GITHUB_ENV"
+          echo "ORG_GRADLE_JAVA_INSTALLATIONS_PATHS=$GRADLE_JAVA_HOME,$JAVA_HOME" >> "$GITHUB_ENV"
       - name: Cache Gradle packages
         uses: actions/cache@v4
         with:
@@ -26,8 +37,12 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Check style
         run: ./gradlew --no-daemon --build-cache spotlessCheck
+        env:
+          JAVA_HOME: ${{ env.GRADLE_JAVA_HOME }}
       - name: Run tests
-        run: ./gradlew --no-daemon --build-cache test
+        run: ./gradlew --no-daemon --build-cache test -PtestJavaVersion=${{ matrix.test-java }}
+        env:
+          JAVA_HOME: ${{ env.GRADLE_JAVA_HOME }}
       - name: Cleanup Gradle Cache
         run: |
           rm -f ~/.gradle/caches/modules-2/modules-2.lock
