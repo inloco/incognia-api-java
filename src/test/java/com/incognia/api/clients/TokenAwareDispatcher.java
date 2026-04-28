@@ -43,6 +43,7 @@ public class TokenAwareDispatcher extends Dispatcher {
   @Setter private String expectedDeviceOs;
   @Setter private String expectedPolicyId;
   @Setter private String expectedAddressLine;
+  @Setter private String expectedCounty;
   @Setter private Boolean isSignalConfigured;
   @Setter private Map<String, Object> expectedCustomProperties;
   @Setter private String expectedRequestToken;
@@ -151,6 +152,7 @@ public class TokenAwareDispatcher extends Dispatcher {
     assertThat(postSignupRequestBody.getExternalId()).isEqualTo(expectedExternalId);
     assertThat(postSignupRequestBody.getPolicyId()).isEqualTo(expectedPolicyId);
     assertThat(postSignupRequestBody.getAddressLine()).isEqualTo(expectedAddressLine);
+    assertThat(postSignupRequestBody.getCounty()).isEqualTo(expectedCounty);
     assertThat(postSignupRequestBody.getCustomProperties()).isEqualTo(expectedCustomProperties);
     assertThat(postSignupRequestBody.getPersonId()).isEqualTo(expectedPersonId);
     final String fileName;

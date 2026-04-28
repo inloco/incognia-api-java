@@ -201,6 +201,7 @@ try {
                     .postalCode("10001")
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+            .county("New York County")
             .build();
     RegisterSignupRequest signupRequest = RegisterSignupRequest.builder()
         .address(address)
@@ -321,6 +322,7 @@ try {
                     .postalCode("10001")
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+            .county("New York County")
             .build();
      
      Map<AddressType, Address> addresses = Map.of(

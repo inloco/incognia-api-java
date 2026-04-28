@@ -9,4 +9,5 @@ public class Address {
   String addressLine;
   StructuredAddress structuredAddress;
   Coordinates coordinates;
+  String county;
 }

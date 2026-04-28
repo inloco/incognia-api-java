@@ -311,6 +311,7 @@ class IncogniaAPITest {
     String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedAddressLine(address.getAddressLine());
+    dispatcher.setExpectedCounty(address.getCounty());
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
@@ -384,6 +385,7 @@ class IncogniaAPITest {
     String relatedWebRequestToken = "related_web_request_token";
 
     dispatcher.setExpectedAddressLine(address.getAddressLine());
+    dispatcher.setExpectedCounty(address.getCounty());
     dispatcher.setExpectedRequestToken(requestToken);
     dispatcher.setExpectedExternalId(externalId);
     dispatcher.setExpectedPolicyId(policyId);
@@ -866,6 +868,7 @@ class IncogniaAPITest {
                     .postalCode("10001")
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+            .county("New York County")
             .build();
     List<PaymentMethod> paymentMethods = new ArrayList<PaymentMethod>();
     paymentMethods.add(
@@ -887,7 +890,11 @@ class IncogniaAPITest {
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
             new TransactionAddress(
-                "shipping", null, address.getStructuredAddress(), address.getCoordinates()));
+                "shipping",
+                null,
+                address.getStructuredAddress(),
+                address.getCoordinates(),
+                address.getCounty()));
 
     List<PixKey> pixKeys = new ArrayList<>();
     pixKeys.add(PixKey.builder().type("cpf").value("12345678901").build());
@@ -980,12 +987,17 @@ class IncogniaAPITest {
                     .postalCode("10001")
                     .build())
             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+            .county("New York County")
             .build();
 
     List<TransactionAddress> transactionAddresses =
         Collections.singletonList(
             new TransactionAddress(
-                "shipping", null, address.getStructuredAddress(), address.getCoordinates()));
+                "shipping",
+                null,
+                address.getStructuredAddress(),
+                address.getCoordinates(),
+                address.getCounty()));
     List<PaymentMethod> paymentMethods = new ArrayList<PaymentMethod>();
     paymentMethods.add(
         PaymentMethod.builder()

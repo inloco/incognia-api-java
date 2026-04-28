@@ -20,6 +20,7 @@ public class PostSignupRequestBody {
   String sessionToken;
   String requestToken;
   String addressLine;
+  String county;
   String appVersion;
   String deviceOs;
   StructuredAddress structuredAddress;

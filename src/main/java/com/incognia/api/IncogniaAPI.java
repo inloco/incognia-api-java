@@ -172,6 +172,7 @@ public class IncogniaAPI {
    *                     .postalCode("10001")
    *                     .build())
    *             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+   *             .county("New York County")
    *             .build();
    *      RegisterSignupRequest signupRequest = RegisterSignupRequest.builder().requestToken(requestToken).address(address).build();
    *      SignupAssessment assessment = api.registerSignup(signupRequest);
@@ -199,6 +200,7 @@ public class IncogniaAPI {
             .deviceOs(
                 Optional.ofNullable(request.getDeviceOs()).map(String::toLowerCase).orElse(null))
             .addressLine(address.map(Address::getAddressLine).orElse(null))
+            .county(address.map(Address::getCounty).orElse(null))
             .structuredAddress(address.map(Address::getStructuredAddress).orElse(null))
             .addressCoordinates(address.map(Address::getCoordinates).orElse(null))
             .externalId(request.getExternalId())
@@ -406,6 +408,7 @@ public class IncogniaAPI {
    *                     .postalCode("10001")
    *                     .build())
    *             .coordinates(new Coordinates(40.74836007062138, -73.98509720487937))
+   *             .county("New York County")
    *             .build();
    *      Map<AddressType, Address> addresses = Map.of(
    *          AddressType.SHIPPING, address
@@ -569,7 +572,8 @@ public class IncogniaAPI {
                   entry.getKey().name().toLowerCase(),
                   address.getAddressLine(),
                   address.getStructuredAddress(),
-                  address.getCoordinates());
+                  address.getCoordinates(),
+                  address.getCounty());
             })
         .collect(Collectors.toList());
   }

@@ -12,4 +12,5 @@ public class TransactionAddress {
   String addressLine;
   StructuredAddress structuredAddress;
   Coordinates addressCoordinates;
+  String county;
 }
