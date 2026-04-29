@@ -10,6 +10,7 @@ public class StructuredAddress {
   String countryName;
   String countryCode;
   String state;
+  String county;
   String city;
   String borough;
   String neighborhood;

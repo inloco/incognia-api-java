@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "com.incognia"
-version = "3.17.0"
+version = "3.18.0"
 
 def projectVersion = version.toString()
 def testJavaVersion = providers.gradleProperty("testJavaVersion").orElse("8").get().toInteger()
